@@ -74,7 +74,7 @@ A JAR file that implements the handling of re,ote resources for the 'MAVEN:' pre
 
 ------------------------------
 Macro modules, which can be included into any installation being safe.
-{#define modules:SAFE_MACROS=assertions,jamal,markdown,mock,snippet,yaml,json,prog,maven-load,sql,xls,rest}
+{#define modules:SAFE_MACROS=assertions,jamal,markdown,mock,snippet,yaml,json,prog,maven-load,sql,xls,rest,git}
 
 ------------------------------
 

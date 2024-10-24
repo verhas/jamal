@@ -54,8 +54,8 @@ Like here:
 {%@variation This is a go<<o>>d thing, because the documentation is always up-to-date.%}
 
 How did this happen?
-I enclosed the variable part of the text in `pass:[<<]` and `pass:[>>]`.
-So I wrote, `This is a gopass:[<<]o>>d thing,...`
+I enclosed the variable part of the text in `<<` and `>>`.
+So I wrote, `This is a go<<o>>d thing,...`
 As simple as that.
 
 ## Avoid copy-paste totally

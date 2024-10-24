@@ -19,7 +19,7 @@ Create a `.mvn` in your project root to use this module.
 This directory will contain the file `extensions.xml` with the content:
 
 [source,xml]
----
+----
 <?xml version="1.0" encoding="UTF-8"?>
 <extensions>
     <extension>
@@ -28,7 +28,7 @@ This directory will contain the file `extensions.xml` with the content:
         <version>2.8.2-SNAPSHOT</version>
     </extension>
 </extensions>
----
+----
 
 When you start Maven, it will read the `pom.xml.jam` or `pom.jam` file, convert it using Jamal and create the `pom.xml` file.
 
@@ -50,7 +50,7 @@ When the Maven Platform Reader returns with the object model, the extension pass
 NOTE: This way you can have the `pom.xml` file and the implementation of the extension was simpler.
 
 
-image::call-sequence.SVG[]
+image::call-sequence.svg[]
 ====
 
 == Using the Generated `pom.xml`
@@ -281,7 +281,6 @@ For further information read the link:../jamal-xls/README.adoc[documentation] of
 
 For further information read the link:../jamal-rest/README.adoc[documentation] of the module.
 
+===  `git`
 
-
-
-
+For further information read the link:../jamal-git/README.adoc[documentation] of the module.

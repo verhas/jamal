@@ -186,6 +186,9 @@ Using these macros, you can split up a Yaml file into smaller pieces and use mac
 {chapter :openai:macro}
 Macros implementing interface to OpenAI.
 
+{chapter :git:macro}
+Macros implementing interface to local git repository.
+
 {chapter :sql:macro}
 Macros implementing SQL interface.
 

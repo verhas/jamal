@@ -1,0 +1,70 @@
+= Jamal Git Macros
+{%@import res:jamal.jim%}
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+This macro package can fetch information from a local git repository.
+
+To use this module, you have to add the dependency to your Maven project, as:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>{%pom /project/artifactId/text()%}</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+This macro package is included in the prepackaged versions of Jamal.
+
+== Macros Implemented
+{%@snip:collect from=src/main/%}
+
+=== `git`
+
+This macro should be used to specify the directory of the git repository.
+For example
+
+{%sample/{@git location=../.git}%}
+
+will locate the repository and then subsequent macros can fetch information from the repository.
+The parameter option (parop) `location` is mandatory and it should point to the `.git` directory of the repository.
+
+The parameters of the opened repository are stored in the user defined macro `$git`.
+You can reference this macro directly as `{$git}` and the value will always be an empty string.
+
+If you want to handle multiple git repositories, you can use the parop `id` to give an identifier to the repository.
+If used, the name specified will be used as a user-defined macro name to store the preference to the git repository.
+In this case the parop `id` should be used in all later calls to the git macros using the specific git repository.
+
+=== `git:tag(s)`, `got:branch(es)`
+
+This macro can be called as
+
+* `git:tag`,
+* `git:tags`,
+* `git:branch`, or
+* `git:branches`
+
+The macro can collect tags or branches from the local git repository.
+The singular and plural forms behave the same, and they exist to help the readability.
+The macro names containing `tag` return a tag  or tags, and the ones containing `branch` return a branch or branches.
+
+The behavior of the macro can be controlled using parops.
+These are the following:
+
+{%#replaceLines replace="/^.*?\"(.*?)\".*/* `$1`/" replace=~^\s*//\s*~~ replace="/.*enumeration.*/"
+{%@snip tag_parameters%}%}
+
+Examples:
+
+{%sample/{@git location=../.git}
+The latest release of Jamal is {#string:substring (begin=1) {@git:tag last orderByName match=v.*}}.
+%}
+
+result in:
+
+{%output%}
+
+

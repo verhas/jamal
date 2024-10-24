@@ -21,7 +21,7 @@ Create a `.mvn` in your project root to use this module.
 This directory will contain the file `extensions.xml` with the content:
 
 [source,xml]
----
+----
 <?xml version="1.0" encoding="UTF-8"?>
 <extensions>
     <extension>
@@ -30,7 +30,7 @@ This directory will contain the file `extensions.xml` with the content:
         <version>{%VERSION%}</version>
     </extension>
 </extensions>
----
+----
 
 When you start Maven, it will read the `pom.xml.jam` or `pom.jam` file, convert it using Jamal and create the `pom.xml` file.
 
@@ -52,7 +52,7 @@ When the Maven Platform Reader returns with the object model, the extension pass
 NOTE: This way you can have the `pom.xml` file and the implementation of the extension was simpler.
 
 {%@import res:kroki.jim%}
-{%kroki/call-sequence/plantuml/SVG/
+{%kroki/call-sequence/plantuml/svg/
 @startuml
 actor User
 skinparam style strictuml
@@ -306,6 +306,10 @@ The library provides macros that can load Java Built-in Macros from Maven artifa
 === {%#block {%depCounter%}%} `rest`
 
 {%further rest%}
+
+=== {%#block {%depCounter%}%} `git`
+
+{%further git%}
 
 
 {%#assert:equals /{%dependencies%}/{%depCounter last%}/Not all dependencies are documented or some documented dependency is not there any more%}

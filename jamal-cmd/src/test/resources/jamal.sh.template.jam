@@ -6,7 +6,7 @@
 {@define CENTRAL=https://repo1.maven.org/maven2}\
 
 CLASSPATH=""
-function download() {}
+download() {}
   DIR=${}1//\.//}
   if ! test -f {REPO}/$DIR/$2/$3/$2-$3.jar; then
     echo "downloading {CENTRAL}/$DIR/$2/$3/jamal-$2-$3.jar"

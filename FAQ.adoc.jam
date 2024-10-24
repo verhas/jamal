@@ -51,7 +51,10 @@ unless the file starts with the characters  `{@escape*``{@``}`.
 }
 
 {Q|I installed the ASCIIDOC plugin, and it gives error for the Jamal documentation|
-If you try to look at the git master HEAD version there is a possibility that the documentation has errors.
+
+It can only happen if you use a non-release, development version.
+
+If you try to look at the git master HEAD version, there is a possibility that the documentation has errors.
 Check on GitHub if the build is broken.
 It usually is not.
 After that check that you have the latest version of the plugin is installed.

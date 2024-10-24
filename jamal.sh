@@ -1,7 +1,7 @@
 #!/bin/sh
 
 CLASSPATH=""
-function download() {
+download() {
   DIR=${1//\.//}
   if ! test -f $HOME/.m2/repository/$DIR/$2/$3/$2-$3.jar; then
     echo "downloading https://repo1.maven.org/maven2/$DIR/$2/$3/jamal-$2-$3.jar"
@@ -125,8 +125,12 @@ download "com.github.virtuald" "curvesapi" "1.08"
 download "org.apache.commons" "commons-compress" "1.26.2"
 download "org.apache.commons" "commons-lang3" "3.14.0"
 download "com.javax0.jamal" "jamal-rest" "2.8.2-SNAPSHOT"
-download "com.javax0.jamal" "jamal-maven-input" "2.8.2-SNAPSHOT"
+download "com.javax0.jamal" "jamal-git" "2.8.2-SNAPSHOT"
 download "com.javax0.jamal" "jamal-extensions" "2.8.2-SNAPSHOT"
+download "org.eclipse.jgit" "org.eclipse.jgit" "6.6.1.202309021850-r"
+download "com.googlecode.javaewah" "JavaEWAH" "1.2.3"
+download "org.slf4j" "slf4j-api" "1.7.36"
+download "com.javax0.jamal" "jamal-maven-input" "2.8.2-SNAPSHOT"
 download "com.javax0.jamal" "jamal-jar-input" "2.8.2-SNAPSHOT"
 download "com.javax0.jamal" "jamal-word" "2.8.2-SNAPSHOT"
 download "com.javax0.jamal" "jamal-testsupport" "2.8.2-SNAPSHOT"

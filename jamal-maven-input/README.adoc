@@ -56,7 +56,7 @@ you will get
 
 [source]
 ----
-Cannot get the content of the file 'maven:com.javax0.jamal:jamal-groovy:1.12.5::version.properties'
+Cannot read file 'maven:com.javax0.jamal:jamal-groovy:1.12.5::version.properties' from any of the directories: 
 ----
 
 but

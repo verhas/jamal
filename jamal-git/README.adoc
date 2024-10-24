@@ -1,0 +1,120 @@
+= Jamal Git Macros
+
+
+This macro package can fetch information from a local git repository.
+
+To use this module, you have to add the dependency to your Maven project, as:
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-git</artifactId>
+    <version>2.8.2-SNAPSHOT</version>
+</dependency>
+----
+
+This macro package is included in the prepackaged versions of Jamal.
+
+== Macros Implemented
+
+
+=== `git`
+
+This macro should be used to specify the directory of the git repository.
+For example
+
+.Jamal source
+[source]
+----
+{@git location=../.git}
+----
+
+will locate the repository and then subsequent macros can fetch information from the repository.
+The parameter option (parop) `location` is mandatory and it should point to the `.git` directory of the repository.
+
+The parameters of the opened repository are stored in the user defined macro `$git`.
+You can reference this macro directly as `{$git}` and the value will always be an empty string.
+
+If you want to handle multiple git repositories, you can use the parop `id` to give an identifier to the repository.
+If used, the name specified will be used as a user-defined macro name to store the preference to the git repository.
+In this case the parop `id` should be used in all later calls to the git macros using the specific git repository.
+
+=== `git:tag(s)`, `got:branch(es)`
+
+This macro can be called as
+
+* `git:tag`,
+* `git:tags`,
+* `git:branch`, or
+* `git:branches`
+
+The macro can collect tags or branches from the local git repository.
+The singular and plural forms behave the same, and they exist to help the readability.
+The macro names containing `tag` return a tag  or tags, and the ones containing `branch` return a branch or branches.
+
+The behavior of the macro can be controlled using parops.
+These are the following:
+
+* `id`
+is the identifier of the opened git repository.
+The default value is `$git` which is also the default value of the `git:connect` macro.
+If you are not dealing with more than one git repositories you can omit this parameter.
+Use it only if you also used it in the `git:connect` macro.
+* `match`
+is a regular expression that the tag name should match.
+If this parameter is present, then only those tags are listed that match the regular expression.
+* `index`
+is the index of the tag to list.
+If this parameter is present, then only the tag at the index is listed.
+The index is 0-based.
+Negative index is also allowed.
+In this case, the index is counted from the end of the list.
+For example, -1 means the last tag.
+If the index is too large or too small, then an error is thrown.
+* `last`
+If this parameter is present, then only the last tag is listed.
+It is the same as `index=-1`.
+* `first`
+If this parameter is present, then only the first tag is listed.
+It is the same as `index=0`.
+* `single`
+If this parameter is present, then the result is a single tag.
+If this parameter is present and the result is more than one tag then an error is thrown.
+
+* `orderByName` orders the tags by name.
+* `orderByDate` orders the tags by the commit date.
++
+The default value is `orderByName`.
+`orderByName` and `orderByDate` are exclusive; you can use only one.
+
+* `name` will return the name(s) of the tag(s) or branch(es).
+* `time` will return the time of the commit of the tag(s) or branch(es).
+* `hash` will return the hash of the commit of the tag(s) or branch(es).
++
+The default value is `name`.
+`name`, `time`, and `hash` are exclusive; you can use only one.
+* `sep`
+is the separator between the tags.
+The default value is `,` (a comma).
+This string (not only a single character is possible) is used to separate the tags in the result.
+The list can be used as the value list for the `for` macro.
+In the very special case when some of the tag or branch names contains a comma, then you can use this parameter.
+
+
+Examples:
+
+.Jamal source
+[source]
+----
+{@git location=../.git}
+The latest release of Jamal is {#string:substring (begin=1) {@git:tag last orderByName match=v.*}}.
+----
+
+result in:
+
+.output
+[source]
+----
+The latest release of Jamal is 2.8.1.
+----
