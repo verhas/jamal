@@ -15,7 +15,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -222,9 +221,9 @@ public class Commit implements Macro, Scanner.WholeInput {
      * occurrence is processed and returned.</p>
      *
      * @param footnote the footnote prefix to look for in the text, case-insensitive
-     * @param from the multi-line text to search within
+     * @param from     the multi-line text to search within
      * @return the extracted content following the specified footnote and colon, or an empty
-     *         string if the footnote is not found
+     * string if the footnote is not found
      */
     private static String extract(final String footnote, final String from) {
         final StringBuilder sb = new StringBuilder();
@@ -237,7 +236,7 @@ public class Commit implements Macro, Scanner.WholeInput {
                     line = line.substring(1).stripLeading();
                     boolean continuation = line.endsWith("_");
                     if (continuation) {
-                        line = line.substring(0, line.length() - 1);
+                        line = line.substring(0, line.length() - 1).stripTrailing();
                     }
                     sb.append(line).append("\n");
                     while (continuation && i < lines.length - 1) {

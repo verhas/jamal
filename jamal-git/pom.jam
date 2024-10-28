@@ -1,6 +1,6 @@
 {@import https://raw.githubusercontent.com/central7/pom/1/pom.jim}
 {@import ../version.jim}
-{project jamal maven input}
+{project jamal git}
     {GAV ::jamal-git:{VERSION}}
     {parent :{GROUPID}:jamal-parent}
     {description :Jamal Git repo reading plugin}
