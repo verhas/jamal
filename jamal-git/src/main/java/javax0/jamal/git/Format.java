@@ -7,6 +7,7 @@ import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 @Macro.Name("git:format")
 public class Format implements Macro, Scanner {
@@ -16,12 +17,14 @@ public class Format implements Macro, Scanner {
         // snippet format_parameters
         final var time = scanner.str(null, "time");
         // is the time as returned by some of the git commands, in number of seconds since the epoch.
+        final var tz = scanner.str(null, "tz", "timezone").defaultValue("UTC");
         // end snippet
         scanner.done();
 
-        final var date = new java.util.Date(Long.parseLong(time.get())*1000);
+        final var date = new java.util.Date(Long.parseLong(time.get()) * 1000);
         InputHandler.skipWhiteSpaces(in);
         final var sdf = new SimpleDateFormat(in.toString());
+        sdf.setTimeZone(TimeZone.getTimeZone(tz.get()));
         return sdf.format(date);
     }
 }
