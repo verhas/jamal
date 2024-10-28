@@ -213,7 +213,7 @@ result in:
 .output
 [source]
 ----
-The latest commit to Jamal is: "My-Special: sample footnote message message for documentation Rev: git macro module"
+The latest commit to Jamal is: "time zone parop was documented"
 ----
 
 
@@ -291,6 +291,8 @@ The time stamp is specified in the parop `time`.
 
 * `time`
 is the time as returned by some of the git commands, in number of seconds since the epoch.
+* `tz`
+or `timezone` is the time zone to use when formatting the time. The default is UTC.
 
 
 Examples:

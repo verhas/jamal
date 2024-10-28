@@ -18,7 +18,7 @@ public class Format implements Macro, Scanner {
         final var time = scanner.str(null, "time");
         // is the time as returned by some of the git commands, in number of seconds since the epoch.
         final var tz = scanner.str(null, "tz", "timezone").defaultValue("UTC");
-        // is the time zone to use when formatting the time. The default is UTC.
+        // or `timezone` is the time zone to use when formatting the time. The default is UTC.
         // end snippet
         scanner.done();
 
