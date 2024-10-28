@@ -205,7 +205,7 @@ public class TestThat implements AutoCloseable {
             InvocationTargetException,
             BadSyntax {
         final var result = resultsClose();
-        Assertions.assertTrue(test.test(result));
+        Assertions.assertTrue(test.test(result), "The result '" + result + "' does not match the predicate");
     }
 
     /**

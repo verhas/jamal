@@ -4,6 +4,10 @@
 {%#define VERSION={%pom /project/version/text()%}%}\
 
 This macro package can fetch information from a local git repository.
+The package does not support modification of the repository, only reading information from it.
+The package does not support remote repositories, only local ones.
+
+This macro package is included in the prepackaged versions of Jamal.
 
 To use this module, you have to add the dependency to your Maven project, as:
 
@@ -16,7 +20,6 @@ To use this module, you have to add the dependency to your Maven project, as:
 </dependency>
 ----
 
-This macro package is included in the prepackaged versions of Jamal.
 
 == Macros Implemented
 {%@snip:collect from=src/main/%}
@@ -54,7 +57,7 @@ The macro names containing `tag` return a tag  or tags, and the ones containing 
 The behavior of the macro can be controlled using parops.
 These are the following:
 
-{%#replaceLines replace="/^.*?\"(.*?)\".*/* `$1`/" replace=~^\s*//\s*~~ replace="/.*enumeration.*/"
+{%!#replaceLines replace="/^.*?\"(.*?)\".*/* `$1`/" replace=~^\s*//\s*~~ replace="/.*enumeration.*/"
 {%@snip tag_parameters%}%}
 
 Examples:
@@ -67,4 +70,50 @@ result in:
 
 {%output%}
 
+=== `git:commit(s)`
 
+This macro will return one or more commits from the git repository.
+
+
+{%!#replaceLines replace="/^.*?\"(.*?)\".*/* `$1`/" replace=~^\s*//\s*~~ replace="/.*enumeration.*/"
+{%@snip commit_parameters%}%}
+
+There are certain restrictions on the commit parameters.
+You can use some parameters together, while some others are exclusive:
+
+{%!#replaceLines replace="/^\\s*BadSyntax.*?\"(.*?)\".*/* $1/" replace=~'~`~
+{%@snip commit_restrictions%}%}
+
+Examples:
+
+{%sample/{@git location=../.git}
+The latest commit to Jamal is: "{@git:commit branch=master last shortMessage}"
+%}
+
+result in:
+
+{%output%}
+
+
+{%sample/
+{@counter:define id=$counter format=%2d start=1 step=1 }
+{#range lines=1..11
+  {!@for [evalist] $C in ({@git:commit from=1.0.2 to=1.1.0 branch=master hash})=
+{$counter}. {@git:commit ref=$C abbreviated}
+    {@git:commit ref=$C shortMessage}}}
+%}
+
+
+result in:
+
+{%output%}
+
+=== `git:format`
+
+Format a time stamp from the git repository.
+When some commands like `git:commit` return a time stamp, you can format it using this macro.
+The format is the same as the Java `SimpleDateFormat` format and it has to be specified in the input of the macro.
+The time stamp is specified
+
+{%!#replaceLines replace="/^.*?\"(.*?)\".*/* `$1`/" replace=~^\s*//\s*~~ replace="/.*enumeration.*/"
+{%@snip format_parameters%}%}

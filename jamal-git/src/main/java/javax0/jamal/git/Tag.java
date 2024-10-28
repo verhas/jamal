@@ -58,10 +58,10 @@ public class Tag implements Macro, Scanner.WholeInput {
         final var scanner = newScanner(in, processor);
         // snippet tag_parameters
         final var id = scanner.str(null, "id").optional();
-        // is the identifier of the opened git repository.
+        // {%@def ID=is the identifier of the opened git repository.
         // The default value is `$git` which is also the default value of the `git:connect` macro.
-        // If you are not dealing with more than one git repositories you can omit this parameter.
-        // Use it only if you also used it in the `git:connect` macro.
+        // If you are not dealing with more than one git repositories, you can omit this parameter.
+        // Use it only if you also used it in the `git:connect` macro.%}
         final var match = scanner.str(null, "match").optional();
         // is a regular expression that the tag name should match.
         // If this parameter is present, then only those tags are listed that match the regular expression.
@@ -83,24 +83,23 @@ public class Tag implements Macro, Scanner.WholeInput {
         // If this parameter is present, then the result is a single tag.
         // If this parameter is present and the result is more than one tag then an error is thrown.
         final var order = scanner.enumeration(OrderBy.class).defaultValue(OrderBy.orderByName);
-        // * `orderByName` orders the tags by name.
-        // * `orderByDate` orders the tags by the commit date.
-        //+
-        // The default value is `orderByName`.
-        // `orderByName` and `orderByDate` are exclusive; you can use only one.
+        // * {%@def EXCLUSIVE=The following parameters are exclusive.
+        //   Only one of them can be used in a macro.%}
+        //   {%@define DEFVAL(x)=The default value is `x`.%}{%DEFVAL orderByName%}
+        // ** `orderByName` orders the tags by name.
+        // ** `orderByDate` orders the tags by the commit date.
         final var what = scanner.enumeration(TagWhat.class).defaultValue(TagWhat.name);
-        // * `name` will return the name(s) of the tag(s) or branch(es).
-        // * `time` will return the time of the commit of the tag(s) or branch(es).
-        // * `hash` will return the hash of the commit of the tag(s) or branch(es).
-        //+
-        // The default value is `name`.
-        // `name`, `time`, and `hash` are exclusive; you can use only one.
+        // * {%EXCLUSIVE%}
+        //  {%DEFVAL name%}
+        // ** `name` will return the name(s) of the tag(s) or branch(es).
+        // ** `time` will return the time of the commit of the tag(s) or branch(es).
+        // ** `hash` will return the hash of the commit of the tag(s) or branch(es).
         final var sep = scanner.str(null, "sep").defaultValue(",");
-        // is the separator between the tags.
+        // {%@def SEPARATOR=is the separator between the tags.
         // The default value is `,` (a comma).
-        // This string (not only a single character is possible) is used to separate the tags in the result.
+        // This string (not only a single character is possible) is used to separate the elements in the result.
         // The list can be used as the value list for the `for` macro.
-        // In the very special case when some of the tag or branch names contains a comma, then you can use this parameter.
+        // In the very special case when some of the elements contain a comma, then you can use this parameter.%}
         // end snippet
         scanner.done();
         BadSyntax.when(last.isPresent() && index.isPresent(), "You cannot specify both 'last' and 'index'");
@@ -117,7 +116,7 @@ public class Tag implements Macro, Scanner.WholeInput {
                     tags.sort((tag1, tag2) -> getCommitTimeForTag(tag1, git) - getCommitTimeForTag(tag2, git));
                     break;
             }
-            final Function<Ref, String> mapper = getMapper(what, git);
+            final var mapper = getMapper(what, git);
             var tagStream = tags.stream()
                     .map(mapper)
                     .map(s -> s.substring(s.lastIndexOf('/') + 1));

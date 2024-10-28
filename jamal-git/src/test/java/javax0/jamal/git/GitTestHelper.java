@@ -1,22 +1,26 @@
 package javax0.jamal.git;
 
-import javax0.jamal.testsupport.TestThat;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assumptions;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class TestGit {
+public class GitTestHelper {
 
     private Repository repository;
     private Git git;
     private File repoDir;
+
+
+    public File getRepoDir() {
+        return repoDir;
+    }
 
     /**
      * Sets up a local Git repository in a temporary directory for testing purposes.
@@ -38,8 +42,7 @@ public class TestGit {
      *
      * @throws Exception if any I/O or Git operation fails during the setup.
      */
-    @BeforeEach
-    public void setup() throws Exception {
+    void setup() throws Exception {
         // Create a temporary directory for the test repo
         repoDir = Files.createTempDirectory("testRepo").toFile();
         // Initialize the repository
@@ -52,6 +55,10 @@ public class TestGit {
         Files.write(testFile.toPath(), "Initial content".getBytes());
         git.add().addFilepattern("testFile.txt").call();
         git.commit().setMessage("Initial commit").call();
+        git.add().addFilepattern("chuckFile.txt").call();
+        git.commit().setMessage("Rev: chucken _\nwas added").call();
+        git.add().addFilepattern("chickFile.txt").call();
+        git.commit().setMessage("Rev: chicken was added").call();
         final var currentBranch = git.getRepository().getBranch();
         git.branchCreate().setName("main").call();
         git.checkout().setName("main").call();
@@ -91,8 +98,7 @@ public class TestGit {
      *
      * @throws Exception if an error occurs while closing the repository or deleting files.
      */
-    @AfterEach
-    public void tearDown() throws Exception {
+    void tearDown() throws Exception {
         // Clean up the temporary repository
         git.getRepository().close();
         git.close();
@@ -111,87 +117,6 @@ public class TestGit {
             }
         }
         Assumptions.assumeTrue(directory.delete());
-    }
-
-    @Test
-    @DisplayName("Get all the tags")
-    public void allTags() throws Exception {
-        TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:tags orderByDate}")
-                .results("v1.0,v2.0,3.0");
-    }
-
-    @Test
-    @DisplayName("Get all the tags starting with V")
-    public void allTagsV() throws Exception {
-        TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:tags orderByDate match=\"v.*\"}")
-                .results("v1.0,v2.0");
-    }
-
-    @Test
-    @DisplayName("Get all the tags starting with V special separator")
-    public void allTagsVSep() throws Exception {
-        TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:tags orderByDate match=\"v.*\" sep=:}")
-                .results("v1.0:v2.0");
-    }
-
-    @Test
-    @DisplayName("Get the latest tag")
-    public void latestTag() throws Exception {
-        TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:tags last orderByDate}")
-                .results("3.0");
-    }
-
-    @Test
-    @DisplayName("Get the last tag by name")
-    public void lastTag() throws Exception {
-        TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:tags last orderByName}")
-                .results("v2.0");
-    }
-
-    @Test
-    @DisplayName("Get the last tag by name time")
-    public void lastTagtime() throws Exception {
-        TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:tags last orderByName time}")
-                .results("20");
-    }
-
-    @Test
-    @DisplayName("Get the last tag by name hashCode")
-    public void lastTagHash() throws Exception {
-        final var result = TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:tags last orderByName hash}")
-                .results();
-        Assertions.assertTrue(result.matches("[0-9a-f]{40}"));
-    }
-
-
-    @Test
-    @DisplayName("Get all the branchs")
-    public void allBranches() throws Exception {
-        TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:branches orderByName}")
-                .results("branch1,branch2,branch3,branch4,branch5,main,release");
-    }
-
-    @Test
-    @DisplayName("Get the last branch by name")
-    public void lastBranch() throws Exception {
-        TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:branches last orderByName}")
-                .results("release");
-    }
-
-    @Test
-    @DisplayName("Get the last branch by name time")
-    public void lastBranchtime() throws Exception {
-        final var time = TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:branches last orderByName time}")
-                .results();
-        Assertions.assertTrue(time.matches("\\d+"));
-    }
-
-    @Test
-    @DisplayName("Get the last branch by name hashCode")
-    public void lastBranchHash() throws Exception {
-        final var result = TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:branches last orderByName hash}")
-                .results();
-        Assertions.assertTrue(result.matches("[0-9a-f]{40}"));
     }
 
 }
