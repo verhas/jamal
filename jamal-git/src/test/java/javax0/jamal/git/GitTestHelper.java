@@ -17,9 +17,8 @@ public class GitTestHelper {
     private Git git;
     private File repoDir;
 
-
-    public File getRepoDir() {
-        return repoDir;
+    String getRepoDir() {
+        return repoDir.getAbsolutePath().replaceAll("\\\\","/");
     }
 
     /**
