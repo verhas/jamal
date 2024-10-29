@@ -209,7 +209,30 @@ public class TestThat implements AutoCloseable {
         Assertions.assertTrue(test.test(result), "The result '" + result + "' does not match the predicate");
     }
 
-    public void results(Predicate<String> test, final Function<String,String> message) throws
+    /**
+     * Create a new macro, a new processor and test that the input creates the expected output.
+     * If the test predicate does not accept the result, then a JUnit5 assertion failure will happen
+     * with a custom message provided by the message function.
+     * <p>
+     * The argument to the message function is the result of the macro evaluation.
+     * <p>
+     * <strong>Example usage:</strong>
+     * <pre>{@code
+     * results(
+     *     result -> result.equals("Expected Output"),
+     *     result -> "Assertion failed: expected 'Expected Output', but got '" + result + "'"
+     * );
+     * }</pre>
+     *
+     * @param test    Predicate that checks the output
+     * @param message Function that generates the failure message based on the result
+     * @throws NoSuchMethodException     if the macro class cannot be instantiated
+     * @throws IllegalAccessException    if the macro class cannot be instantiated
+     * @throws InstantiationException    if the macro class cannot be instantiated
+     * @throws InvocationTargetException if the macro class cannot be instantiated
+     * @throws BadSyntaxAt               if the macro evaluation throws BadSyntaxAt
+     */
+    public void results(Predicate<String> test, final Function<String, String> message) throws
             NoSuchMethodException,
             IllegalAccessException,
             InstantiationException,

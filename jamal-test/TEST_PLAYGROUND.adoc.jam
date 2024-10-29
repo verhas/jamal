@@ -1,7 +1,3 @@
-{%@http:post
-(url="http://localhost:11434/api/generate" ){
-"model": "llama3:latest",
-"prompt": "why is the sky blue?",
-"stream": false
-}
-%}
+{%@option failfast%}
+{%biroka%}
+{%miroka%}

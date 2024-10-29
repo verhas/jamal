@@ -8,10 +8,7 @@ import javax0.jamal.api.TransientException;
 import javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy;
 import javax0.jamal.asciidoc258.CompatibilityProcess;
 import javax0.jamal.engine.Processor;
-import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Input;
-import javax0.jamal.tools.MacroReader;
-import javax0.jamal.tools.OutputFile;
+import javax0.jamal.tools.*;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.extension.JavaExtensionRegistry;
@@ -145,8 +142,8 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         final var fileName = nonNull(reader.getFile()) ? reader.getFile() : (String) document.getAttribute("docfile");
         setContextClassLoader();
         /*
-         * The plugin is invoked for all asciidoc files.
-         * If the file ending is adoc, asciidoc or anything else, then there is nothing to do with the Jamal preprocessor.
+         * The plugin is invoked for all AsciiDoc files.
+         * If the file ending is adoc, AsciiDoc or anything else, then there is nothing to do with the Jamal preprocessor.
          */
         if (!fileName.endsWith(".jam")) {
             return reader;
@@ -163,7 +160,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         lines.addAll(linesAfterFM);
 
         var outputFileName = fileName.substring(0, fileName.length() - 4);
-        final var firstLine = lines.size() > 0 ? lines.get(0).trim() : "";
+        final var firstLine = lines.isEmpty() ? "" : lines.get(0).trim();
         final var opts = new InFileOptions(firstLine);
         if (opts.off) {
             reader.restoreLines(lines);
@@ -264,7 +261,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * Set the context class loader to the preprocessors class loader.
      * <p>
      * Snake yaml is part of the Yaml macro library, but it is also used by the Asciidoctor plugin.
-     * When Snake Yaml code tries to access the class {@link javax0.jamal.api.Ref} it uses it tries to load the class
+     * When Snake Yaml code tries to access the class {@link javax0.jamal.api.Ref} it uses, it tries to load the class
      * calling the context class loader and then the plugin's class loader.
      * <p>
      * The plugin, eventually separates itself from the preprocessor.
@@ -287,6 +284,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         // snipline spec_env2 filter="(.*?)"
         System.setProperty("asciidocfx.asciidoctor.plugin", "1");
         try {
+            OptionsStore.getInstance(processor).addOptions(Processor.FAIL_FAST);
             // snipline asciidoctorj_version filter="(.*?)"
             processor.defineGlobal(processor.newUserDefinedMacro("asciidoctorj:version", getAsciidoctorJVersion()));
         } catch (BadSyntax ignore) {

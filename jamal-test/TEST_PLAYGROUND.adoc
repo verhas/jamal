@@ -1,62 +1,29 @@
 [WARNING]
 --
-* POST url 'null' failed at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/0:12
+* User macro '{%biroka ...' is not defined. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/1:3
 --
+{%@option failfast%}
 [WARNING]
 --
-* POST url 'null' failed at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/0:12
+* User macro '{%biroka ...' is not defined. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/1:3
 --
-{%@http:post
-(url="http://localhost:11434/api/generate" ){
-"model": "llama3:latest",
-"prompt": "why is the sky blue?",
-"stream": false
-}
-%}
+{%biroka%}
+{%miroka%}
 [WARNING]
 --
-* POST url 'null' failed at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/0:12
+* User macro '{%biroka ...' is not defined. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/1:3
 --
 [source]
 ----
-POST url 'null' failed at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/0:12
-	javax0.jamal.rest.Rest(evaluate:140)
-	javax0.jamal.engine.Processor(evaluateBuiltinMacro:514)
-	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:457)
-	javax0.jamal.engine.Processor(safeEvaluate:466)
-	javax0.jamal.engine.Processor(evaluateBuiltInMacro:457)
-	javax0.jamal.engine.Processor(evalMacro:412)
-	javax0.jamal.engine.Processor(processMacro:325)
+User macro '{%biroka ...' is not defined. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/1:3
+	javax0.jamal.engine.Processor(throwForUndefinedUdMacro:610)
+	javax0.jamal.engine.Processor(evalUserDefinedMacro:563)
+	javax0.jamal.engine.Processor(evalMacro:417)
+	javax0.jamal.engine.Processor(processMacro:327)
 	javax0.jamal.engine.Processor(process:202)
-	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:457)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:294)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:215)
-	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:63)
-Causing Exception:
-Cannot invoke "String.length()" because "spec" is null	javax0.jamal.rest.Rest(evaluate:95)
-	javax0.jamal.engine.Processor(evaluateBuiltinMacro:514)
-	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:457)
-	javax0.jamal.engine.Processor(safeEvaluate:466)
-	javax0.jamal.engine.Processor(evaluateBuiltInMacro:457)
-	javax0.jamal.engine.Processor(evalMacro:412)
-	javax0.jamal.engine.Processor(processMacro:325)
-	javax0.jamal.engine.Processor(process:202)
-	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:457)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:294)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:215)
-	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:63)
-Causing Exception:
-Cannot invoke "String.length()" because "spec" is null	javax0.jamal.rest.Rest(evaluate:95)
-	javax0.jamal.engine.Processor(evaluateBuiltinMacro:514)
-	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:457)
-	javax0.jamal.engine.Processor(safeEvaluate:466)
-	javax0.jamal.engine.Processor(evaluateBuiltInMacro:457)
-	javax0.jamal.engine.Processor(evalMacro:412)
-	javax0.jamal.engine.Processor(processMacro:325)
-	javax0.jamal.engine.Processor(process:202)
-	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:457)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:294)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:215)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:455)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:292)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:212)
 	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:63)
 sed -i.bak  '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam
 ----
