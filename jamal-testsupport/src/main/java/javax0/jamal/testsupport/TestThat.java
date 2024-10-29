@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -206,6 +207,16 @@ public class TestThat implements AutoCloseable {
             BadSyntax {
         final var result = resultsClose();
         Assertions.assertTrue(test.test(result), "The result '" + result + "' does not match the predicate");
+    }
+
+    public void results(Predicate<String> test, final Function<String,String> message) throws
+            NoSuchMethodException,
+            IllegalAccessException,
+            InstantiationException,
+            InvocationTargetException,
+            BadSyntax {
+        final var result = resultsClose();
+        Assertions.assertTrue(test.test(result), message.apply(result));
     }
 
     /**

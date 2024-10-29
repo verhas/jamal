@@ -32,8 +32,9 @@ public class TestCommit {
         final var result = new String[]{"[0-9a-f]{40}", "Peter Verhas", "\\d+", "\\d+", "Rev: chicken was added", "Rev: chicken was added", "[0-9a-f]{7}", "Peter Verhas", "[0-9a-f]{40}", "[0-9a-f]{40}",};
         for (int i = 0; i < what.length; i++) {
             final int j = i;
-            TestThat.theInput("{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:commit branch=main last " + what[j] + "}")
-                    .results(s -> s.matches(result[j]));
+            final var theInput = "{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:commit branch=main last " + what[j] + "}";
+            TestThat.theInput(theInput)
+                    .results(s -> s.matches(result[j]), r-> String.format("For the %s expected: %s, got: %s", theInput,result[j], r));
         }
     }
 
