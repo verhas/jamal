@@ -259,7 +259,7 @@ public class TestThat implements AutoCloseable {
             InstantiationException,
             InvocationTargetException,
             BadSyntax {
-        final var result = Objects.nonNull(resultsClose());
+        final var result = resultsClose();
 
         if (dumpYaml) {
             var title = getTitle();
@@ -274,7 +274,7 @@ public class TestThat implements AutoCloseable {
         final String resultNl;
         if (ignoreLineEndingFlag) {
             expectedNl = expected.replaceAll("\r", "");
-            resultNl = result.replaceAll("\r", "");
+            resultNl = result == null ? null : result.replaceAll("\r", "");
         } else {
             expectedNl = expected;
             resultNl = result;
@@ -283,7 +283,7 @@ public class TestThat implements AutoCloseable {
         final String resultSPC;
         if (ignoreSpacesFlag) {
             expectedSPC = expectedNl.replaceAll("\\s", "");
-            resultSPC = resultNl.replaceAll("\\s", "");
+            resultSPC = resultNl == null ? null : resultNl.replaceAll("\\s", "");
         } else {
             expectedSPC = expectedNl;
             resultSPC = resultNl;
