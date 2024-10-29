@@ -11,7 +11,6 @@ import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.*;
 import org.asciidoctor.Asciidoctor;
 import org.asciidoctor.ast.Document;
-import org.asciidoctor.extension.JavaExtensionRegistry;
 import org.asciidoctor.extension.Preprocessor;
 import org.asciidoctor.extension.PreprocessorReader;
 import org.asciidoctor.extension.Reader;
@@ -24,13 +23,7 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -291,7 +284,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         }
         final var r = processJamal(processor, input);
         r.processor = processor;
-        if( opts.writableOutput ){
+        if (opts.writableOutput) {
             // we do not allow writableOutput when processing is internal
             r.position = new Position("", 0);
             r.exception = new BadSyntax("writableOutput can only be used when processing is external");
@@ -356,7 +349,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
             if (converter.canConvert(fileName)) {
                 final var convertedLines = converter.convert(lines);
                 log.info("not adding prelude and post lude, it is an asciidoc file");
-                if (opts.keepFrontMatter || convertedLines.size() == 0 || !convertedLines.get(0).equals("---")) {
+                if (opts.keepFrontMatter || convertedLines.isEmpty() || !convertedLines.get(0).equals("---")) {
                     log.info("Keeping the front matter, or no front matter");
                     reader.restoreLines(convertedLines);
                 } else {
@@ -404,9 +397,9 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
      * @return the list of the lines to be used by the asciidoctor processor
      */
     private List<String> postProcess(final List<String> lines, final Result r, final String inputFileName) {
-        if (r.errorMessage == null && r.log.length() == 0 && r.result != null) {
+        if (r.errorMessage == null && r.log.isEmpty() && r.result != null) {
             return List.of(r.result.split("\n"));
-        } else if (r.errorMessage == null && r.log.length() > 0) {
+        } else if (r.errorMessage == null && !r.log.isEmpty()) {
             List<String> newLines = new ArrayList<>();
             appendLog(r.log, newLines);
             newLines.addAll(List.of(r.result.split("\n")));
@@ -478,7 +471,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
     }
 
     private void appendLog(final String log, final List<String> newLines) {
-        if (log != null && log.length() != 0) {
+        if (log != null && !log.isEmpty()) {
             newLines.add("[NOTE]");
             newLines.add("--");
             Collections.addAll(newLines, Arrays.stream(log.split("\n")).map(s -> "* " + s).toArray(String[]::new));

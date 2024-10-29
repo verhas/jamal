@@ -259,7 +259,8 @@ public class TestThat implements AutoCloseable {
             InstantiationException,
             InvocationTargetException,
             BadSyntax {
-        final var result = resultsClose();
+        final var result = Objects.nonNull(resultsClose());
+
         if (dumpYaml) {
             var title = getTitle();
             if (title.isEmpty()) {
