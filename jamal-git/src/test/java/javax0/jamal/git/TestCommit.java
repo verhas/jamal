@@ -29,7 +29,7 @@ public class TestCommit {
     @DisplayName("Get the latest commit name")
     public void latestCommit() throws Exception {
         final var what = new String[]{"hash", "author", "date", "commitTime", "message", "shortMessage", "abbreviated", "committer", "parentIds", "treeId"};
-        final var result = new String[]{"[0-9a-f]{40}", "Peter Verhas", "\\d+", "\\d+", "Rev: chicken was added", "Rev: chicken was added", "[0-9a-f]{7}", "Peter Verhas", "[0-9a-f]{40}", "[0-9a-f]{40}",};
+        final var result = new String[]{"[0-9a-f]{40}", "Pinco Palino", "\\d+", "\\d+", "Rev: chicken was added", "Rev: chicken was added", "[0-9a-f]{7}", "Peter Muster", "[0-9a-f]{40}", "[0-9a-f]{40}",};
         for (int i = 0; i < what.length; i++) {
             final int j = i;
             final var theInput = "{@git location=\"" + repoDir.getAbsolutePath() + "\"}{@git:commit branch=main last " + what[j] + "}";

@@ -50,15 +50,17 @@ public class GitTestHelper {
         repository.create();
         git = new Git(repository);
 
+        final var author = new PersonIdent("Pinco Palino", "penne@piccolo.it");
+        final var comitter = new PersonIdent("Peter Muster", "kleiner@pensioner.ch");
         // Make an initial commit
         File testFile = new File(repoDir, "testFile.txt");
         Files.write(testFile.toPath(), "Initial content".getBytes());
         git.add().addFilepattern("testFile.txt").call();
-        git.commit().setMessage("Initial commit").call();
+        git.commit().setAuthor(author).setCommitter(comitter).setMessage("Initial commit").call();
         git.add().addFilepattern("chuckFile.txt").call();
-        git.commit().setMessage("Rev: chucken _\nwas added").call();
+        git.commit().setAuthor(author).setCommitter(comitter).setMessage("Rev: chucken _\nwas added").call();
         git.add().addFilepattern("chickFile.txt").call();
-        git.commit().setMessage("Rev: chicken was added").call();
+        git.commit().setAuthor(author).setCommitter(comitter).setMessage("Rev: chicken was added").call();
         final var currentBranch = git.getRepository().getBranch();
         git.branchCreate().setName("main").call();
         git.checkout().setName("main").call();
