@@ -22,5 +22,7 @@ public class Rot13 implements Macro {
         }
         return sb.toString();
     }
-
 }
+/*template jm__rot13
+{template |rot13|rot13|calculate rot13 encoding|}
+ */

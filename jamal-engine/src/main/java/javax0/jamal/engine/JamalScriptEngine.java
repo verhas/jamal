@@ -4,12 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.Input;
 
-import javax.script.AbstractScriptEngine;
-import javax.script.Bindings;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngineFactory;
-import javax.script.ScriptException;
-import javax.script.SimpleBindings;
+import javax.script.*;
 import java.io.BufferedReader;
 import java.io.Reader;
 import java.util.Objects;

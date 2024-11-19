@@ -1,12 +1,11 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Debugger;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.OptionsControlled;
-import javax0.jamal.api.Processor;
-import javax0.jamal.tools.*;
+import javax0.jamal.api.*;
+import javax0.jamal.tools.MinimumAffinityDebuggerSelector;
+import javax0.jamal.tools.ProxyDebugger;
+import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.ScannerTools;
 
 import java.util.List;
 
@@ -62,3 +61,8 @@ public class Debug implements Macro, OptionsControlled.Core, Scanner.Core {
         return "";
     }
 }
+/*template jm_debug
+{template |debug|debug $O$|Switch operation to debug mode|
+  {variable |O|"on off noDebug lenient using"}
+}
+ */

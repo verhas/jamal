@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}Collect.java hash=ebd410d6%}
+{%#snip:check file={%JAVA_DIR%}Collect.java hash=5da789b7%}
 Since 1.7.4 option `onceAs`
 
 This macro collects text snippets from files.

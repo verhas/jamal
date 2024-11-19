@@ -1,4 +1,3 @@
-{%@comment writableOutput%}
 {%@import ../version.jim%}
 {%@define asciidoc:output=live-templates/templates/Jamal.xml%}
 {%@sep 〔 〕%}
@@ -14,180 +13,34 @@ $variables
 〔@define variable($name,$default)=<variable name="$name" expression="〔@replace `///`$default///"///&quot;〕" alwaysStopAt="true" />〕\
 
 <templateSet group="Jamal">
+〔@comment
+The templates are usually at the end of the Java source code file, start with
+/*template template-name
+and end with the Java end comment after the last line of the template
+*/
 
+The templates should use '{' and '}' as macro open and close strings.
+These will be replaced to the one used here before they get evaluated.
 
-〔template |begin|begin $M$|mark the beginning of a named or anonymous block|
-  〔variable |M|"[marker]"〕
 〕
 
-〔template |block|#block [$O$] $C$|enclose the content into a block|
-  〔variable |O|"flat"〕
-  〔variable |C|"..."〕
-〕
+〔@snip:collect from="../jamal-core/src/main/java" start="/\\*template\\s+([a-zA-Z0-9_$]+)" stop="\\*/"〕
+〔@snip:collect from="../jamal-snippet/src/main/java" start="/\\*template\\s+([a-zA-Z0-9_$]+)" stop="\\*/"〕
+〔@snip:collect from="../jamal-xls/src/main/java" start="/\\*template\\s+([a-zA-Z0-9_$]+)" stop="\\*/"〕
 
-〔template |catch|catch $C$|catch an error|
-  〔variable |C|"..."〕
-〕
 
-〔template |comment|comment $C$|Comment out the content|
-  〔variable |C|"..."〕
-〕
+〔!#replace `/%/`〔@snip (poly) jm_.*〕/%/{/%/〔@escape`.`〔`.`〕/%/}/%/〔@escape`.`〕`.`〕〕
 
-〔template |debug|debug $O$|Switch operation to debug mode|
-  〔variable |O|"on off noDebug lenient using"〕
-〕
 
-〔template |defer|defer [$O$] $C|defer evaluation of content after the document was processed|
-  〔variable |O|"$input $output"〕
-  〔variable |C|"..."〕
-〕
 
-〔template |define|define [$O$]$M$($P$)=$V$|Define a Jamal user defined macro|
-  〔variable |O|"verbatim tail optional fail pure global export class"〕
-  〔variable |M|"MACRO_NAME"〕
-  〔variable |P|"$p1,$p2,..."〕
-  〔variable |V|"..."〕
-〕
 
-〔template |end|end $M$|mark the end of a named or anonymous block|
-  〔variable |M|"[marker]"〕
-〕
-
-〔template |env|env $P$ $C$|get the value of an environment variable|
-  〔variable |P|enum("?","!","")〕
-  〔variable |C|"..."〕
-〕
-
-〔template |escape|escape$S$ `$P$`$C$`$P$`|escape the evaluation of the content|
-  〔variable |S|enum("*","")〕
-  〔variable |P|"..."〕
-  〔variable |C|"..."〕
-〕
-
-〔template |eval|eval/$S$ $C$|evaluate the content as script|
-  〔variable |S|"script"〕
-  〔variable |C|"..."〕
-〕
-
-〔template |export|export $C$|export the macro one level up|
-  〔variable |C|"m1, m2, m3"〕
-〕
-
-〔template |for|for [$O$]($A$) in ($V$)=$C$|repeat the content with different values|
-  〔variable :O:"$forsep=, $forsubsep=| trim skipEmpty lenient evalist"〕
-  〔variable |A|"$a, $b, $c"〕
-  〔variable :V:"a1|a2|a3,b1|b2|b3,c1|c2|c3"〕
-  〔variable |C|"..."〕
-〕
-
-〔template |ident|ident $C$|return the content without evaluation|
-  〔variable |C|"..."〕
-〕
-
-〔template |if|if [$O$] /$C$/$T$/$E$|If statement|
-  〔variable |O|"not empty blank and or defined global local lessThan greaterThan equals"〕
-  〔variable |C|"CONDITION"〕
-  〔variable |T|"THEN"〕{%@define MACRO_NAME()=%}
-  〔variable |E|"ELSE"〕
-〕
-
-〔template |import|import [$O$] $F$|import definitions from the file|
-  〔variable |O|"top noCache"〕
-  〔variable |F|fileRelativePath()〕
-〕
-
-〔template |include|include [$O$] $F$|include a file|
-  〔variable |O|"top noCache verbatim lines=m..n"〕
-  〔variable |F|fileRelativePath()〕
-〕
-
-〔template |JShell|JShell $E$|define script for the JShell engine|
-  〔variable |E|"..."〕
-〕
-
-〔template |log|log [$O$] $C$|log a message|
-  〔variable |O|"log=info"〕
-  〔variable |C|"..."〕
-〕
-
-〔template |macro|macro [type=$T$ $O$] $C$|reference a macro with irregular name|
-  〔variable :T:enum("","userdefined","builtin")〕
-  〔variable :O:"alias="" global"〕
-  〔variable |C|"macro-name"〕
-〕
-
-〔template |options|options $C$|set or reset options|
-  〔variable |C|"o1  ~o2"〕
-〕
-
-〔template |require|require $R$ $V$|require a certain version of Jamal|
-  〔variable |R|enum("&lt;=","&lt;","=","&gt;=","&gt;")〕
-  〔variable |V|"〔VERSION〕"〕
-〕
-
-〔template |script|script$SL$ $E$|execute script|
-  〔variable |E|"..."〕
-  〔variable :SL:"/script_lang〕
-〕
-
-〔template |sep|sep $O$ $C$|define opening and closing string|
-  〔variable |O|"{!"〕
-  〔variable |C|"!}"〕
-〕
-
-〔template |try|try$M$$C$|define opening and closing string|
-  〔variable |M|enum("","!","?")〕
-  〔variable |C|"..."〕
-〕
-
-〔template |undefine|undefine $C$|undefine a macro|
-  〔variable |C|"macro_name"〕
-〕
-
-〔template |use|use  [$O$] $C$ $ALI$|use a class as macro|
-  〔variable |O|"global"〕
-  〔variable |ALI|"as alias"〕
-  〔variable |C|"com.package.name.MacroClass"〕
-〕
-
-〔template |base64|base64 ($O$) $C$|base64 encode the content|
-  〔variable |O|"quote compress url"〕
-  〔variable |C|"..."〕
-〕
-
-〔template |case|case:$TO$ $C$|undefine a macro|
-  〔variable |TO|enum("lower","upper","cap","decap")〕
-  〔variable |C|"..."〕
-〕
-
-〔template |clear|snip:clear|clear the snippets|
-〕
-
-〔template |collect|snip:collect $O$ from=$FROM$|collect snippets|
-  〔variable |O|"include=.* exclude=.* scanDepth=1 onceAs asciidoc ignoreErrors"〕
-  〔variable |FROM|fileRelativePath()〕
-〕
-
-〔template |counter|counter:define $O$ |define a counter|
-  〔variable |O|"id=... format=%02d start=1 step=1 IIII"〕
-〕
-
-〔template |date|date $F$ |current date and time formatted|
-  〔variable |F|"yyyy-MM-dd hh:mm:ss:SSS"〕
-〕
-
-〔template |download|download file=$F$ $URL$|download file from the net|
-  〔variable |F|fileRelativePath()〕
-  〔variable |URL|"https://"〕
-〕
-
-〔@define FORMAT=$name $absolutePath $parent $simpleName $canonicalPath $bareNaked $naked1 $naked2 $naked3 $naked4 $naked5 $extensions $extension1 $extension2 $extension3 $extension4 $extension5〕
 
 〔template |directory|directory ($O$) $F$|check the existence of directory and format|
   〔variable |O|"format=... root=..."〕
   〔variable |F|fileRelativePath()〕
 〕
 
+〔@define FORMAT=$name $absolutePath $parent $simpleName $canonicalPath $bareNaked $naked1 $naked2 $naked3 $naked4 $naked5 $extensions $extension1 $extension2 $extension3 $extension4 $extension5〕
 〔template |file|file ($O$) $F$|check the existence of file and format|
   〔variable |O|" root=... format=〔FORMAT〕"〕
   〔variable |F|fileRelativePath()〕
@@ -281,19 +134,6 @@ $variables
 
 〔template |reflow|reflow $O$|reflow the text|
   〔variable :O:"width=n"〕
-〕
-
-〔template |replace|replace ($O$) $S$$string$$S$src1$S$replace1$S$src2$S$replace2$S$|replace the text|
-  〔variable :O:"enum("regex","")〕
-  〔variable :S:enum("/","~","`...`")〕
-  〔variable :string:""〕
-  〔variable :src1:"search_1"〕
-  〔variable :replace1:"replace_1"〕
-  〔variable :src2:"search_x"〕
-  〔variable :replace2:"replace_x"〕
-〕
-
-〔template |rot13|rot13|calculate rot13 encoding|
 〕
 
 〔template |shell:var|shell:var (variables=&quot;&quot;&quot;\nv1_...\nv2=...\n...&quot;&quot;&quot;) $C$|handle shell variable syntax|

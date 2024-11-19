@@ -6,9 +6,7 @@ import javax0.jamal.tools.InputHandler;
 
 import java.util.Objects;
 
-import static javax0.jamal.tools.param.Escape.handleEscape;
-import static javax0.jamal.tools.param.Escape.handleNormalCharacter;
-import static javax0.jamal.tools.param.Escape.handleNormalMultiLineStringCharacter;
+import static javax0.jamal.tools.param.Escape.*;
 
 public class StringFetcher {
     public static final String MULTI_LINE_STRING_DELIMITER = "\"\"\"";

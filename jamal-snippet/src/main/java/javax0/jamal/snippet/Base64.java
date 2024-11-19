@@ -27,7 +27,16 @@ public class Base64 {
             return encoder.encodeToString(plainText);
         }
     }
-
+/*template jm_base64
+{template |base64|base64 ($O$) $C$|base64 encode the content|
+  {variable |O|"quote compress url"}
+  {variable |C|"..."}
+}
+{template |base64:encode|base64:encode ($O$) $C$|base64 encode the content|
+  {variable |O|"quote compress url"}
+  {variable |C|"..."}
+}
+ */
     @Name("base64:decode")
     public static class Decode implements Macro, Scanner {
 
@@ -47,6 +56,12 @@ public class Base64 {
         }
 
     }
+/*template jm_base64_decode
+{template |base64:decode|base64:decode ($O$) $C$|base64 decode the content|
+  {variable |O|"quote url"}
+  {variable |C|"..."}
+}
+ */
 
     private static byte[] getBytes(final Input in, final boolean quote, final boolean compress) throws BadSyntax {
         final String plainText;

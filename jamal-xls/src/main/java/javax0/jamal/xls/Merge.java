@@ -7,7 +7,6 @@ import javax0.jamal.api.Processor;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.ss.util.CellReference;
 
 import static javax0.jamal.xls.Set.Name;
 import static javax0.jamal.xls.Set.WholeInput;

@@ -4,14 +4,12 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.testsupport.TestAll;
-import javax0.jamal.testsupport.TestThat;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;

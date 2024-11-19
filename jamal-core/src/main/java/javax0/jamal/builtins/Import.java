@@ -189,3 +189,9 @@ public class Import implements Stackable, OptionsControlled.Core, Scanner.Core {
         importedAlready.remove(importedAlready.size() - 1);
     }
 }
+/*template jm_import
+{template |import|import [$O$] $F$|import definitions from the file|
+  {variable |O|"top noCache"}
+  {variable |F|fileRelativePath()}
+}
+ */

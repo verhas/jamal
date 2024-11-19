@@ -20,7 +20,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 
 import static javax0.jamal.java.Dependency.dependency;
-
 import static javax0.jamal.java.TextTags.filter;
 import static javax0.jamal.java.TextTags.module;
 import static javax0.jamal.java.Xml.path;

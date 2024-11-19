@@ -23,4 +23,8 @@ public class JShell implements Macro {
         return "";
     }
 }
-
+/*template jm_jshell
+{template |JShell|JShell $E$|define script for the JShell engine|
+  {variable |E|"..."}
+}
+ */

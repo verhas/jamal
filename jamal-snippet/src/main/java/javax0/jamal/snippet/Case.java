@@ -83,3 +83,9 @@ public class Case {
         }
     }
 }
+/*template jm_case
+{template |case|case:$TO$ $C$|change the case of a macro|
+        {variable |TO|enum("lower","upper","cap","decap")}
+        {variable |C|"..."}
+ }
+ */

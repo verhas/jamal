@@ -1,6 +1,4 @@
 import javax0.jamal.api.Macro;
-import javax0.jamal.java.JavaSourceMacro;
-import javax0.jamal.java.Jdsl;
 
 module jamal.java {
     exports javax0.jamal.java;

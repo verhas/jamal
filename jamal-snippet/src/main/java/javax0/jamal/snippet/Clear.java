@@ -16,3 +16,6 @@ public class Clear implements Macro {
         return "";
     }
 }
+/*template jm_clear
+{template |clear|snip:clear|clear the snippets|}
+ */

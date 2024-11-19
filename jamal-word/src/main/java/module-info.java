@@ -1,9 +1,3 @@
-import javax0.jamal.poi.word.MacroDocxInclude;
-import javax0.jamal.poi.word.MacroDocxPicture;
-import javax0.jamal.poi.word.MacroDocxProtect;
-import javax0.jamal.poi.word.MacroDocxText;
-import javax0.jamal.poi.word.MacroDocxTrackRevisions;
-
 module jamal.word {
     exports javax0.jamal.poi.word;
     requires jamal.api;

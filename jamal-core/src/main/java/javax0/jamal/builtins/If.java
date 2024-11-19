@@ -214,3 +214,11 @@ public class If implements Macro, OptionsControlled.Core, Scanner.Core {
     }
 
 }
+/*template jm_if
+{template |if|if [$O$] /$C$/$T$/$E$|If statement|
+  {variable |O|"not empty blank and or defined global local lessThan greaterThan equals"}
+  {variable |C|"CONDITION"}
+  {variable |T|"THEN"}
+  {variable |E|"ELSE"}
+}
+ */

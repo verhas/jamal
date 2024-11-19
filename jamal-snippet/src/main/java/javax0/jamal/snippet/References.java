@@ -1,15 +1,6 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Closer;
-import javax0.jamal.api.Evaluable;
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.ObjectHolder;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.Serializing;
-import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Scanner;
 
@@ -20,15 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 

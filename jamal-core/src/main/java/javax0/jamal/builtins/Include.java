@@ -1,23 +1,14 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.OptionsControlled;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
-import javax0.jamal.tools.InputHandler;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Marker;
 import javax0.jamal.tools.Range;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
 import javax0.jamal.tools.param.StringParameter;
 
-import static javax0.jamal.api.SpecialCharacters.IMPORT_CLOSE;
-import static javax0.jamal.api.SpecialCharacters.IMPORT_OPEN;
-import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG1;
-import static javax0.jamal.api.SpecialCharacters.IMPORT_SHEBANG2;
+import static javax0.jamal.api.SpecialCharacters.*;
 import static javax0.jamal.tools.FileTools.getInput;
 import static javax0.jamal.tools.Input.makeInput;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
@@ -37,7 +28,7 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
         try {
             return Integer.parseInt(limitString);
         } catch (NumberFormatException nfe) {
-            throw new RuntimeException(new BadSyntax("The environment variable " + EnvironmentVariables.JAMAL_INCLUDE_DEPTH_ENV + " should be an integer"));
+            throw BadSyntax.rt("The environment variable " + EnvironmentVariables.JAMAL_INCLUDE_DEPTH_ENV + " should be an integer");
         }
     }
 
@@ -130,3 +121,9 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
         return position;
     }
 }
+/*template jm_include
+{template |include|include [$O$] $F$|include a file|
+  {variable |O|"top noCache verbatim lines=m..n"}
+  {variable |F|fileRelativePath()}
+}
+ */

@@ -799,7 +799,7 @@ The format and the meaning of the option `lines` is exactly the same as the opti
 
 [[Base64]]
 === {%chapter%}`base64` encode and decode
-{%#snip:check file={%JAVA_DIR%}Base64.java hash=01b6f7bc%}
+{%#snip:check file={%JAVA_DIR%}Base64.java hash=67ed1a80%}
 
 There are two macros that can encode and decode the input using the Base64 algorithm.
 The encoding macro is called `base64`.
@@ -905,7 +905,7 @@ which will result in
 
 [[rot13]]
 === {%chapter%}`rot13`
-{%#snip:check file={%JAVA_DIR%}Rot13.java hash=2346fc70%}
+{%#snip:check file={%JAVA_DIR%}Rot13.java hash=52a5aab3%}
 
 This macro calculates the ROT13 transformation of the input.
 For example
@@ -1320,7 +1320,7 @@ When there is a match for a `skip`, any further `skip` is ignored until an `endS
 
 [[replace]]
 === {%chapter%}`replace`
-{%#snip:check file={%JAVA_DIR%}Replace.java hash=a41a3951%}
+{%#snip:check file={%JAVA_DIR%}Replace.java hash=bd67fe66%}
 The macro `replace` replaces strings with other strings in its input.
 {%standardInput%}
 
@@ -1411,7 +1411,7 @@ If this boolean parameter is `true`, the macro will error if it changes no line.
 
 [[counter_define]]
 === {%chapter%}`counter:define`
-{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=f645b1c0%}
+{%#snip:check file={%JAVA_DIR%}CounterMacro.java,src/main/java/javax0/jamal/snippet/Counter.java hash=109e2238%}
 This macro defines a counter.
 The counter can be used like a parameterless user-defined macro that returns the actual formatted value of the counter each time.
 The actual value of the counter is modified after each use.
@@ -2343,7 +2343,7 @@ For more examples and detailed explanation of the thin XML format, see the link:
 
 [[date]]
 === {%chapter%}`date`
-{%#snip:check file={%JAVA_DIR%}DateMacro.java hash=92b8d56d%}
+{%#snip:check file={%JAVA_DIR%}DateMacro.java hash=dff36da3%}
 This macro will return the current date formatted using Java `SimpleDateFormat`.
 The format string is the input of the macro.
 
@@ -2416,7 +2416,7 @@ hashCode(0x4d38e0bd5891048a)=0x15a9e437
 
 [[case]]
 === {%chapter%}`case:lower`, `case:upper`, ...
-{%#snip:check file={%JAVA_DIR%}Case.java hash=28aa6570%}
+{%#snip:check file={%JAVA_DIR%}Case.java hash=58ada7c4%}
 There are a few character-case changing macros implemented in the snippet package.
 These are:
 

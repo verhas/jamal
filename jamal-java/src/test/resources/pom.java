@@ -1,3 +1,5 @@
+import javax0.jamal.java.Extension;
+
 //{@import res:pom.jim}{@java:dsl}
 dependencyManagement().dependency("myGroup:myArtifact:1.0.0");
 parent("myGroup:myParent:1.0.0").relativePath("../myParent");

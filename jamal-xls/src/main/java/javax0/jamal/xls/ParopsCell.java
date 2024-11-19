@@ -50,6 +50,16 @@ class ParopsCell {
         // The indexing starts from 0.
         // end snippet
     }
+// these are not replaced from {} to 〔〕unfortunately, so here we have to use 〔 and 〕 directly
+/*template parops_cell
+        〔variable |WB|"..."〕
+        〔variable |SHEET|"..."〕
+        〔variable |ROW|0〕
+        〔variable |COL|0〕
+ */
+/*template parops_cell_list
+wb=$WB$ sheet=$SHEET$ row=$ROW$ col=$COL$
+*/
 
     public Workbook getWorkbook(Processor processor) throws BadSyntax {
         return WorkbookUtils.get(workbook.get(), processor, true);

@@ -4,7 +4,6 @@ import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 
 import java.io.Closeable;
-import java.io.IOException;
 
 public class Close implements Macro, Scanner, OptionsControlled {
     @Override

@@ -1,15 +1,7 @@
 package javax0.jamal.yaml;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.Xml.ATTR;
-import javax0.jamal.api.Xml.CDATA;
-import javax0.jamal.api.Xml.CDATATEXT;
-import javax0.jamal.api.Xml.TAG;
-import javax0.jamal.api.Xml.TEXT;
+import javax0.jamal.api.*;
+import javax0.jamal.api.Xml.*;
 import javax0.jamal.engine.StackLimiter;
 import javax0.jamal.tools.Scanner;
 

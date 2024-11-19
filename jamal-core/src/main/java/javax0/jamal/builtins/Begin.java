@@ -23,3 +23,8 @@ public class Begin implements Macro {
         return "";
     }
 }
+/*template jm_begin
+{template |begin|begin $M$|mark the beginning of a named or anonymous block|
+        {variable |M|"[marker]"}
+        }
+ */

@@ -21,6 +21,8 @@ public class Jamalizer {
 
     private static final String version = System.getProperty("jamal.version") == null ? Processor.jamalVersionString() : System.getProperty("jamal.version");
     private static final String DOWNLOAD_URL_TEMPLATE = "https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-asciidoc/%s/jamal-asciidoc-%s-jamal-asciidoc-distribution.zip";
+    private static final String LIVE_TEMPLATES_ZIP = "live-templates.zip";
+    private static final String DOWNLOAD_URL_LIVETEMPLATE = "https://github.com/verhas/jamal/raw/refs/tags/v%s/jamal-asciidoc/"+LIVE_TEMPLATES_ZIP;
 
     static void jamalize(String version) throws IOException, BadSyntax {
         if (version == null) {
@@ -33,6 +35,14 @@ public class Jamalizer {
                 false,
                 new javax0.jamal.engine.Processor())
         );
+        final var liveTemplates = FileTools.getFileBinaryContent(
+                String.format(DOWNLOAD_URL_LIVETEMPLATE, version),
+                false,
+                new javax0.jamal.engine.Processor());
+        final var path = Paths.get(ASCIIDOCTOR_DIR, LIB_DIR, LIVE_TEMPLATES_ZIP);
+        try (final var fos = new FileOutputStream(path.toFile())) {
+            fos.write(liveTemplates);
+        }
     }
 
     private static void warnAboutSnapshot(String version) {

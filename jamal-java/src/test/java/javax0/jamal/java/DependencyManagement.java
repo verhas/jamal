@@ -1,5 +1,5 @@
 package javax0.jamal.java;
-import static javax0.jamal.java.Xml.path;
+
 public class DependencyManagement extends Xml {
 
 

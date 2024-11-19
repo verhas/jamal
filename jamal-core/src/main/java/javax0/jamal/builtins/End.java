@@ -20,3 +20,8 @@ public class End implements Macro {
         return "";
     }
 }
+/*template jm_end
+{template |end|end $M$|mark the end of a named or anonymous block|
+  {variable |M|"[marker]"}
+}
+ */

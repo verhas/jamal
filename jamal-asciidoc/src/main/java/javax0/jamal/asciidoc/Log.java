@@ -7,8 +7,12 @@ import java.time.LocalDateTime;
 
 /**
  * A simple logger that writes to a file. It is used to log different events of the asciidoctor preprocessor into a file.
- * With that you can see when the preprocessor is called and what it does, when does it use already calculated values and
- * when it uses the last cached value.
+ * With that you can see when the preprocessor is called and what it does:
+ *
+ * <ul>
+ * <li>when does it use already calculated values and
+ * <li>when it uses the last cached value.
+ * </ul>
  */
 class Log {
     final String fileName;

@@ -1,9 +1,10 @@
 package javax0.jamal.git;
 
 import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.*;
-
-import java.io.File;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 public class TestTag {
 

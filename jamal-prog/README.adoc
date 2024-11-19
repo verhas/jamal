@@ -4,7 +4,7 @@
 The prog macro extends Jamal to execute a simple BASIC like programming language.
 
 Using this integration module, you can mix Jamal macro text with simple, imperative code snippets.
-To use this module, you have to add the dependency to your Maven project, as:
+To use this module, the dependency:
 
 
 [source,xml]
@@ -15,6 +15,8 @@ To use this module, you have to add the dependency to your Maven project, as:
     <version>2.8.2-SNAPSHOT</version>
 </dependency>
 ----
+
+is needed.
 
 The dependency is added to the different Jamal integrations.
 This module is available automatically when you use Jamal in Maven extension, JavaDoc, through JBang, or in the IntelliJ Asciidoctor plugin.

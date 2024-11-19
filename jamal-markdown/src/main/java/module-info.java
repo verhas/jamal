@@ -1,5 +1,4 @@
 import javax0.jamal.api.Macro;
-import javax0.jamal.markdown.Markdown;
 
 module jamal.markdown {
     exports javax0.jamal.markdown;

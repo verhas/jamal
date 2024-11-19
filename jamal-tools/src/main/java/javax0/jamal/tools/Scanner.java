@@ -6,10 +6,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.param.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -238,7 +235,7 @@ public interface Scanner {
                         }
                     })
                     .map(t -> Arrays.stream(t.keys())
-                            .filter(k -> k != null)
+                            .filter(Objects::nonNull)
                             .map(k -> "'" + k + "'")
                             .collect(Collectors.joining(" or "))
                     )

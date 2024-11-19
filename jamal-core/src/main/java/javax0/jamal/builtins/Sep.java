@@ -114,3 +114,9 @@ public class Sep implements Macro {
         processor.separators(null, null);
     }
 }
+/*template jm_sep
+{template |sep|sep $O$ $C$|define opening and closing string|
+  {variable |O|"[!"}
+  {variable |C|"!]"}
+}
+ */

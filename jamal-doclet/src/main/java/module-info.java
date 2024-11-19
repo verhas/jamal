@@ -1,6 +1,4 @@
 import javax0.jamal.api.Macro;
-import javax0.jamal.doclet.Code;
-import javax0.jamal.doclet.Link;
 
 module jamal.doclet {
     requires jdk.javadoc;

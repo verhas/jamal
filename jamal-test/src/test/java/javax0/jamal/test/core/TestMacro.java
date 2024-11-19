@@ -1,10 +1,6 @@
 package javax0.jamal.test.core;
 
-import javax0.jamal.api.Identified;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

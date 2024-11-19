@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}Clear.java hash=060e1237%}
+{%#snip:check file={%JAVA_DIR%}Clear.java hash=71b2d778%}
 This macro deletes all collected snippets from memory.
 
 Snippets are stored in a central structure, which is global for the whole processed file.

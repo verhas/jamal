@@ -139,3 +139,11 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
                 .get();
     }
 }
+/*template jm_define
+{template |define|define [$O$]$M$($P$)=$V$|Define a Jamal user defined macro|
+  {variable |O|"verbatim tail optional fail pure global export class"}
+  {variable |M|"MACRO_NAME"}
+  {variable |P|"$p1,$p2,..."}
+  {variable |V|"..."}
+}
+ */

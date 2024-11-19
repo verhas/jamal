@@ -1,19 +1,10 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.OptionsControlled;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Scanner;
 
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces2EOL;
+import static javax0.jamal.tools.InputHandler.*;
 
 public class Snippet implements Macro, OptionsControlled, Scanner {
     @Override

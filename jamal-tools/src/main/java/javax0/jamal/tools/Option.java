@@ -6,9 +6,7 @@ import javax0.jamal.api.Identified;
 import javax0.jamal.api.ObjectHolder;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.Deque;
-import java.util.List;
 
 /**
  * Options are stored as user defined macros. Note that the macro storage the processor manages allows anything

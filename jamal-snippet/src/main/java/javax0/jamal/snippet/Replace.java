@@ -1,10 +1,6 @@
 package javax0.jamal.snippet;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 
@@ -67,3 +63,15 @@ public class Replace implements Macro, InnerScopeDependent, Scanner {
         }
     }
 }
+/*template jm_replace
+{template |replace|replace ($O$ $DNC$) $S$$string$$S$$search_1$$S$$replace_1$$S$$search_x$$S$$replace_x$$S$|replace the text|
+  {variable |O|enum("regex","")}
+  {variable |DNC|enum("detectNoChange","")}
+  {variable |S|enum("/","~","`...`")}
+  {variable |string|""}
+  {variable |search_1|"search_1"}
+  {variable |replace_1|"replace_1"}
+  {variable |search_x|"search_x"}
+  {variable |replace_x|"replace_x"}
+}
+ */

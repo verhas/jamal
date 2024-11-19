@@ -5,7 +5,6 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.IntegerParameter;
 import org.apache.poi.util.Units;

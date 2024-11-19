@@ -1,10 +1,6 @@
 package javax0.jamal.testsupport;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 import javax0.jamal.engine.Processor;
 
 import java.io.File;

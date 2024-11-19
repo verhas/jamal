@@ -1,18 +1,11 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Closer;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.OptionsStore;
 
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.move;
-import static javax0.jamal.tools.InputHandler.moveWhiteSpaces;
-import static javax0.jamal.tools.InputHandler.skip;
+import static javax0.jamal.tools.InputHandler.*;
 
 /**
  * W A R N I N G!!!!
@@ -217,3 +210,10 @@ public class Escape implements Macro, Macro.Escape {
         }
     }
 }
+/*template jm_escape
+{template |escape|escape$S$ `$P$`$C$`$P$`|escape the evaluation of the content|
+  {variable |S|enum("*","")}
+  {variable |P|"..."}
+  {variable |C|"..."}
+}
+ */

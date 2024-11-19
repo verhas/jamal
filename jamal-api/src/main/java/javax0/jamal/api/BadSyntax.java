@@ -7,7 +7,7 @@ import java.util.List;
 import static java.util.stream.Collectors.joining;
 
 /**
- * This exception, as the name suggest, is thrown when the processor or a macro finds something it cannot interpret.
+ * This exception, as the name suggests, is thrown when the processor or a macro finds something it cannot interpret.
  * This exception is always captured inside Jamal and then rethrown as a {@link BadSyntaxAt} exception adding the line
  * reference information. This exception is used at code locations where it is not possible to identify the actual input
  * location where the erroneous syntax started. See also {@link BadSyntaxAt}.
@@ -32,16 +32,39 @@ public class BadSyntax extends Exception {
         }
     }
 
+    /**
+     * Create a runtime exception from a {@code BadSyntax} exception. This is used when the exception is thrown from a
+     * method that is not declared to throw {@code BadSyntax} exception, or in a place where the exception is not
+     * expected.
+     *
+     * @param message the message of the exception to the {@code BadSyntax} exception
+     * @return the runtime exception
+     */
     public static RuntimeException rt(final String message) {
         return new RuntimeException(new BadSyntax(message));
     }
 
+    /**
+     * Create a runtime exception from a {@code BadSyntax} exception. This is used when the exception is thrown from a
+     * method that is not declared to throw {@code BadSyntax} exception, or in a place where the exception is not
+     * expected. The cause of the exception is also provided.
+     *
+     * @param message the message of the exception to the {@code BadSyntax} exception
+     * @param cause   the cause of the exception
+     * @return the runtime exception
+     */
     public static RuntimeException rt(final String message, Throwable cause) {
         return new RuntimeException(new BadSyntax(message, cause));
     }
 
     final private List<String> parameters = new ArrayList<>();
 
+    /**
+     * Get the parameters of the exception. The parameters are the strings that are added to the exception to provide
+     * more information about the error.
+     *
+     * @return the list of parameters
+     */
     public List<String> getParameters() {
         return parameters;
     }
@@ -51,11 +74,25 @@ public class BadSyntax extends Exception {
         return this;
     }
 
+    /**
+     * Add a list of parameters to the exception. The parameters are the strings that are added to the exception to
+     * provide more information about the error.
+     *
+     * @param param the list of parameters to add
+     * @return the exception itself
+     */
     public BadSyntax parameters(List<String> param) {
         parameters.addAll(param);
         return this;
     }
 
+    /**
+     * Abbreviate the long parameter to a shorter one. If the parameter is longer than 60 characters then it is
+     * abbreviated to 60 characters and three dots are added to the end.
+     *
+     * @param longParam the long parameter to be shortened
+     * @return the shortened parameter
+     */
     private static String abbreviate(String longParam) {
         if (longParam.length() > 60) {
             return longParam.substring(0, 60) + "...";
@@ -63,10 +100,24 @@ public class BadSyntax extends Exception {
         return longParam;
     }
 
+    /**
+     * Get the message of the exception. If there are no parameters, then the message is the same as the message of the
+     * exception itself.
+     *
+     * @return the message of the exception
+     */
     public String getShortMessage() {
         return super.getMessage();
     }
 
+    /**
+     * Get the message of the exception. If there are parameters, then the message is the message of the exception
+     * followed by the parameters. The parameters are abbreviated to 60 characters.
+     * <p>
+     * The parameters are listed in separate lines following the message of the exception, each parameter in its own line.
+     *
+     * @return the message of the exception
+     */
     @Override
     public String getMessage() {
         if (parameters.isEmpty()) {
@@ -126,13 +177,32 @@ public class BadSyntax extends Exception {
         }
     }
 
+    /**
+     * This method throws a {@code BadSyntax} exception with the format and the parameters.
+     *
+     * @param format    is a message format
+     * @param parameters the parameter for the message format
+     * @return does NOT return. It is declared retirning the exception, so you can throw the result of the method to aid the Java compiler control flow analysis.
+     * @throws BadSyntax always
+     */
+    public static BadSyntax format(final String format, final Object... parameters) throws BadSyntax {
+        throw castrated(new BadSyntax(String.format(format, parameters)));
+    }
+
+    /**
+     * This method throws a {@code BadSyntax} exception with the format and the parameters. The provided exceptions is
+     * the cause of the exception.
+     *
+     * @param e the cause of the exception
+     * @param format is a message format
+     * @param parameters the parameter for the message format
+     * @return does NOT return. It is declared retirning the exception, so you can throw the result of the method to aid the Java compiler control flow analysis.
+     * @throws BadSyntax always
+     */
     public static BadSyntax format(final Exception e, final String format, final Object... parameters) throws BadSyntax {
         throw castrated(new BadSyntax(String.format(format, parameters), e));
     }
 
-    public static BadSyntax format(final String format, final Object... parameters) throws BadSyntax {
-        throw castrated(new BadSyntax(String.format(format, parameters)));
-    }
 
     /**
      * Remove the elements from the stack trace that are in this class. This all belongs to the exception throwing

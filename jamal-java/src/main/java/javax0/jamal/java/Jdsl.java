@@ -1,12 +1,7 @@
 package javax0.jamal.java;
 
 import com.javax0.sourcebuddy.Compiler;
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Closer;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.StringParameter;
 

@@ -1,0 +1,5 @@
+#! /bin/bash
+jamal -open="{%" -close="%}" Jamal.xml.jam live-templates/templates/Jamal.xml
+rm live-templates.zip
+cd live-templates
+zip -r ../live-templates.zip *

@@ -60,7 +60,7 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
         final var liner = scanner.pattern("liner").defaultValue("snipline\\s+([a-zA-Z0-9_$]+)");
         // can define a regular expression. The lines that match the regular expression will signal the start of a one-liner snippet.
         final var lineFilter = scanner.<Predicate<String>>param("lineFilter", "filter").defaultValue("filter=(.*)").asPattern();
-        // can define a regular expression. The pattern will be used against any 'snipline' lines, to find the regular expression that will be used to filter the content of the line
+        // can define a regular expression. The pattern will be used against any 'snipline' lines to find the regular expression that will be used to filter the content of the line
         final var stop = scanner.pattern("stop").defaultValue("end\\s+snippet");
         // can define a regular expression. The lines that match the regular expression will signal the end of a snippet.
         final var scanDepth = scanner.number("scanDepth").defaultValue(Integer.MAX_VALUE);
@@ -475,3 +475,23 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
         );
     }
 }
+/*template jm_collect
+{template |collect|snip:collect from=$FROM$ $INCLUDE$ $EXCLUDE$ $LINEFILTER$ $START$ $LINER$ $STOP$ $SCANDEPTH$ $ONCEAS$ $PREFIX$ $POSTFIX$ $JAVASNIPPETCOLLECTOR$ $JAVA$ $ASCIIDOC$ $IGNOREERRORS$|collect snippets|
+
+        {variable |INCLUDE|"include=.*"}
+        {variable |EXCLUDE|"exclude=.*"}
+        {variable |LINEFILTER|"lineFilter=.*"}
+        {variable |START|"start=.*"}
+        {variable |LINER|"liner=.*"}
+        {variable |STOP|"stop=.*"}
+        {variable |SCANDEPTH|"scanDepth=1"}
+        {variable |FROM|fileRelativePath()}
+        {variable |ONCEAS|"onceAs=..."}
+        {variable |PREFIX|"prefix=..."}
+        {variable |POSTFIX|"postfix=..."}
+        {variable |JAVASNIPPETCOLLECTOR|"javaSnippetCollectors=..."}
+        {variable |JAVA|"java"}
+        {variable |ASCIIDOC|"asciidoc"}
+        {variable |IGNOREERRORS|"ignoreErrors"}
+}
+*/

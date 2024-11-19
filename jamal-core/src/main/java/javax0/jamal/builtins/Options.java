@@ -34,3 +34,9 @@ public class Options implements Macro, Scanner.Core {
         return "";
     }
 }
+/*template jm_options
+{template |options|options [$R$] $C$|set, reset, push or pop options|
+  {variable |R|enum("push","pop","set")}
+  {variable |C|"o1  ~o2"}
+}
+ */

@@ -1,12 +1,9 @@
 package javax0.jamal.sql;
 
 import javax0.jamal.DocumentConverter;
-import javax0.jamal.api.BadSyntax;
 import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.sql.DriverManager;
 
 public class TestSelect {

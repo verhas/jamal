@@ -9,11 +9,7 @@ import static javax0.jamal.java.Dependency.dependency;
 import static javax0.jamal.java.DistributionType.repo;
 import static javax0.jamal.java.Exclusion.exclusion;
 import static javax0.jamal.java.License.MIT;
-import static javax0.jamal.java.TextTags.directory;
-import static javax0.jamal.java.TextTags.filter;
-import static javax0.jamal.java.TextTags.filtering;
-import static javax0.jamal.java.TextTags.finalName;
-import static javax0.jamal.java.TextTags.targetPath;
+import static javax0.jamal.java.TextTags.*;
 import static javax0.jamal.java.Xml.path;
 
 public class MyPom extends Pom {

@@ -1,22 +1,12 @@
 package javax0.jamal.maven.load;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.EnvironmentVariables;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.engine.NullMacro;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Option;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.StringParameter;
-import javax0.maventools.download.ArtifactType;
-import javax0.maventools.download.Downloader;
-import javax0.maventools.download.MavenCoordinates;
-import javax0.maventools.download.Pom;
-import javax0.maventools.download.Repo;
+import javax0.maventools.download.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,13 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 

@@ -1,20 +1,8 @@
 import javax0.jamal.api.Macro;
-import javax0.jamal.snippet.*;
 import javax0.jamal.snippet.Java.ClassMacro;
 import javax0.jamal.snippet.Java.FieldMacro;
 import javax0.jamal.snippet.Java.MethodMacro;
-import javax0.jamal.snippet.StringMacros.Chop;
-import javax0.jamal.snippet.StringMacros.Contains;
-import javax0.jamal.snippet.StringMacros.EndsWith;
-import javax0.jamal.snippet.StringMacros.Equals;
-import javax0.jamal.snippet.StringMacros.Length;
-import javax0.jamal.snippet.StringMacros.Quote;
-import javax0.jamal.snippet.StringMacros.Reverse;
-import javax0.jamal.snippet.StringMacros.StartsWith;
-import javax0.jamal.snippet.StringMacros.Substring;
-import javax0.jamal.snippet.StringMacros.StringMacro;
-import javax0.jamal.snippet.StringMacros.Between;
-import javax0.jamal.snippet.StringMacros.After;
+import javax0.jamal.snippet.StringMacros.*;
 
 module jamal.snippet {
     exports javax0.jamal.snippet;

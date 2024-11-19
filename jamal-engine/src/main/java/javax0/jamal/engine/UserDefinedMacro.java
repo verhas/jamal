@@ -1,11 +1,6 @@
 package javax0.jamal.engine;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Configurable;
-import javax0.jamal.api.Counted;
-import javax0.jamal.api.Debuggable;
-import javax0.jamal.api.Identified;
+import javax0.jamal.api.*;
 import javax0.jamal.engine.macro.ParameterSegment;
 import javax0.jamal.engine.macro.Segment;
 import javax0.jamal.engine.macro.TextSegment;
@@ -17,13 +12,7 @@ import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tools.Scanner;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.

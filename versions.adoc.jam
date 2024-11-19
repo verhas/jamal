@@ -64,7 +64,7 @@ When upgrading the newer version, check that the dependency on
 
 of the OOXML package is higher than 1.25.0
 
-Version 1.25.0 has two vulnerabilities CVE-2024-26308 and CVE-2024-25710.
+Version 1.25.0 has two vulnerabilities, CVE-2024-26308 and CVE-2024-25710.
 The OOXML library version 5.2.5 depends on the vulnerable version.
 The version 〔COMMONS_COMPRESS_VERSION〕 of the compress library is explicitly added to the `jamal-xls` module as a dependency.
 It may not be needed when the poi-ooxml library also updates its dependency.

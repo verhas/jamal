@@ -18,7 +18,7 @@ public class TextConverter {
             type = outputFileName.substring(innerExt + 1);
         }
         final var sourcedLines = new ArrayList<String>();
-        if (type.length() > 0) {
+        if (!type.isEmpty()) {
             sourcedLines.add("[source," + type + "]");
         } else {
             sourcedLines.add("[source]");
@@ -30,7 +30,7 @@ public class TextConverter {
         sourcedLines.add("----");
         for (final var line : original) {
             final var trimmed = line.trim();
-            if (trimmed.length() == 0) {
+            if (trimmed.isEmpty()) {
                 // add an invisible space so that empty lines at the start and at the end will be displayed
                 sourcedLines.add("\u200B");
             } else if (trimmed.equals("----")) {

@@ -30,3 +30,8 @@ public class Export implements Macro {
         return "";
     }
 }
+/*template jm_export
+{template |export|export $C$|export the macro one level up|
+  {variable |C|"m1, m2, m3"}
+}
+ */

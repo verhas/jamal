@@ -5,9 +5,7 @@ import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.tools.OptionsStore;
 import javax0.jamal.tools.ScriptingTools;
 
-import static javax0.jamal.tools.ScriptingTools.getEngine;
-import static javax0.jamal.tools.ScriptingTools.populate;
-import static javax0.jamal.tools.ScriptingTools.resultToString;
+import static javax0.jamal.tools.ScriptingTools.*;
 
 /**
  * Stores the information about a user defined macro and can also evaluate it using actual parameter string values.

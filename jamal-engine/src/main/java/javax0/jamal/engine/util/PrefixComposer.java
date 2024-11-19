@@ -5,9 +5,7 @@ import javax0.jamal.tools.InputHandler;
 
 import static javax0.jamal.api.SpecialCharacters.IDENT;
 import static javax0.jamal.api.SpecialCharacters.POST_VALUATE;
-import static javax0.jamal.tools.InputHandler.firstCharIs;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.*;
 
 /**
  * Compose a macro prefix object reading the input. The macro prefix is the string between the macro open string and the

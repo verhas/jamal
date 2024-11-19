@@ -135,3 +135,10 @@ public class Macro implements javax0.jamal.api.Macro, OptionsControlled.Core, Sc
         return name;
     }
 }
+/*template jm_macro
+{template |macro|macro [type=$T$ $O$] $C$|reference a macro with irregular name|
+  {variable :T:enum("","userdefined","builtin")}
+  {variable :O:"alias="" global"}
+  {variable |C|"macro-name"}
+}
+ */

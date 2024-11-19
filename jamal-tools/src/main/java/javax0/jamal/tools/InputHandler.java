@@ -1,11 +1,7 @@
 package javax0.jamal.tools;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
 import javax0.jamal.api.Input;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.SpecialCharacters;
+import javax0.jamal.api.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

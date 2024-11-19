@@ -13,3 +13,8 @@ public class Comment implements Macro {
         return "";
     }
 }
+/*template jm_comment
+{template |comment|comment $C$|Comment out the content|
+  {variable |C|"..."}
+}
+ */

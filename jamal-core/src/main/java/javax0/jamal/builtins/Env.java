@@ -58,3 +58,9 @@ public class Env implements Macro, Scanner.Core {
         }
     }
 }
+/*template jm_env
+{template |env|env $P$ $C$|get the value of an environment variable|
+  {variable |P|enum("?","!","")}
+  {variable |C|"..."}
+}
+ */

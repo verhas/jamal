@@ -36,14 +36,14 @@ class ProcessingCache {
     /**
      * This method checks if the file in the cache is stale or not.
      * <p>
-     * To decide it checks the provided md5 value against the md5 value of the file content stored in the cache,
+     * To decide, it checks the provided md5 value against the md5 value of the file content stored in the cache,
      * The main file assumed unchanged if these values are the same.
      * <p>
      * After that the method reads all the files this file depends on, calculates their md5 values and compares each
-     * with the one stored. If there is a difference in any of them of if any of the files are not readable then the
+     * with the one stored. If there is a difference in any of them, or if any of the files are not readable, then the
      * cache is stale.
      * <p>
-     * If all the md5 values match the cache item can be used.
+     * If all the md5 values match, the cache item can be used.
      *
      * @param md5 the md5 value of the file content as it is now, to be compared with the old one
      * @return {@code true} if all the comparisons show that the file and the dependent files did not change.

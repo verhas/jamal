@@ -5,10 +5,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 
-import static javax0.jamal.tools.InputHandler.convertGlobal;
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.isGlobalMacro;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.*;
 
 public class Undefine implements Macro {
 
@@ -26,3 +23,8 @@ public class Undefine implements Macro {
         return "";
     }
 }
+/*template jm_undefine
+{template |undefine|undefine $C$|undefine a macro|
+  {variable |C|"macro_name"}
+}
+ */

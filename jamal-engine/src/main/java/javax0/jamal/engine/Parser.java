@@ -13,10 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static javax0.jamal.api.SpecialCharacters.IDENT;
-import static javax0.jamal.api.SpecialCharacters.NO_PRE_EVALUATE;
-import static javax0.jamal.api.SpecialCharacters.POST_VALUATE;
-import static javax0.jamal.api.SpecialCharacters.PRE_EVALUATE;
+import static javax0.jamal.api.SpecialCharacters.*;
 
 /**
  * Parse the input string and create an AST (Abstract Syntax Tree) from it.

@@ -1,20 +1,12 @@
 package javax0.jamal.yaml;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Processor;
-import javax0.jamal.tools.Params;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.StringParameter;
 import ognl.Ognl;
 import ognl.OgnlException;
 
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
-import static javax0.jamal.tools.InputHandler.startsWith;
+import static javax0.jamal.tools.InputHandler.*;
 
 
 public class Set implements Macro, InnerScopeDependent, Scanner {

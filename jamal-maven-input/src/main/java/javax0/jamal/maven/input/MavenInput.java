@@ -3,11 +3,7 @@ package javax0.jamal.maven.input;
 import javax0.jamal.api.EnvironmentVariables;
 import javax0.jamal.api.ResourceReader;
 import javax0.jamal.tools.FileTools;
-import javax0.maventools.download.ArtifactType;
-import javax0.maventools.download.Downloader;
-import javax0.maventools.download.MavenCoordinates;
-import javax0.maventools.download.Pom;
-import javax0.maventools.download.Repo;
+import javax0.maventools.download.*;
 
 import java.io.File;
 import java.io.IOException;

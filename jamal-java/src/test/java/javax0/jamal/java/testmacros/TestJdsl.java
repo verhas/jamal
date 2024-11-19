@@ -1,8 +1,6 @@
 package javax0.jamal.java.testmacros;
 
-import javax0.jamal.java.Xml;
 import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 

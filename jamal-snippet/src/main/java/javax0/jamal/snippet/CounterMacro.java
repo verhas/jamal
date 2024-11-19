@@ -11,6 +11,7 @@ import java.util.stream.IntStream;
 
 import static javax0.jamal.tools.InputHandler.*;
 
+@Macro.Name("counter:define")
 public class CounterMacro implements Macro, InnerScopeDependent, Scanner.FirstLine {
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
@@ -83,8 +84,14 @@ public class CounterMacro implements Macro, InnerScopeDependent, Scanner.FirstLi
         return Arrays.stream(start.get().split("\\.")).mapToInt(Integer::parseInt).toArray();
     }
 
-    @Override
-    public String getId() {
-        return "counter:define";
-    }
 }
+/*template jm_counter
+{template |counter|counter:define id=$ID$ $FORMAT$ $START$ $STEP$ $IIII$ $HIERARCHICAL$ |define a counter|
+        {variable |ID|"..."}
+        {variable |FORMAT|format=%02d"}
+        {variable |START|start=1"}
+        {variable |STEP|step=1"}
+        {variable |IIII|"IIII"}
+        {variable |HIERARCHICAL|"hierarchical"}
+}
+ */

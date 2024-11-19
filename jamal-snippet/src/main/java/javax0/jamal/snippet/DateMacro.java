@@ -18,3 +18,8 @@ public class DateMacro implements Macro {
         return formatter.format(new Date());
     }
 }
+/*template jm_date
+{template |date|date $F$ |current date and time formatted|
+  {variable |F|"yyyy-MM-dd hh:mm:ss:SSS"}
+}
+ */

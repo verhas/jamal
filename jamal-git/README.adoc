@@ -187,6 +187,9 @@ The list can be used as the value list for the `for` macro.
 In the very special case when some of the elements contain a comma, then you can use this parameter.
 
 
+NOTE: There is a separate section detailing how to use the parop `footnote`.
+See below!
+
 There are certain restrictions on the commit parameters.
 You can use some parameters together, while some others are exclusive:
 
@@ -213,7 +216,7 @@ result in:
 .output
 [source]
 ----
-The latest commit to Jamal is: "time zone parop was documented"
+The latest commit to Jamal is: "further fix for the windows failing test"
 ----
 
 
@@ -256,15 +259,13 @@ Using this command, you can create a list of changes between two releases.
 You can add lines to the commit messages starting with a key, like `Change-Note`.
 When you use the parop `footnote=change-note` specifying the name of the key the value will be the text following the key in the commit message.
 
-In the following example we print the footnote `my-special` and also the full commit message for a special commit of the Jamal git repository:
+In the following example we print the footnote `my-special` and also the full commit message for a specific commit of the Jamal git repository:
 
 .Jamal source
 [source]
 ----
-footnote: {@git:commit ref=178bb91bdc88c4c133c8429c46107483397fbc81
-footnote=my-special}\
-message: {@git:commit ref=178bb91bdc88c4c133c8429c46107483397fbc81
-message}
+message: {@git:commit ref=178bb91 message}
+footnote: {@git:commit ref=178bb91 footnote=my-special}
 ----
 
 will result in:
@@ -272,15 +273,17 @@ will result in:
 .output
 [source]
 ----
-footnote: sample footnote message message for documentation
 message: My-Special: sample footnote message message for documentation
 Rev: git macro module
+
+footnote: sample footnote message message for documentation
 ----
 
 
 You can add multiline footnotes to the commit messages.
 When the first line or any continuation line ends with an underscore (`_`) character the next line will be appended to the footnote.
-Footnote lines end with a new line character, even if the commit message is not terminated with one.
+The underscore character and any spaces before are removed from the output.
+Footnote lines always end with a new line character, even if the commit message is not terminated with one.
 
 === `git:format`
 
@@ -310,5 +313,5 @@ will result in:
 [source]
 ----
 1730127733
-2024-10-28 16:02:13 +0100
+2024-10-28 15:02:13 +0000
 ----

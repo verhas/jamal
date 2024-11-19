@@ -1,21 +1,12 @@
 package javax0.jamal.engine.util;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.BadSyntaxAt;
-import javax0.jamal.api.Evaluable;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.SpecialCharacters;
+import javax0.jamal.api.*;
 import javax0.jamal.engine.Processor;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.skip;
-import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
+import static javax0.jamal.tools.InputHandler.*;
 
 public class MacroQualifier {
     public final Input input;

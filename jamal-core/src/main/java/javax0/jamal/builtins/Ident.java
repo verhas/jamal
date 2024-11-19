@@ -13,3 +13,8 @@ public class Ident implements Macro {
         return input.toString();
     }
 }
+/*template jm_ident
+{template |ident|ident $C$|return the content without evaluation|
+  {variable |C|"..."}
+}
+ */

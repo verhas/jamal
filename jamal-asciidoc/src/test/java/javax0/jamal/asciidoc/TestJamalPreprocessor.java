@@ -2,11 +2,7 @@ package javax0.jamal.asciidoc;
 
 import org.asciidoctor.ast.Document;
 import org.asciidoctor.extension.PreprocessorReader;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 

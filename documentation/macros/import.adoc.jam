@@ -2,7 +2,7 @@
 {%@import macrodoc.jim%}
 {%MACRO name="import" since={%RELEASE:ZURICH%}%}
 
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=a7551102%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Import.java hash=a0f57c21%}
 
 == Syntax
 

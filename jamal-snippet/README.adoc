@@ -355,7 +355,7 @@ can define a regular expression. The lines that match the regular expression wil
 * `liner`
 can define a regular expression. The lines that match the regular expression will signal the start of a one-liner snippet.
 * `lineFilter`
-can define a regular expression. The pattern will be used against any 'snipline' lines, to find the regular expression that will be used to filter the content of the line
+can define a regular expression. The pattern will be used against any 'snipline' lines to find the regular expression that will be used to filter the content of the line
 * `stop`
 can define a regular expression. The lines that match the regular expression will signal the end of a snippet.
 * `scanDepth`
@@ -3476,12 +3476,12 @@ will result
 - DevRoot.java: 2,280 bytes
 - Sort.java: 8,606 bytes
 - Decorate.java: 12,250 bytes
-- Case.java: 2,269 bytes
+- Case.java: 2,439 bytes
 - NumberLines.java: 2,853 bytes
 - RangeMacro.java: 1,191 bytes
 - Untab.java: 2,389 bytes
 - Plural.java: 2,277 bytes
-- DateMacro.java: 556 bytes
+- DateMacro.java: 681 bytes
 - Format.java: 930 bytes
 - tools: 192 bytes
 - ModifiersBuilder.java: 1,740 bytes
@@ -3492,9 +3492,9 @@ will result
 - Update.java: 979 bytes
 - Eval.java: 2,009 bytes
 - SnipTransform.java: 17,071 bytes
-- Base64.java: 3,162 bytes
+- Base64.java: 3,606 bytes
 - FilesMacro.java: 11,636 bytes
-- Collect.java: 23,894 bytes
+- Collect.java: 24,771 bytes
 - SnipFile.java: 680 bytes
 - CounterFormatter.java: 4,599 bytes
 - Repeat.java: 1,120 bytes
@@ -3505,7 +3505,7 @@ will result
 - Decorator.java: 9,094 bytes
 - Memoize.java: 8,760 bytes
 - LineCount.java: 552 bytes
-- Replace.java: 3,212 bytes
+- Replace.java: 3,644 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 775 bytes
 - SemVerCollator.java: 9,016 bytes
@@ -3523,19 +3523,19 @@ will result
 - JavaSourceTemplate.java: 7,443 bytes
 - AbstractXmlDefine.java: 1,484 bytes
 - Dictionary.java: 1,527 bytes
-- Clear.java: 399 bytes
+- Clear.java: 471 bytes
 - KillLines.java: 1,711 bytes
 - SnipLoad.java: 3,482 bytes
-- Rot13.java: 855 bytes
+- Rot13.java: 928 bytes
 - SnippetStore.java: 11,428 bytes
-- Download.java: 2,122 bytes
+- Download.java: 2,286 bytes
 - ListDir.java: 5,423 bytes
 - XmlFormat.java: 3,927 bytes
 - SnippetXmlReader.java: 6,515 bytes
 - XmlInsert.java: 6,162 bytes
 - SnipProperties.java: 1,485 bytes
 - Xml.java: 539 bytes
-- CounterMacro.java: 3,885 bytes
+- CounterMacro.java: 4,186 bytes
 - Variation.java: 6,518 bytes
 - SnipList.java: 1,228 bytes
 - ShellVar.java: 5,290 bytes
@@ -3816,7 +3816,7 @@ will result in the output
 .output
 [source]
 ----
-2024-10-29 11:46:59
+2024-11-04 15:52:18
 ----
 
 
@@ -5366,7 +5366,7 @@ The URL is given after the option.
 ====
 . There is a similar functionality macro in the `jamal-io` module.
 That macro is called `io:copy`.
-This macro cannot append to a file, will not create the directory if it does not exist and you cannot control the use of cache.
+This macro cannot append to a file, will not create the directory if it does not exist, you cannot control the use of cache.
 This macro will not use the Jamal download cache.
 
 . Technically, the URL can specify any file name that you could `include`.

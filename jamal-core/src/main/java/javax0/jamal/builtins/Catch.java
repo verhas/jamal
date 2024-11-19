@@ -27,3 +27,8 @@ public class Catch implements Macro {
         return "catch";
     }
 }
+/*template jm_catch
+{template |catch|catch $C$|catch an error|
+  {variable |C|"..."}
+}
+ */

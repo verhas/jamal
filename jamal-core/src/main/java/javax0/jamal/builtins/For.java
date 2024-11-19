@@ -1,13 +1,7 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.InnerScopeDependent;
-import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
-import javax0.jamal.api.ObjectHolder;
-import javax0.jamal.api.OptionsControlled;
-import javax0.jamal.api.Position;
-import javax0.jamal.api.Processor;
+import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 
 import java.util.HashMap;
@@ -15,7 +9,6 @@ import java.util.HashMap;
 import static java.lang.String.format;
 import static javax0.jamal.builtins.ForState.*;
 import static javax0.jamal.tools.InputHandler.fetchId;
-import static javax0.jamal.tools.InputHandler.skip;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 /**
@@ -81,6 +74,12 @@ public class For implements Macro, InnerScopeDependent, OptionsControlled.Core, 
         return output.toString();
 
     }
-
-
 }
+/*template jm_for
+{template |for|for [$O$]($A$) in ($V$)=$C$|repeat the content with different values|
+  {variable :O:"$forsep=, $forsubsep=| trim skipEmpty lenient evalist"}
+  {variable |A|"$a, $b, $c"}
+  {variable :V:"a1|a2|a3,b1|b2|b3,c1|c2|c3"}
+  {variable |C|"..."}
+}
+ */

@@ -211,3 +211,10 @@ public class Use implements Macro {
     }
 
 }
+/*template jm_use
+{template |use|use  [$O$] $C$ $ALI$|use a class as macro|
+  {variable |O|"global"}
+  {variable |ALI|"as alias"}
+  {variable |C|"com.package.name.MacroClass"}
+}
+ */

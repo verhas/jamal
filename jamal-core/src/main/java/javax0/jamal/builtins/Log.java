@@ -25,3 +25,9 @@ public class Log implements Macro, Scanner.Core {
         return "";
     }
 }
+/*template jm_log
+{template |log|log [$O$] $C$|log a message|
+  {variable |O|"log=info"}
+  {variable |C|"..."}
+}
+ */

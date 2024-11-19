@@ -1,7 +1,3 @@
-import javax0.jamal.asciidoc.Converter;
-import javax0.jamal.asciidoc.converters.AsciiDocConverter;
-import javax0.jamal.asciidoc.converters.MarkdownConverter;
-import javax0.jamal.asciidoc.converters.XmlConverter;
 import org.asciidoctor.jruby.extension.spi.ExtensionRegistry;
 
 module jamal.asciidoc {

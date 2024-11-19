@@ -2,7 +2,6 @@ package javax0.jamal.snippet;
 
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;

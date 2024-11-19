@@ -4,19 +4,13 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
 import javax0.jamal.api.Ref;
 import javax0.jamal.engine.StackLimiter;
-import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.BooleanParameter;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
+import java.util.*;
 
 /**
  * A resolver object can resolve the Jamal Yaml macro references in a Yaml structure.

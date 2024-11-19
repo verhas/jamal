@@ -1,6 +1,6 @@
 {%@import macrodoc.jim%}
 {%MACRO name="log" since=1.12.3%}
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Log.java hash=949b6eee%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Log.java hash=ea0dbc20%}
 
 This macro results sends the input to the log output.
 The macro has one parop, `level` that may specify the logging level.

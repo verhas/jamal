@@ -9,7 +9,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 == Jamal version check
 
-* `OK`  `LAST_RELEASE` `2.8.0` 
+* `OK`  `LAST_RELEASE` `2.8.1` 
 
 == Dependencies
 
@@ -21,13 +21,13 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 We do not upgrade to beta versions.
 
 
-* `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.10.0` 
+* `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.10.1` 
 
-* `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.2.5` 
+* `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.2.7` 
 
 * `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.7.1` 
 
-* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `3.13.1` `*[red]#upgrade to 4.0.0-beta-4#*`
+* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `3.9.9` `*[red]#upgrade to 4.0.0-beta-5#*`
 +
 We do not upgrade to beta versions.
 
@@ -41,7 +41,7 @@ We do not upgrade to beta versions.
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.7.0` 
 
-* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.5.0` 
+* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.5.1` 
 
 * `*[red]#NO#*`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.3.1` `*[red]#upgrade to 4.0.0-beta-1#*`
 +
@@ -49,11 +49,11 @@ We do not upgrade to beta versions.
 
 * `OK`  `APPASSEMBLER_PLUGIN_VERSION` `2.1.0` 
 
-* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.8.0` 
+* `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.8.1` 
 
-* `OK`  `JUPITER_VERSION` `5.11.0` 
+* `OK`  `JUPITER_VERSION` `5.11.3` 
 
-* `OK`  `MOCKITO_VERSION` `5.13.0` 
+* `OK`  `MOCKITO_VERSION` `5.14.2` 
 
 * `OK`  `JRUBY_VERSION` `9.4.8.0` 
 
@@ -80,7 +80,7 @@ When upgrading the newer version, check that the dependency on
 
 of the OOXML package is higher than 1.25.0
 
-Version 1.25.0 has two vulnerabilities CVE-2024-26308 and CVE-2024-25710.
+Version 1.25.0 has two vulnerabilities, CVE-2024-26308 and CVE-2024-25710.
 The OOXML library version 5.2.5 depends on the vulnerable version.
 The version 1.26.2 of the compress library is explicitly added to the `jamal-xls` module as a dependency.
 It may not be needed when the poi-ooxml library also updates its dependency.
@@ -106,15 +106,15 @@ Version 2.5.2 changed the name of the module.
 If we change the name of the module some tests that depend on prior versions of Jamal do not work.
 To upgrade we have to remove the dependency from the snippet module and move the dependent macros to a different module.
 
-* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `3.9.8` `*[red]#upgrade to 4.0.0-beta-4#*`
+* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `3.9.8` `*[red]#upgrade to 4.0.0-beta-5#*`
 +
 We do not upgrade to beta versions.
 
 * `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.2.0` 
 
-* `OK`  `ASM_VERSION` `9.7` 
+* `OK`  `ASM_VERSION` `9.7.1` 
 
-* `OK`  `ASM_TREE_VERSION` `9.7` 
+* `OK`  `ASM_TREE_VERSION` `9.7.1` 
 
 * `OK`  `MARKDOWN_TO_ASCIIDOC` `2.0.1` 
 

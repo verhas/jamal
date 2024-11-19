@@ -1,7 +1,7 @@
 {%@import macrodoc.jim%}
 {%MACRO name="macro" since={%RELEASE:ZOLLIKOFEN%}%}
 
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=13147f2b%}
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/Macro.java hash=dccdcd3d%}
 
 Using this built-in macro, you can __use__ user-defined macros which have arbitrary names.
 These macros may be created by other macros other than using the built-in macro `define`.

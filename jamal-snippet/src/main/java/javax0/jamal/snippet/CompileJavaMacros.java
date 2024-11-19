@@ -2,12 +2,7 @@ package javax0.jamal.snippet;
 
 import com.javax0.sourcebuddy.Compiler;
 import com.javax0.sourcebuddy.Fluent;
-import javax0.jamal.api.BadSyntax;
-import javax0.jamal.api.Input;
-import javax0.jamal.api.Macro;
-import javax0.jamal.api.ObjectHolder;
-import javax0.jamal.api.Processor;
-import javax0.jamal.api.UserDefinedMacro;
+import javax0.jamal.api.*;
 import javax0.jamal.snippet.tools.MethodTool;
 import javax0.jamal.snippet.tools.ReflectionTools;
 import javax0.jamal.tools.FileTools;
@@ -21,12 +16,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 

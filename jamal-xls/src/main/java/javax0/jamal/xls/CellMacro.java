@@ -7,11 +7,7 @@ import javax0.jamal.api.Macro.Name;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
-import javax0.jamal.tools.ScannerTools;
 import javax0.jamal.tools.param.EnumerationParameter;
-import javax0.jamal.tools.param.IntegerParameter;
-import javax0.jamal.tools.param.StringParameter;
-import javax0.jamal.xls.utils.WorkSheetUtils;
 import javax0.jamal.xls.utils.WorkbookUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -28,7 +24,7 @@ public class CellMacro implements Macro, Scanner {
         // snippet cell_as_enum
         value,
         // specify you want the value of the cell.
-        // This is the default if you do not specity any of these options.
+        // It is the default if you do not specity any of these options.
         // The value is usually the same as the content.
         // The difference is in the case of formulas.
         // For formulas the value is the calculated value, the content is the formula itself.
@@ -266,3 +262,11 @@ public class CellMacro implements Macro, Scanner {
         }
     }
 }
+/*template jm_celldef
+{template |xls:cell|xls:cell ({@snip parops_cell_list} $AS$ $STYLE$) $C$|get the value of a cell|
+   {@snip parops_cell}
+   {variable |AS|enum("value", "content", "type", "format", "comment", "commentAuthor", "style", "hasComment", "isString", "isNumeric", "isBoolean", "isFormula", "isBlank", "isError", "isNull")}
+   {variable |STYLE|enum("toString", "align", "border", "fill", "dataFormat", "hidden", "locked", "rotation", "shrinkToFit", "verticalAlignment", "wrapText")}
+   {variable |C|"..."}
+}
+*/

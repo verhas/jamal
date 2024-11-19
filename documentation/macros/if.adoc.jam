@@ -2,7 +2,7 @@
 {%MACRO name="if" since={%RELEASE:ZURICH%}%}
 
 
-{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=5dfc882d
+{%@snip:check file=../../jamal-core/src/main/java/javax0/jamal/builtins/If.java hash=023dd11d
 %}
 {%@snip:collect from=../../jamal-core/src/main/java%}\
 

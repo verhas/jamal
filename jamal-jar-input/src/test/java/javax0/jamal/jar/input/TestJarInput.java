@@ -5,8 +5,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
-
 public class TestJarInput {
 
     @DisplayName("JarInput says it can read something that starts with 'jar:file:'")

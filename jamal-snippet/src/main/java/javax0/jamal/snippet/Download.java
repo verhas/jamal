@@ -7,7 +7,6 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Scanner;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -37,6 +36,12 @@ public class Download implements Macro, Scanner {
     }
 
 }
+/*template jm_download
+{template |download|download (file=$F$) $URL$|download file from the net|
+  {variable |F|fileRelativePath()}
+  {variable |URL|"https://"}
+}
+ */
 /* snippet Download
 
 This macro downloads a resource from a URL and saves it to a file.
@@ -56,7 +61,7 @@ The URL is given after the option.
 ====
 . There is a similar functionality macro in the `jamal-io` module.
 That macro is called `io:copy`.
-This macro cannot append to a file, will not create the directory if it does not exist and you cannot control the use of cache.
+This macro cannot append to a file, will not create the directory if it does not exist, you cannot control the use of cache.
 This macro will not use the Jamal download cache.
 
 . Technically, the URL can specify any file name that you could `include`.

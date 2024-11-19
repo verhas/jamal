@@ -277,6 +277,9 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
         // snipline spec_env2 filter="(.*?)"
         System.setProperty("asciidocfx.asciidoctor.plugin", "1");
         try {
+            // set to fail fast, because it is important to finish sooner than to discover all the errors like in a batch,
+            // also additional errors may be a distraction. As soon as the first error is fixed, the next error will be
+            // displayed.
             OptionsStore.getInstance(processor).addOptions(Processor.FAIL_FAST);
             // snipline asciidoctorj_version filter="(.*?)"
             processor.defineGlobal(processor.newUserDefinedMacro("asciidoctorj:version", getAsciidoctorJVersion()));

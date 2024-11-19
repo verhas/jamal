@@ -1,7 +1,5 @@
 package javax0.jamal.api;
 
-import java.util.Arrays;
-
 /**
  * This exception, as the name suggest, is thrown when the processor or a macro finds something it cannot interpret. The
  * 'At' at the end of the name suggest that the exception contains a {@link Position} object that tells exactly which
