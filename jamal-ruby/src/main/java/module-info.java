@@ -1,4 +1,5 @@
 import javax0.jamal.api.Macro;
+import javax0.jamal.ruby.*;
 
 module jamal.ruby {
     exports javax0.jamal.ruby;

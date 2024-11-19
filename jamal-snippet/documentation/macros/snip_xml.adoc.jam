@@ -1,5 +1,6 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}SnipXml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=c48d0f2a%}
+{%#snip:check file={%JAVA_DIR%}SnipXml.java,{%JAVA_DIR%}AbstractXmlDefine.java hash=5df9435a
+%}
 This macro loads an XML file and assigns it to a "user-defined" macro.
 The syntax of the command is
 

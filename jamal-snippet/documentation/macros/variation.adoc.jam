@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}Variation.java hash=bfb0c8fd %}
+{%#snip:check file={%JAVA_DIR%}Variation.java hash=56045c4a%}
 This macro helps to keep variations of repeated texts in the document consistent.
 
 Repeated texts are text fragments that appear in the document at multiple places repeated exactly as they are or with minimal variations.

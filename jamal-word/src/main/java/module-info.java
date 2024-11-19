@@ -1,3 +1,5 @@
+import javax0.jamal.poi.word.*;
+
 module jamal.word {
     exports javax0.jamal.poi.word;
     requires jamal.api;

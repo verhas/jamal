@@ -1,5 +1,6 @@
 import javax0.jamal.api.Macro;
 import javax0.jamal.assertions.NumericAsserts.*;
+import javax0.jamal.assertions.*;
 
 module jamal.assertions {
     exports javax0.jamal.assertions;

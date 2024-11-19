@@ -3,6 +3,7 @@ import javax0.jamal.xls.CellConvert.ToCell;
 import javax0.jamal.xls.CellConvert.ToCol;
 import javax0.jamal.xls.CellConvert.ToRow;
 import javax0.jamal.xls.CellConvert.ToSheet;
+import javax0.jamal.xls.*;
 
 module jamal.xls {
     exports javax0.jamal.xls;

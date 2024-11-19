@@ -1,4 +1,6 @@
 import org.asciidoctor.jruby.extension.spi.ExtensionRegistry;
+import javax0.jamal.asciidoc.*;
+import javax0.jamal.asciidoc.converters.*;
 
 module jamal.asciidoc {
     exports javax0.jamal.asciidoc;

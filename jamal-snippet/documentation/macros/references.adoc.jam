@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}References.java hash=3793404e%}
+{%#snip:check file={%JAVA_DIR%}References.java hash=e054db63%}
 From time to time, there may be a need to have a reference to a part of the text that is defined later.
 Macros, by their nature, cannot be used before they are defined.
 You cannot reference a section or chapter number before the section or chapter is defined.

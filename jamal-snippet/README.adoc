@@ -3469,87 +3469,87 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 2,528 bytes
-- JavaMatcherBuilderMacros.java: 20,378 bytes
+- JavaMatcherBuilderMacros.java: 19,216 bytes
 - Snip.java: 4,597 bytes
 - ReplaceUtil.java: 1,033 bytes
 - SnipSave.java: 4,691 bytes
 - DevRoot.java: 2,280 bytes
 - Sort.java: 8,606 bytes
-- Decorate.java: 12,250 bytes
+- Decorate.java: 12,215 bytes
 - Case.java: 2,439 bytes
-- NumberLines.java: 2,853 bytes
-- RangeMacro.java: 1,191 bytes
-- Untab.java: 2,389 bytes
-- Plural.java: 2,277 bytes
+- NumberLines.java: 2,669 bytes
+- RangeMacro.java: 1,007 bytes
+- Untab.java: 2,205 bytes
+- Plural.java: 2,136 bytes
 - DateMacro.java: 681 bytes
 - Format.java: 930 bytes
 - tools: 192 bytes
 - ModifiersBuilder.java: 1,740 bytes
-- ReflectionTools.java: 26,140 bytes
+- ReflectionTools.java: 25,562 bytes
 - Pluralizer.java: 1,561 bytes
 - MethodTool.java: 7,761 bytes
 - Def.java: 952 bytes
-- Update.java: 979 bytes
-- Eval.java: 2,009 bytes
-- SnipTransform.java: 17,071 bytes
+- Update.java: 829 bytes
+- Eval.java: 1,827 bytes
+- SnipTransform.java: 16,939 bytes
 - Base64.java: 3,606 bytes
-- FilesMacro.java: 11,636 bytes
+- FilesMacro.java: 11,400 bytes
 - Collect.java: 24,771 bytes
 - SnipFile.java: 680 bytes
 - CounterFormatter.java: 4,599 bytes
 - Repeat.java: 1,120 bytes
 - HashCode.java: 462 bytes
-- TrimLines.java: 5,345 bytes
-- JavaSourceInsert.java: 8,984 bytes
+- TrimLines.java: 5,161 bytes
+- JavaSourceInsert.java: 8,813 bytes
 - ThinXml.java: 8,792 bytes
 - Decorator.java: 9,094 bytes
 - Memoize.java: 8,760 bytes
 - LineCount.java: 552 bytes
-- Replace.java: 3,644 bytes
+- Replace.java: 3,494 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 775 bytes
 - SemVerCollator.java: 9,016 bytes
 - CounterHierarchical.java: 6,611 bytes
 - SnipXml.java: 537 bytes
-- ThinXmlMacro.java: 603 bytes
+- ThinXmlMacro.java: 453 bytes
 - BlockConverter.java: 1,912 bytes
 - UrlEncode.java: 855 bytes
 - Reference.java: 1,373 bytes
 - Numbers.java: 1,785 bytes
 - Unicode.java: 2,114 bytes
 - Counter.java: 2,166 bytes
-- CompileJavaMacros.java: 23,483 bytes
-- StringMacros.java: 15,620 bytes
+- CompileJavaMacros.java: 23,173 bytes
+- StringMacros.java: 15,470 bytes
 - JavaSourceTemplate.java: 7,443 bytes
-- AbstractXmlDefine.java: 1,484 bytes
-- Dictionary.java: 1,527 bytes
+- AbstractXmlDefine.java: 1,032 bytes
+- Dictionary.java: 1,632 bytes
 - Clear.java: 471 bytes
-- KillLines.java: 1,711 bytes
-- SnipLoad.java: 3,482 bytes
+- KillLines.java: 1,527 bytes
+- SnipLoad.java: 3,298 bytes
 - Rot13.java: 928 bytes
-- SnippetStore.java: 11,428 bytes
-- Download.java: 2,286 bytes
-- ListDir.java: 5,423 bytes
-- XmlFormat.java: 3,927 bytes
+- SnippetStore.java: 11,145 bytes
+- Download.java: 2,265 bytes
+- ListDir.java: 5,236 bytes
+- XmlFormat.java: 3,745 bytes
 - SnippetXmlReader.java: 6,515 bytes
-- XmlInsert.java: 6,162 bytes
-- SnipProperties.java: 1,485 bytes
+- XmlInsert.java: 5,954 bytes
+- SnipProperties.java: 1,346 bytes
 - Xml.java: 539 bytes
 - CounterMacro.java: 4,186 bytes
-- Variation.java: 6,518 bytes
-- SnipList.java: 1,228 bytes
+- Variation.java: 6,370 bytes
+- SnipList.java: 1,078 bytes
 - ShellVar.java: 5,290 bytes
 - Locate.java: 5,824 bytes
-- XmlDocument.java: 6,076 bytes
-- References.java: 9,702 bytes
-- Java.java: 11,623 bytes
-- ReplaceLines.java: 3,479 bytes
-- SkipLines.java: 2,801 bytes
+- XmlDocument.java: 5,928 bytes
+- References.java: 9,142 bytes
+- Java.java: 11,364 bytes
+- ReplaceLines.java: 3,258 bytes
+- SkipLines.java: 2,617 bytes
 - SnipCheck.java: 7,556 bytes
 - IdempotencyFailed.java: 1,816 bytes
-- Reflow.java: 2,094 bytes
+- Reflow.java: 1,910 bytes
 - Pos.java: 5,016 bytes
-- Snippet.java: 1,988 bytes
+- Snippet.java: 1,559 bytes
 ----
 
 
@@ -3816,7 +3816,7 @@ will result in the output
 .output
 [source]
 ----
-2024-11-04 15:52:18
+2024-11-19 15:01:30
 ----
 
 

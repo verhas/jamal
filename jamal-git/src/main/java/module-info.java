@@ -1,4 +1,5 @@
 import javax0.jamal.api.Macro;
+import javax0.jamal.git.*;
 
 module jamal.git {
     requires jamal.api;

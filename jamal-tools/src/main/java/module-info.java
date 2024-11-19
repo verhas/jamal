@@ -1,5 +1,8 @@
 import javax0.jamal.api.Debugger;
 import javax0.jamal.api.ResourceReader;
+import javax0.jamal.tools.HttpsInput;
+import javax0.jamal.tools.ResourceInput;
+import javax0.jamal.tools.NullDebugger;
 
 module jamal.tools {
     uses ResourceReader;

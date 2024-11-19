@@ -1,4 +1,5 @@
 import javax0.jamal.api.Macro;
+import javax0.jamal.mock.Mock;
 
 module jamal.mock {
     exports javax0.jamal.mock;

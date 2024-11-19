@@ -1,4 +1,6 @@
 import javax0.jamal.api.ResourceReader;
+import javax0.jamal.jar.input.JarInput;
+
 
 module jamal.jar.input {
     requires jamal.api;

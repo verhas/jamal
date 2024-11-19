@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}Plural.java hash=f74afe22%}
+{%#snip:check file={%JAVA_DIR%}Plural.java hash=84ca1c39%}
 This macro helps to get the plural form of an English word.
 
 Having the plural form of a word is usually not a problem.

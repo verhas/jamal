@@ -3,6 +3,7 @@ import javax0.jamal.snippet.Java.ClassMacro;
 import javax0.jamal.snippet.Java.FieldMacro;
 import javax0.jamal.snippet.Java.MethodMacro;
 import javax0.jamal.snippet.StringMacros.*;
+import javax0.jamal.snippet.*;
 
 module jamal.snippet {
     exports javax0.jamal.snippet;
