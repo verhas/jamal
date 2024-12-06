@@ -7,7 +7,7 @@ since version `1.12.3`
 
 
 The macro `debug` can be used to start the debugger from the Jamal source code.
-It is an extra way to start the debugger in case setting an environment variable or system variable would be too difficult.
+It is an extra way to start the debugger in case setting an environment variable or system variable would be too challenging.
 
 The macro has the following syntax:
 
@@ -49,5 +49,6 @@ It is possible to use this option as a parameter to the macro, however, in this 
 * `lenient` is an option that can be used via the `options` macro.
 When this option is on, the fact that a global and external debugger is defined will not result in an error.
 
-
-
+NOTE: The macro does not work inside the interactive embeddings like IntelliJ or AsciidocFx.
+Starting up the debugger may cause several different issues in an environment like that.
+Insread the macro in those environments returns a constant string that gets into the document, so you can see while editing.

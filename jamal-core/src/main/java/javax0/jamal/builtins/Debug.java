@@ -26,6 +26,9 @@ public class Debug implements Macro, OptionsControlled.Core, Scanner.Core {
         final var selector = scanner.str(null, "using", "debugger", "selector");
         scanner.done();
 
+        if (System.getProperty("intellij.asciidoctor.plugin") != null || System.getProperty("asciidocfx.asciidoctor.plugin") != null) {
+            return "DEBUG IS NOT SUPPORTED IN THE INTELLIJ PLUGIN";
+        }
         ScannerTools.badSyntax(this).whenBooleans(on,off).multipleAreTrue();
 
         final var proxyOpt = processor.getDebugger().filter(p -> p instanceof ProxyDebugger);
