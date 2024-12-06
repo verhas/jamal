@@ -36,7 +36,7 @@
     }
 
     {dependencies#
-        {#for MODULE in ({modules:DEFAULT_JAMAL_MODULES},word)=
+        {#for MODULE in ({modules:DEFAULT_JAMAL_MODULES},word,{modules:DEBUG})=
             {dependency|{GROUPID}|jamal-MODULE}}
         {dependency :{GROUPID}:jamal-testsupport}
         {#for MODULE in (api,engine)=

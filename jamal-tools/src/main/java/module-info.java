@@ -2,7 +2,6 @@ import javax0.jamal.api.Debugger;
 import javax0.jamal.api.ResourceReader;
 import javax0.jamal.tools.HttpsInput;
 import javax0.jamal.tools.ResourceInput;
-import javax0.jamal.tools.NullDebugger;
 
 module jamal.tools {
     uses ResourceReader;
@@ -11,6 +10,5 @@ module jamal.tools {
     exports javax0.jamal.tools.param;
     requires java.scripting;
     requires levenshtein;
-    provides Debugger with NullDebugger;
     provides ResourceReader with ResourceInput, HttpsInput;
 }

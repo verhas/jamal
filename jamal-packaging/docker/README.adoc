@@ -43,6 +43,6 @@ The final step is to display how to push the container to Docker Hub.
 
 To execute Jamal from the container, you should execut ethe command
 
-   docker run --rm -v $(pwd):/workspace verhas/jamal:2.6.1-SNAPSHOT jamal_command_line_arguments
+   docker run --rm -v $(pwd):/workspace verhas/jamal:2.8.2-SNAPSHOT jamal_command_line_arguments
 
 to work on files that are in the current working directory.

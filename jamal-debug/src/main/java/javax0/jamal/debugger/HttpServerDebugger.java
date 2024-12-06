@@ -15,6 +15,12 @@ import java.util.concurrent.*;
 
 import static java.net.HttpURLConnection.*;
 
+/**
+ * Implementation of the {@link Debugger} interface using an HTTP server to interact with
+ * a debugging client. This debugger allows controlling the execution of a Jamal processor
+ * via HTTP requests, enabling features like stepping through macros, viewing internal
+ * states, and setting breakpoints.
+ */
 public class HttpServerDebugger implements Debugger, AutoCloseable {
     private static final String MIME_PLAIN = "text/plain";
     public static final String MIME_APPLICATION_JSON = "application/json";
@@ -25,6 +31,10 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         GET, POST
     }
 
+    /**
+     * Enum representing the available debugger commands, their corresponding URL endpoints,
+     * and the HTTP method required to invoke them.
+     */
     private enum Command {
         ALL("all", Method.GET),
         VERSION("version", Method.GET),
@@ -53,7 +63,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     /**
-     * The thread that manages an HTTP request utilizes this queue to dispatch a task to the Jamal main thread.
+     * The thread that manages an HTTP request uses this queue to dispatch a task to the Jamal main thread.
      * <p>
      * Given that this server is not designed for heavy-duty use, the queue size is limited to one.
      * There is no need to increase this capacity, as the server is intended to handle only one client, with each
@@ -96,8 +106,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         }
 
         /**
-         * After the debugger was done it may wait for acknowledgement. For example asking the debugger to quit or run
-         * may result the main Jamal thread to finish before the http server thread services the client sending the
+         * After the debugger was done, it may wait for acknowledgement. For example, asking the debugger to quit or run
+         * may result in the main Jamal thread to finish before the http server thread services the client sending the
          * response. In that case the client would not get the response. To avoid that these commands call this {@code
          * #waitForAck()} method that will wait until the other thread invokes {@link #acknowledge()}. That is called by
          * the HTTP server when the content was sent to the client and the channel was closed.
@@ -113,7 +123,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         /**
          * The web service thread will call this method to wait for the debugger thread to call {@link #done()}. The
          * method {@link #done()} is invoked when the debugger has finished the processing, put all the result into the
-         * task and the http server can serve the client with this information.
+         * task, and the http server can serve the client with this information.
          *
          * @throws InterruptedException if the thread was interrupted
          */
@@ -209,7 +219,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     private void handle() {
         if (state == RunState.RUN && handleState.equals("BEFORE")) {
             for (final var breakpoint : breakpoints) {
-                if (breakpoint != null && breakpoint.length() > 0 && macros.contains(breakpoint)) {
+                if (breakpoint != null && !breakpoint.isEmpty() && macros.contains(breakpoint)) {
                     state = RunState.STEP_IN;
                     break;
                 }
@@ -454,6 +464,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     }
 
     private HttpServer server;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Properties mimeTypes = new Properties();
 
     @Override
@@ -483,7 +494,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         createContext(server, Command.STEP_OUT);
         createContext(server, Command.QUIT);
         server.createContext("/client", e -> {
-                    if (client == null || client.length() == 0) {
+                    if (client == null || client.isEmpty()) {
                         respond(e, HTTP_OK, MIME_PLAIN, e.getRemoteAddress().getHostString());
                     } else {
                         respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "404");
@@ -491,18 +502,19 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 }
         );
         createStaticContext(server);
-        server.setExecutor(Executors.newSingleThreadExecutor());
+        server.setExecutor(executor);
         server.start();
     }
 
     @Override
     public void close() {
         server.stop(1);
+        executor.shutdownNow();
     }
 
     private void createStaticContext(HttpServer server) {
         server.createContext("/", (e) -> {
-            if (client != null && client.length() > 0 && !Objects.equals(e.getRemoteAddress().getHostString(), client)) {
+            if (client != null && !client.isEmpty() && !Objects.equals(e.getRemoteAddress().getHostString(), client)) {
                 respond(e, HTTP_UNAUTHORIZED, MIME_PLAIN, "");
                 return;
             }
@@ -511,7 +523,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 return;
             }
             var file = e.getRequestURI().toString().substring(1);
-            if (file.length() == 0) {
+            if (file.isEmpty()) {
                 file = "index.html";
             }
             final var extensionStart = file.lastIndexOf('.');
@@ -550,7 +562,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                 respond(e, HTTP_NOT_FOUND, MIME_PLAIN, "");
                 return;
             }
-            if (client != null && client.length() > 0 && !Objects.equals(e.getRemoteAddress().getHostString(), client)) {
+            if (client != null && !client.isEmpty() && !Objects.equals(e.getRemoteAddress().getHostString(), client)) {
                 respond(e, HTTP_UNAUTHORIZED, MIME_PLAIN, "");
                 return;
             }

@@ -7,7 +7,7 @@ Usage: jamal [options] input output
   -close=<macroClose>        the macro closing string
   -T7                        use {% and %} as macro opening and closing
   -depth=<depth>             directory traversal depth, default is infinite
-  -debug=<debug>             type:port, usually http:8080
+  -debug=<debug>             type:port, http:8080 by default when the value is skipped
   -include=<include>         file name regex pattern to include into the processing
   -exclude=<exclude>         file name regex pattern to exclude from the processing
   -source=<sourceDirectory>  source directory to start the processing

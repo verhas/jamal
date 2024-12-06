@@ -4,6 +4,9 @@ import javax0.jamal.api.Debugger;
 
 /**
  * A sample implementation of the {@link Debugger} interface that does nothing.
+ * <p>
+ * Note that this implementation is used when there is no other debugger configured, and it is NOT provided as a
+ * service via the service loader mechanism. If you do so it will throw an exception during the service loading.
  */
 public class NullDebugger implements Debugger {
     @Override
@@ -28,7 +31,7 @@ public class NullDebugger implements Debugger {
 
     @Override
     public int affinity(String s) {
-        return Integer.MAX_VALUE-1;
+        throw new RuntimeException("This debugger must not be included in the META-INF list or as a service.");
     }
 
     @Override

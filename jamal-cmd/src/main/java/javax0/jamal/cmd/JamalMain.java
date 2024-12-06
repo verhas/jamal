@@ -81,7 +81,7 @@ public class JamalMain {
                     "  -close=<macroClose>        the macro closing string\n" +
                     "  -T7                        use {% and %} as macro opening and closing\n" +
                     "  -depth=<depth>             directory traversal depth, default is infinite\n" +
-                    "  -debug=<debug>             type:port, usually http:8080\n" +
+                    "  -debug=<debug>             type:port, http:8080 by default when the value is skipped\n" +
                     "  -include=<include>         file name regex pattern to include into the processing\n" +
                     "  -exclude=<exclude>         file name regex pattern to exclude from the processing\n" +
                     "  -source=<sourceDirectory>  source directory to start the processing\n" +
@@ -98,7 +98,12 @@ public class JamalMain {
             return;
         }
         if (params.get("debug").isPresent()) {
-            EnvironmentVariables.setenv(EnvironmentVariables.JAMAL_DEBUG_ENV, params.get("debug").get());
+            final var value = params.get("debug").get();
+            if( "true".equals(value) || value.isEmpty() ){
+                EnvironmentVariables.setenv(EnvironmentVariables.JAMAL_DEBUG_ENV, "http:8080");
+            } else {
+                EnvironmentVariables.setenv(EnvironmentVariables.JAMAL_DEBUG_ENV, value);
+            }
         }
         if (Arrays.stream("include,exclude,source,target,from,to,depth".split(",")).map(params::get).anyMatch(Optional::isPresent)) {
             final var sourceDirectory = params.get("source").orElse(".");

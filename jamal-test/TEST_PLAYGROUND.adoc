@@ -21,9 +21,8 @@ User macro '{%biroka ...' is not defined. at /Users/verhasp/github/jamal/jamal-t
 	javax0.jamal.engine.Processor(evalMacro:417)
 	javax0.jamal.engine.Processor(processMacro:327)
 	javax0.jamal.engine.Processor(process:202)
-	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:455)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:292)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:212)
-	javax0.jamal.asciidoc258.Asciidoctor2XXCompatibilityProxy(process:63)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:451)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:288)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:205)
 sed -i.bak  '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam
 ----

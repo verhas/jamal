@@ -133,6 +133,7 @@ download "org.slf4j" "slf4j-api" "1.7.36"
 download "com.javax0.jamal" "jamal-maven-input" "2.8.2-SNAPSHOT"
 download "com.javax0.jamal" "jamal-jar-input" "2.8.2-SNAPSHOT"
 download "com.javax0.jamal" "jamal-word" "2.8.2-SNAPSHOT"
+download "com.javax0.jamal" "jamal-debug" "2.8.2-SNAPSHOT"
 download "com.javax0.jamal" "jamal-testsupport" "2.8.2-SNAPSHOT"
 
 

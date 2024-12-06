@@ -22,7 +22,7 @@ public class JsonConverter {
      * <p>
      * When you are developing a library, you should consider the same costs. However, there is a multiplication factor
      * when you think of the library version change and security screening and follow-up in this case. This part of the
-     * cost, which uses an external library heavier, should be multiplied by the number of installation users will
+     * cost, which uses an external library heavily, should be multiplied by the number of installation users will
      * utilize your library. It means that you should consider using an external library
      * <li>if you intend to use a lot of features (the development is not 30min),
      * <li>you expect the library to be highly stable, rarely changing, not even for security reasons,

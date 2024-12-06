@@ -37,11 +37,9 @@ public class DebuggerFactory {
      */
     public static Debugger build(Processor processor) {
         final var s = EnvironmentVariables.getenv(EnvironmentVariables.JAMAL_DEBUG_ENV).orElse("");
-        if (s.length() == 0) {
+        if (s.isEmpty()) {
             return new ProxyDebugger();
         }
-        int min = Integer.MAX_VALUE;
-        boolean unique = true;
         Debugger selected = MinimumAffinityDebuggerSelector.select(Debugger.getInstances(), s);
         try {
             if (processor.getDebuggerStub().isPresent()) {

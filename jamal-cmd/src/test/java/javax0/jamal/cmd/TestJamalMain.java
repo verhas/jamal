@@ -72,6 +72,7 @@ public class TestJamalMain {
                 () -> Assertions.assertTrue(Files.exists(Paths.get("target/test-classes/test3")))
         );
     }
+
     @Test
     @DisplayName("Command line converts a single docx file")
     public void testConvertSingleDocFile() {
@@ -80,4 +81,13 @@ public class TestJamalMain {
                 () -> Assertions.assertTrue(Files.exists(Paths.get("target/test-classes/test1.docx")))
         );
     }
+
+    @DisplayName("AdHoc test to support debugging")
+    public void testAdHocTest() {
+        final var out = jamal("-debug=", "../jamal-test/TEST_PLAYGROUND.md.jam", "../jamal-test/TEST_PLAYGROUND.markdown").replaceAll("\\\\", "/");
+        Assertions.assertAll(
+                () -> Assertions.assertTrue(Files.exists(Paths.get("target/test-classes/test1.docx")))
+        );
+    }
+
 }

@@ -14,7 +14,7 @@ The macro has the following syntax:
 .Jamal source
 [source]
 ----
-{@debug on/off using="..."}
+{@debug [on/off using="..."]}
 ----
 
 It is important to note, it will only work if the debugger is on the module path or on the classpath.
@@ -26,6 +26,9 @@ The macro has the following options:
 
 * `using` (aliases `debugger`, `selector`) can specify the debugger connection string.
 This is the same connection string that you can use in the environment variable `JAMAL_DEBUG` or system property.
+
++
+Currently, the only implemented debugger is the one using HTTP, and the connection string is `http:8080` or whatever port instead of 8080 you want to use.
 
 +
 You can switch off and on the debugger inside the input using the options `on` and `off`.

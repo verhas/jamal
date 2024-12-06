@@ -383,8 +383,12 @@ public interface Processor extends AutoCloseable {
          * Tries to read the file, decides on redirect or do nothing.
          *
          * @param fileName the original name of the file
-         * @return the structure containing the result, which is nothing, the final name of the file or the content of
-         * the file
+         * @return the structure containing the result, which is
+         * <ul>
+         *  <li> nothing,
+         *  <li> the final name of the file, or
+         *  <li> the content of the file
+         * </ul>
          */
         IOHookResult read(final String fileName);
 

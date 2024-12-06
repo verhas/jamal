@@ -142,6 +142,10 @@
         </dependency>
         <dependency>
             <groupId>com.javax0.jamal</groupId>
+            <artifactId>jamal-debug</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.javax0.jamal</groupId>
             <artifactId>jamal-testsupport</artifactId>
         </dependency>
         <dependency>
