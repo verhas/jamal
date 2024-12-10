@@ -27,7 +27,7 @@ public class Shell implements Identified {
     }
 
     public Object evaluate(String script, String fileName) {
-        if (fileName != null && fileName.length() > 0) {
+        if (fileName != null && !fileName.isEmpty()) {
             return shell.evaluate(script, fileName);
         } else {
             return shell.evaluate(script, id + ".groovy");

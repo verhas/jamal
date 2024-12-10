@@ -24,9 +24,7 @@ public class Jdsl implements Macro, Scanner.WholeInput {
 
         @Override
         public void close() throws Exception {
-            final var sb = output.getSB();
-            sb.delete(0, sb.length());
-            sb.append(result);
+            output.replace(result);
         }
 
         @Override
@@ -40,7 +38,7 @@ public class Jdsl implements Macro, Scanner.WholeInput {
         final var original = Macro.super.fetch(processor, input);
 
         processor.state(this, State::new).source = input.toString();
-        input.getSB().delete(0, input.length());
+        input.reset();
         return original;
     }
 

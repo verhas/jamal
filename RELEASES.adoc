@@ -9,11 +9,32 @@
 NOTE: The known bugs sections in the releases are updated after the release.
 Plese consult the latest SNAPSHOT version available online at https://github.com/verhas/jamal/blob/master/RELEASES.adoc[GitHub Jamal RELEASES.adoc]
 
-== https://github.com/verhas/jamal/tree/2.8.1[2.8.1]
+== https://github.com/verhas/jamal/tree/2.8.2[2.8.2]
 
 === Known Bugs
 
 __currently there are no known bugs in this release__
+
+=== New Features
+
+* The installation kit installed command line version includes the debugger.
+
+* When starting the command line version using `-debug` without value it will start the HTTP debugger on the port `8080`.
+If you need to start it on a different port use the ``-debug=http:port`` option.
+Here `http:` is a literal string, and `port` is the port number.
+
+* There is a macro module to read a local GIT repository, which is experimental in this release.
+
+== https://github.com/verhas/jamal/tree/2.8.1[2.8.1]
+
+=== Known Bugs
+
+The command line version of the application does not include the debugger.
+It is not a bug, per se.
+You can start the debugger from the command line, but you have to start the application editing some shell scripts adding the dependency.
+Because the jbang version does include the debugger, it was not considered a bug.
+Starting with the release 2.8.1 there is an installation kit.
+When using the Jamal command line installed with the installation kit, the debugger is not available.
 
 === New Features
 

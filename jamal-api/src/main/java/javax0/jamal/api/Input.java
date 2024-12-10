@@ -1,12 +1,11 @@
 package javax0.jamal.api;
 
 /**
- *
  * The input Jamal is working with.
  * This is essentially a stream of characters along with the position reference.
- * When a macro is processed many times the output is also the input of the surrounding macro.
+ * When a macro is processed many times, the output is also the input of the surrounding macro.
  * Therefore, many times the class implementing this interface is also used as output.
- * The naming, therefore is a bit confusing.
+ * The naming, therefore, is a bit confusing.
  * <p>
  * An input has a string builder and also a file name from where the input is coming from.
  * The string builder is used to fetch the characters.
@@ -15,12 +14,20 @@ package javax0.jamal.api;
  */
 public interface Input extends CharSequence {
     /**
+     * Do not use this method in code using the implementations of this interface.
+     * The implementations should
+     * <ul>
+     * <li>either perform the operation as described here to support the default implementations, or
+     * <li>implement the methods in a way that they do not use this method.
+     * </ul>
+     *
      * Get the {@link StringBuilder} that contains the characters of the input. The processing many times works directly
      * on the {@link StringBuilder} deleting characters from the start of it as the processing progresses, thus
      * essentially modifying/mutating the {@code Input} object.
      *
      * @return the {@link StringBuilder} containing the characters of the input.
      */
+    @Deprecated()
     StringBuilder getSB();
 
     /**
@@ -115,6 +122,18 @@ public interface Input extends CharSequence {
      */
     default Input append(Object obj) {
         getSB().append(obj);
+        return this;
+    }
+
+    /**
+     * replaces the current content of the input with the string representation of the {@code Object} argument.
+     *
+     * @param obj the object to be converted to string and replace the content of the input
+     * @return {@code this}
+     */
+    default Input replace(Object obj) {
+        this.reset();
+        this.append(obj);
         return this;
     }
 

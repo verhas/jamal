@@ -596,7 +596,7 @@ When the XML content is in a file calling this macro is a bit more efficient.
 
 
 This macro can modify an XML-formatted user defined macro inserting content into the XML document.
-XML-formatted user defined macros can be created using the `xml:define` and `snippet:xml` macros.
+XML-formatted user-defined macros can be created using the `xml:define` and `snippet:xml` macros.
 
 This macro can also be used to insert an XML fragment into the XML document, which is the output of the whole processing.
 This latter use is for the case when the Jamal file processed creates an XML file.
@@ -3477,9 +3477,9 @@ will result
 - Sort.java: 8,606 bytes
 - Decorate.java: 12,215 bytes
 - Case.java: 2,439 bytes
-- NumberLines.java: 2,669 bytes
-- RangeMacro.java: 1,007 bytes
-- Untab.java: 2,205 bytes
+- NumberLines.java: 2,730 bytes
+- RangeMacro.java: 1,069 bytes
+- Untab.java: 2,216 bytes
 - Plural.java: 2,136 bytes
 - DateMacro.java: 681 bytes
 - Format.java: 930 bytes
@@ -3491,7 +3491,7 @@ will result
 - Def.java: 952 bytes
 - Update.java: 829 bytes
 - Eval.java: 1,827 bytes
-- SnipTransform.java: 16,939 bytes
+- SnipTransform.java: 16,950 bytes
 - Base64.java: 3,606 bytes
 - FilesMacro.java: 11,400 bytes
 - Collect.java: 24,771 bytes
@@ -3499,9 +3499,9 @@ will result
 - CounterFormatter.java: 4,599 bytes
 - Repeat.java: 1,120 bytes
 - HashCode.java: 462 bytes
-- TrimLines.java: 5,161 bytes
+- TrimLines.java: 5,172 bytes
 - JavaSourceInsert.java: 8,813 bytes
-- ThinXml.java: 8,792 bytes
+- ThinXml.java: 8,777 bytes
 - Decorator.java: 9,094 bytes
 - Memoize.java: 8,760 bytes
 - LineCount.java: 552 bytes
@@ -3524,30 +3524,30 @@ will result
 - AbstractXmlDefine.java: 1,032 bytes
 - Dictionary.java: 1,632 bytes
 - Clear.java: 471 bytes
-- KillLines.java: 1,527 bytes
+- KillLines.java: 1,589 bytes
 - SnipLoad.java: 3,298 bytes
 - Rot13.java: 928 bytes
 - SnippetStore.java: 11,145 bytes
 - Download.java: 2,265 bytes
 - ListDir.java: 5,236 bytes
-- XmlFormat.java: 3,745 bytes
+- XmlFormat.java: 3,693 bytes
 - SnippetXmlReader.java: 6,515 bytes
-- XmlInsert.java: 5,954 bytes
+- XmlInsert.java: 5,902 bytes
 - SnipProperties.java: 1,346 bytes
 - Xml.java: 539 bytes
 - CounterMacro.java: 4,186 bytes
 - Variation.java: 6,370 bytes
 - SnipList.java: 1,078 bytes
-- ShellVar.java: 5,290 bytes
+- ShellVar.java: 5,301 bytes
 - Locate.java: 5,824 bytes
 - XmlDocument.java: 5,928 bytes
 - References.java: 9,142 bytes
 - Java.java: 11,364 bytes
-- ReplaceLines.java: 3,258 bytes
-- SkipLines.java: 2,617 bytes
+- ReplaceLines.java: 3,320 bytes
+- SkipLines.java: 2,675 bytes
 - SnipCheck.java: 7,556 bytes
 - IdempotencyFailed.java: 1,816 bytes
-- Reflow.java: 1,910 bytes
+- Reflow.java: 1,973 bytes
 - Pos.java: 5,016 bytes
 - Snippet.java: 1,559 bytes
 ----
@@ -3816,7 +3816,7 @@ will result in the output
 .output
 [source]
 ----
-2024-12-06 15:26:42
+2024-12-10 17:58:06
 ----
 
 

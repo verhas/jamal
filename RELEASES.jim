@@ -33,7 +33,7 @@ You can find some bare release numbers in the documentation even though the exis
 my parents were there once
 {@define ! RELEASE:ULANBATOR=1.12.3}
 
-The first "next" (non-retrospect) release is named after the city where I lived in most of the my life.
+The first "next" (non-retrospect) release is named after the city where I was born and where I lived in most of the my life.
 
 {@define ! RELEASE:BUDAPEST=2.0.0}
 
@@ -65,4 +65,5 @@ a town very north in Russia
 {@define ! RELEASE:PECSVARAD=2.7.0}
 {@define ! RELEASE:PECS=2.8.0}
 {@define ! RELEASE:KOMLO=2.8.1}
+{@define ! RELEASE:HARKIV=2.8.2} to remember the heroic effort of the Ukrainian people on the 1000-th day of the Russian war
 

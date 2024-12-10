@@ -69,7 +69,7 @@ MAVEN_PLUGIN_API=3.9.9                     -- https://repo.maven.apache.org/mave
 MAVEN_PLUGIN_ANNOTATIONS=3.13.1            -- https://repo.maven.apache.org/maven2/org/apache/maven/plugin-tools/maven-plugin-annotations/
 MAVEN_PLUGIN_PLUGIN_VERSION=3.13.1         -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-plugin-plugin
 SONATYPE_PLUGIN_VERSION=1.7.0              -- https://repo.maven.apache.org/maven2/org/sonatype/plugins/nexus-staging-maven-plugin
-SUREFIRE_PLUGIN_VERSION=3.5.1              -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-surefire-plugin
+SUREFIRE_PLUGIN_VERSION=3.5.2              -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-surefire-plugin
 MAVEN_SOURCE_PLUGIN_VERSION=3.3.1          -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-source-plugin
 APPASSEMBLER_PLUGIN_VERSION=2.1.0          -- https://repo.maven.apache.org/maven2/org/codehaus/mojo/appassembler-maven-plugin
 MAVEN_DEPENDENCY_PLUGIN_VERSION=3.8.1      -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-dependency-plugin
@@ -82,8 +82,8 @@ JUPITER_VERSION=5.11.3                     -- https://repo.maven.apache.org/mave
 MOCKITO_VERSION=5.14.2                     -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
 
 -- dependencies needed for the Jamal libraries
-JRUBY_VERSION=9.4.8.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
-GROOVY_VERSION=3.0.22                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
+JRUBY_VERSION=9.4.9.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
+GROOVY_VERSION=3.0.23                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
 OGNL_VERSION=3.4.3                         -- https://repo.maven.apache.org/maven2/ognl/ognl
 SNAKEYAML_VERSION=2.3                      -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
 JSON_ORG_VERSION=20240303                  -- https://repo.maven.apache.org/maven2/org/json/json/
@@ -104,6 +104,6 @@ JSQLPARSER_VERSION=5.0                     -- https://repo.maven.apache.org/mave
 -- dependencies needed for the Maven extension (not the plugin)
 MAVEN_CORE_VERSION=3.9.8                   -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
 PLEXUS_COMPONENT_METADATA_VERSION=2.2.0    -- https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-metadata
-COMMONS_COMPRESS_VERSION=1.26.2            -- https://repo.maven.apache.org/maven2/org/apache/commons/commons-compress
-JSOUP_VERSION=1.18.1                       -- https://repo.maven.apache.org/maven2/org/jsoup/jsoup
+COMMONS_COMPRESS_VERSION=1.27.1            -- https://repo.maven.apache.org/maven2/org/apache/commons/commons-compress
+JSOUP_VERSION=1.18.3                       -- https://repo.maven.apache.org/maven2/org/jsoup/jsoup
 }

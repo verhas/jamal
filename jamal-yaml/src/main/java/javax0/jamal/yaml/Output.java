@@ -23,8 +23,7 @@ public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, C
         Resolver.resolve(yamlObject, processor, clone, copy);
         final var out = new StringWriter();
         yaml.dump(yamlObject.getObject(), out);
-        output.reset();
-        output.getSB().append(out);
+        output.replace(out);
     }
 
     @Override

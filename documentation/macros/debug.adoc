@@ -52,3 +52,6 @@ When this option is on, the fact that a global and external debugger is defined 
 NOTE: The macro does not work inside the interactive embeddings like IntelliJ or AsciidocFx.
 Starting up the debugger may cause several different issues in an environment like that.
 Insread the macro in those environments returns a constant string that gets into the document, so you can see while editing.
+
+
+

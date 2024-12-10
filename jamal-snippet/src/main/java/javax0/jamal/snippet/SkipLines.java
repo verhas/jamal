@@ -16,7 +16,9 @@ public class SkipLines implements Macro, InnerScopeDependent, BlockConverter, Sc
         final var skipEnd = scanner.pattern("endSkip").defaultValue("end\\s+skip");
         scanner.done();
 
-        convertTextBlock(processor, in.getSB(), in.getPosition(), skipStart.getParam(), skipEnd.getParam());
+        final var sb = new StringBuilder(in);
+        convertTextBlock(processor, sb, in.getPosition(), skipStart.getParam(), skipEnd.getParam());
+        in.replace(sb);
         return in.toString();
     }
 
@@ -61,7 +63,7 @@ public class SkipLines implements Macro, InnerScopeDependent, BlockConverter, Sc
     }
 
     private static boolean needsNoExtraNl(String in, boolean lastLineCopied, String joined) {
-        return joined.length() == 0 || joined.charAt(joined.length() - 1) == '\n' || (lastLineCopied && in.charAt(in.length() - 1) != '\n');
+        return joined.isEmpty() || joined.charAt(joined.length() - 1) == '\n' || (lastLineCopied && in.charAt(in.length() - 1) != '\n');
     }
 
     @Override

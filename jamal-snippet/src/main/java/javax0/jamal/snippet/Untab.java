@@ -24,7 +24,7 @@ public class Untab implements Macro, InnerScopeDependent, BlockConverter , Scann
         final var scanner = newScanner(in, processor);
         final var tabSize = scanner.number("tabSize", "tab", "size").defaultValue(8);
         scanner.done();
-        final var sb = in.getSB();
+        final var sb = new StringBuilder(in);
         convertTextBlock(processor, sb, in.getPosition(), tabSize.getParam());
         return sb.toString();
     }

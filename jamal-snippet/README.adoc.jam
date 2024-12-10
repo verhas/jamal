@@ -657,7 +657,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 
 [[trimLines]]
 === {%chapter%}`trimLines`, `trim`
-{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=df16a908%}
+{%#snip:check file={%JAVA_DIR%}TrimLines.java hash=8d8de139%}
 This macro can cut off the unneeded spaces from the start and end of the lines.
 {%parameterized%}
 
@@ -729,7 +729,7 @@ will result
 
 [[untab]]
 === {%chapter%}`untab`
-{%#snip:check file={%JAVA_DIR%}Untab.java hash=341886c9%}
+{%#snip:check file={%JAVA_DIR%}Untab.java hash=d36e4064%}
 
 The syntax of the macro is:
 
@@ -778,7 +778,7 @@ will be converted to
 
 [[range]]
 === {%chapter%}`range`
-{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=fb31977a%}
+{%#snip:check file={%JAVA_DIR%}RangeMacro.java hash=7e738178%}
 
 This macro can filter lines of its input by a range of numbers.
 The syntax of the macro is:
@@ -1115,7 +1115,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 
 [[numberLines]]
 === {%chapter%}`numberLines`
-{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=3a9613e0%}
+{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=366ba1a6%}
 This macro can put numbers in front of the lines, sequentially numbering them.
 {%parameterized%}
 
@@ -1183,7 +1183,7 @@ Any illegal formatting will result in an error.
 
 [[killLines]]
 === {%chapter%}`killLines`
-{%#snip:check file={%JAVA_DIR%}KillLines.java hash=f64d6845%}
+{%#snip:check file={%JAVA_DIR%}KillLines.java hash=0d0db731%}
 This macro deletes, or keeps the selected lines from its input.
 {%parameterized%}
 
@@ -1255,7 +1255,7 @@ In this case only the comment lines remained that start with `//` at the start o
 
 [[skipLines]]
 === {%chapter%}`skipLines`
-{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=5f1fcc03%}
+{%#snip:check file={%JAVA_DIR%}SkipLines.java hash=089a5797%}
 You can use this macro to skip lines from the snippet.
 {%parameterized%}
 
@@ -1366,7 +1366,7 @@ In that case you can switch it off using the option `(detectNoChange=false)` in 
 
 [[replaceLines]]
 === {%chapter%}`replaceLines`
-{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=daba1439%}
+{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=791bbd14%}
 This macro replaces strings in the input.
 {%parameterized%}
 
@@ -1671,7 +1671,7 @@ If you need a forward reference to a counter, you should define a user defined m
 
 [[reflow]]
 === {%chapter%}`reflow`
-{%#snip:check file={%JAVA_DIR%}Reflow.java hash=ca41411b%}
+{%#snip:check file={%JAVA_DIR%}Reflow.java hash=02fd0303%}
 This macro reflows the content.
 {%parameterized%}
 
@@ -1842,7 +1842,7 @@ In that case yur `snip:eval` can reference the snippet by the name for the file 
 
 [[snipTransform]]
 === {%chapter%}`snip:transform`
-{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=592e82aa%}
+{%#snip:check file={%JAVA_DIR%}SnipTransform.java hash=da5129ea %}
 
 The `snip:transform` macro integrates the functionality of the macros
 
@@ -2211,7 +2211,7 @@ will result
 
 [[xmlFormat]]
 === {%chapter%}`xmlFormat`
-{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=9f366b64%}
+{%#snip:check file={%JAVA_DIR%}XmlFormat.java hash=ec91f3e3%}
 The macro `xmlFormat` interprets the input as an XML document if there is any, resulting in the formatted document.
 If the input is empty or contains only spaces, it registers a post-processor that runs after the Jamal processing and formats the final output as XML.
 For example,

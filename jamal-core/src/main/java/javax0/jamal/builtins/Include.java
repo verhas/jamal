@@ -57,7 +57,9 @@ public class Include implements Macro, OptionsControlled.Core, Scanner.Core {
         final var weArePseudoDefault = processor.getRegister().open().equals("{") && processor.getRegister().close().equals("}");
         final var useDefaultSeparators = in.length() > 1 && in.charAt(0) == IMPORT_SHEBANG1 && in.charAt(1) == IMPORT_SHEBANG2 && !weArePseudoDefault;
         if (lines.isPresent()) {
-            Range.Lines.filter(in.getSB(), lines.get());
+            final var sb = new StringBuilder(in);
+            Range.Lines.filter(sb, lines.get());
+            in.replace(sb);
         }
         if (verbatim.is()) {
             result = in.toString();

@@ -205,8 +205,7 @@ public class Escape implements Macro, Macro.Escape {
             if (!processor.errors().isEmpty()) {
                 processor.throwUp();
             }
-            output.getSB().setLength(0);
-            output.append(result);
+            output.replace(result);
         }
     }
 }

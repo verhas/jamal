@@ -137,7 +137,7 @@ public class ThinXml {
         } else {
             if (tabText) {
                 skipWhiteSpaces(in);
-                if (tags.size() > 0) {
+                if (!tags.isEmpty()) {
                     xml.append(spaces(tags.get(tags.size() - 1).outTab + tabSize));
                 }
             }
@@ -147,7 +147,7 @@ public class ThinXml {
             }
             tabClosed = tabText;
         }
-        in.getSB().setLength(0);
+        in.reset();
     }
 
     private boolean convertTag(StringBuilder xml, Input in, boolean tabText, int column) throws BadSyntax {
@@ -157,7 +157,7 @@ public class ThinXml {
         skipWhiteSpaces(in);
         final var tag = fetchId(in);
         final int outTab;
-        if (tags.size() == 0) {
+        if (tags.isEmpty()) {
             outTab = 0;
         } else {
             outTab = tags.get(tags.size() - 1).outTab + tabSize;

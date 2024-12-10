@@ -301,7 +301,7 @@ public class SnipTransform implements Macro {
     public String evaluate(final Params.ExtraParams extraParams, final Input in, final Processor processor) throws BadSyntax {
         final var params = new Parameters(extraParams, in, processor);
         final var macros = new UnderlyingMacros(processor);
-        final var sb = in.getSB();
+        final var sb = new StringBuilder(in);
         final var pos = in.getPosition();
         for (final String action : params.actionsSet) {
             switch (action) {

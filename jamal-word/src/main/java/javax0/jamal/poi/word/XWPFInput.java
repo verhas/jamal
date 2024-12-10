@@ -1,7 +1,6 @@
 package javax0.jamal.poi.word;
 
 import javax0.jamal.api.Position;
-import javax0.jamal.tools.Input;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -41,13 +40,11 @@ import java.util.List;
  * <p>
  * It is also a limitation of this approach that you cannot use, at least as for now, deferred actions.
  */
-public class XWPFInput extends Input {
+public class XWPFInput extends XWPFAbstractInput {
 
     final XWPFDocument document;
-    final XWPFTableCell cell;
+    private final XWPFTableCell cell;
     final List<XWPFParagraph> paragraphs;
-    final Position pos;
-    final StringBuilder sb;
 
     /**
      * Create a new input that will harvest the paragraphs so long as long it must. This input stops as soon as it can.
@@ -79,11 +76,9 @@ public class XWPFInput extends Input {
      */
     public XWPFInput(XWPFDocument document, XWPFTableCell cell, List<XWPFParagraph> paragraphs, Position pos) {
         super("", pos);
-        this.sb = getSB();
         this.document = document;
         this.cell = cell;
         this.paragraphs = paragraphs;
-        this.pos = pos;
     }
 
     /**
@@ -135,7 +130,7 @@ public class XWPFInput extends Input {
         runEndIndex = runStartIndex;
         if (paragraphStartIndex < paragraphs.size() && runStartIndex < paragraphs.get(paragraphStartIndex).getRuns().size()) {
             final var text = paragraphs.get(paragraphStartIndex).getRuns().get(runStartIndex).getText(0);
-            sb.append(text == null ? "" : text);
+            input.append(text == null ? "" : text);
         }
     }
 
@@ -191,7 +186,7 @@ public class XWPFInput extends Input {
      */
     @Override
     public boolean isEmpty() {
-        if (sb.length() > 0) {
+        if (input.length() > 0) {
             return false;
         }
         return paragraphEndIndex == paragraphs.size() - 1 && runEndIndex == paragraphs.get(paragraphEndIndex).getRuns().size() - 1;
@@ -210,17 +205,17 @@ public class XWPFInput extends Input {
      */
     @Override
     public char charAt(int index) {
-        if (index < sb.length()) {
-            return sb.charAt(index);
+        if (index < input.length()) {
+            return input.charAt(index);
         }
-        while (index >= sb.length()) {
-            final var l = sb.length();
+        while (index >= input.length()) {
+            final var l = input.length();
             appendOneRun();
             if (empty()) {// nothing was appended
                 throw new StringIndexOutOfBoundsException(index);
             }
         }
-        return sb.charAt(index);
+        return input.charAt(index);
     }
 
     /**
@@ -285,10 +280,10 @@ public class XWPFInput extends Input {
      */
     @Override
     public int indexOf(String str) {
-        while (sb.length() < str.length() && thereAreMOreRuns() && str.startsWith(sb.toString())) {
+        while (input.length() < str.length() && thereAreMOreRuns() && str.startsWith(input.toString())) {
             appendOneRun();
         }
-        return sb.indexOf(str);
+        return input.indexOf(str);
     }
 
     private boolean thereAreMOreRuns() {
@@ -302,7 +297,7 @@ public class XWPFInput extends Input {
     public boolean empty() {
         return paragraphEndIndex >= paragraphs.size() - 1 &&
                 runEndIndex >= paragraphs.get(paragraphEndIndex).getRuns().size() - 1 &&
-                sb.length() == 0;
+                input.length() == 0;
     }
 
     /**
@@ -315,15 +310,15 @@ public class XWPFInput extends Input {
             runEndIndex++;
         }
         if (runEndIndex < endRuns.size()) {
-            sb.append(endRuns.get(runEndIndex).getText(0));
+            input.append(endRuns.get(runEndIndex).getText(0));
         } else while (paragraphEndIndex + 1 < paragraphs.size()) {
             paragraphEndIndex++;
             runEndIndex = 0;
-            sb.append("\n");
+            input.append("\n");
             final var endRunsNext = paragraphs.get(paragraphEndIndex).getRuns();
             if (!endRunsNext.isEmpty()) {
                 final var text = endRunsNext.get(0).getText(0);
-                sb.append(text == null ? "" : text);
+                input.append(text == null ? "" : text);
                 break;
             }
         }

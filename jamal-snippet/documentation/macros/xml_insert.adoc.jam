@@ -1,7 +1,7 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}XmlInsert.java hash=d24f2421%}
+{%#snip:check file={%JAVA_DIR%}XmlInsert.java hash=c4f23837%}
 This macro can modify an XML-formatted user defined macro inserting content into the XML document.
-XML-formatted user defined macros can be created using the `xml:define` and `snippet:xml` macros.
+XML-formatted user-defined macros can be created using the `xml:define` and `snippet:xml` macros.
 
 This macro can also be used to insert an XML fragment into the XML document, which is the output of the whole processing.
 This latter use is for the case when the Jamal file processed creates an XML file.

@@ -12,7 +12,9 @@ public class RangeMacro implements Macro, InnerScopeDependent, BlockConverter, S
         final var ranges = scanner.str(null, "range", "ranges", "lines").optional();
         scanner.done();
 
-        convertTextBlock(processor, in.getSB(), in.getPosition(), ranges.getParam());
+        final var sb = new StringBuilder(in);
+        convertTextBlock(processor, sb, in.getPosition(), ranges.getParam());
+        in.replace(sb);
         return in.toString();
     }
 

@@ -16,12 +16,14 @@ public class GroovyCloser implements Macro, InnerScopeDependent, Scanner {
 
         @Override
         public void close() throws Exception {
-            shell.property("result", result.getSB());
+            final var resultSB = new StringBuilder(result);
+            shell.property("result", resultSB);
             try {
                 final var sb = shell.evaluate(closerScript, null);
-                if (sb != null && sb != result.getSB()) {// NOT EQUALS, does it return the same object or not
-                    result.getSB().setLength(0);
-                    result.getSB().append(sb);
+                if (sb != null ) {
+                    result.replace(sb);
+                }else{
+                    result.replace(resultSB);
                 }
             } catch (Exception e) {
                 throw new BadSyntax("There was an exception '"

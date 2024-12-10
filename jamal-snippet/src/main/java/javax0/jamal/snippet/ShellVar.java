@@ -19,7 +19,7 @@ public class ShellVar implements Macro, Scanner {
         // get the parameters without any key name constraint using the params handling tools
         Params.using(processor).tillEnd().parse(javax0.jamal.tools.Input.makeInput(parameters.get()), values::put, s -> true);
 
-        final var sb = in.getSB();
+        final var sb = new StringBuilder(in);
         replace(processor, values, sb, 0);
         unescape(sb);
         return sb.toString();

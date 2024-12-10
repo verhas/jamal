@@ -17,7 +17,7 @@ public class RubyImport implements Macro, InnerScopeDependent, Scanner {
         } else {
             script = in;
         }
-        script.getSB().append("\n''");
+        script.append("\n''");
         try {
             shell.evaluate(script.toString(), scriptName);
         } catch (Exception e) {

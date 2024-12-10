@@ -308,10 +308,7 @@ public class TestProcessor {
 
         @Override
         public void close() {
-            final var sb = output.getSB();
-            final var text = sb.toString().toUpperCase(Locale.ENGLISH);
-            sb.setLength(0);
-            sb.append(text);
+            output.replace(output.toString().toUpperCase(Locale.ENGLISH));
         }
 
         @Override

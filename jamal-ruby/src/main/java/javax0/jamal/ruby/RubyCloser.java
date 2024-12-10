@@ -17,12 +17,11 @@ public class RubyCloser implements Macro, InnerScopeDependent, Scanner {
 
         @Override
         public void close() throws Exception {
-            shell.property("$result", RubyString.newString(shell.shell.getProvider().getRuntime(), result.getSB()));
+            shell.property("$result", RubyString.newString(shell.shell.getProvider().getRuntime(), result));
             try {
                 final var sb = shell.evaluate(closerScript, null);
                 BadSyntax.when(sb == null, "Ruby closer script '%s' returned null", shell.getId());
-                result.getSB().setLength(0);
-                result.getSB().append(sb);
+                result.replace(sb);
             } catch (Exception e) {
                 throw new BadSyntax(String.format("There was an exception '%s' executing the ruby closer script in the shell '%s'.",
                         e.getMessage(), shell.getId()), e);

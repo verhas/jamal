@@ -24,7 +24,7 @@ public class TrimLines implements Macro, InnerScopeDependent, BlockConverter, Sc
         final var verticalTrimOnly = scanner.bool("verticalTrimOnly", "vtrimOnly");
         scanner.done();
         //end snippet
-        final var sb = in.getSB();
+        final var sb = new StringBuilder(in);
         convertTextBlock(processor, sb, in.getPosition(), margin.getParam(), trimVertical.getParam(), verticalTrimOnly.getParam());
         return sb.toString();
     }

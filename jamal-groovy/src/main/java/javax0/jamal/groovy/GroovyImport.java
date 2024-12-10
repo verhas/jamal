@@ -11,13 +11,13 @@ public class GroovyImport implements Macro, InnerScopeDependent, Scanner {
         final var shell = Shell.getShell(in, processor, this);
         final var scriptName = InputHandler.fetch2EOL(in).trim();
         final Input script;
-        if (scriptName.length() > 0) {
+        if (!scriptName.isEmpty()) {
             final var fileName = FileTools.absolute(in.getReference(), scriptName);
             script = FileTools.getInput(fileName, processor);
         } else {
             script = in;
         }
-        script.getSB().append(";''");
+        script.append(";''");
         try {
             shell.evaluate(script.toString(), scriptName);
         } catch (Exception e) {

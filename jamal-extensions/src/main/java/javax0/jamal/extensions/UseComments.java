@@ -40,9 +40,7 @@ public class UseComments implements Macro, Macro.Escape {
             }
             lines[j++] = lines[i];
         }
-        final var sb = input.getSB();
-        sb.delete(0, sb.length());
-        sb.append(Arrays.stream(lines).limit(j).collect(Collectors.joining("\n")));
+        input.replace(Arrays.stream(lines).limit(j).collect(Collectors.joining("\n")));
         return Macro.super.fetch(processor, input);
     }
 
