@@ -7,8 +7,11 @@ import javax0.jamal.api.Position;
  */
 public class Input implements javax0.jamal.api.Input {
     private final StringBuilder input;
-    private final Position pos;
+    private Position pos;
 
+    Position getPos() {
+        return pos;
+    }
 
     /**
      * Create an empty input, which may also serve as an output where the characters are collected.
@@ -146,7 +149,6 @@ public class Input implements javax0.jamal.api.Input {
         pos.column++;
         pos.charpos++;
     }
-
 
     @Override
     public StringBuilder getSB() {

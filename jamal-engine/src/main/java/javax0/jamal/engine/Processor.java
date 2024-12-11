@@ -200,7 +200,7 @@ public class Processor implements javax0.jamal.api.Processor {
                     skipWhiteSpaces(input);
                     try {
                         processMacro(input, output);
-                    }catch(LinkageError le){
+                    } catch (LinkageError le) {
                         throw new BadSyntax("Linkage error", le);
                     }
                 } else {
@@ -215,7 +215,7 @@ public class Processor implements javax0.jamal.api.Processor {
             }
             processingException = badSyntax;
             throw badSyntax;
-        }finally {
+        } finally {
             closeProcessWithExceptionHandling(output, processingException);
         }
         traceRecordFactory.dump(null);
@@ -511,7 +511,14 @@ public class Processor implements javax0.jamal.api.Processor {
     private String evaluateBuiltinMacro(final Input input, final Position ref, final MacroQualifier qualifier) throws BadSyntaxAt {
         try {
             lastInvokedBuiltInMacro = qualifier.macroId;
-            return qualifier.macro.evaluate(input, this);
+            input.getPosition().cloneOf.pushSegment(qualifier.macro.getId());
+            final String s;
+            try {
+                s = qualifier.macro.evaluate(input, this);
+            } finally {
+                input.getPosition().cloneOf.popSegment();
+            }
+            return s;
         } catch (BadSyntax bs) {
             pushBadSyntax(bs, ref);
             return "";

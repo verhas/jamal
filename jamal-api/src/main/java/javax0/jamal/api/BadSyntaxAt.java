@@ -58,20 +58,12 @@ public class BadSyntaxAt extends BadSyntax {
         this.pos = pos;
     }
 
-    public static String posFormat(Position pos) {
-        if (pos == null) {
-            return "";
-        } else {
-            return pos.file + "/" + pos.line + ":" + pos.column;
-        }
-    }
-
     @Override
     public String getMessage() {
         if (pos == null) {
             return super.getMessage();
         } else {
-            return super.getMessage() + " at " + posFormat(pos);
+            return super.getMessage() + " at " + pos.posFormat();
         }
     }
 

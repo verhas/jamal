@@ -137,7 +137,7 @@ public class JamalMain {
     private static final System.Logger LOGGER = System.getLogger("JAMAL");
 
     private static void log(final System.Logger.Level level, final Position pos, final String format, final String... params) {
-        final var msg = String.format(format, (Object[]) params) + (pos == null ? "" : " at ") + BadSyntaxAt.posFormat(pos);
+        final var msg = String.format(format, (Object[]) params) + (pos == null ? "" : " at " + pos.posFormat());
         LOGGER.log(level, msg);
     }
 

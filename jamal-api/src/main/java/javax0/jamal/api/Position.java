@@ -1,5 +1,7 @@
 package javax0.jamal.api;
 
+import java.util.ArrayList;
+
 /**
  * The {@code Position} contains the name of a file, a line number and the column number. This serves as a parameter
  * when an error happens. The exception {@link BadSyntaxAt} gets an object of this type as a parameter, and later it is
@@ -10,19 +12,30 @@ package javax0.jamal.api;
  */
 public class Position {
     public final String file;
+    public final ArrayList<String> segment = new ArrayList<>();
     public int line;
     public int column;
     public int charpos = 0;
     public final Position parent;
+
+    /**
+     * This is the position that this position is a clone of. This is needed when segments are to be added to or
+     * removed from a position. The method {@link Input#getPosition()} returns a clone of the position but in the case
+     * when we want to add a segment we need the original position as we want to modify it.
+     */
+    public final Position cloneOf;
 
     public Position(String file, int line, int column, Position parent) {
         this.file = file;
         this.line = line;
         this.column = column;
         this.parent = parent;
+        this.cloneOf = this;
     }
 
+
     public Position(Position clone) {
+        cloneOf = clone;
         if (clone == null) {
             file = null;
             line = 1;
@@ -60,6 +73,14 @@ public class Position {
         return new Position(this);
     }
 
+    public void pushSegment(String segment) {
+        this.segment.add(segment);
+    }
+
+    public void popSegment() {
+        this.segment.remove(this.segment.size() - 1);
+    }
+
     /**
      * @return return the position, which is the same as the position of the input, but references the position of the
      * input as parent. This means that we will have two positions, with the same file/line:column information, but
@@ -83,10 +104,18 @@ public class Position {
      */
     public Position top() {
         var top = this;
-        while ( top.parent != null) {
+        while (top.parent != null) {
             top = top.parent;
         }
         return top;
+    }
+
+    public String posFormat() {
+        if (segment.isEmpty()) {
+            return file + "/" + line + ":" + column;
+        } else {
+            return file + "[" + String.join(">", segment) + "]" + line + ":" + column;
+        }
     }
 
     @Override

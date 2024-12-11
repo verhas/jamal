@@ -20,7 +20,7 @@ public interface Input extends CharSequence {
      * <li>either perform the operation as described here to support the default implementations, or
      * <li>implement the methods in a way that they do not use this method.
      * </ul>
-     *
+     * <p>
      * Get the {@link StringBuilder} that contains the characters of the input. The processing many times works directly
      * on the {@link StringBuilder} deleting characters from the start of it as the processing progresses, thus
      * essentially modifying/mutating the {@code Input} object.
@@ -37,7 +37,6 @@ public interface Input extends CharSequence {
      * That chain is used to maintain the "include list" hierarchy in error messages.
      */
     Position getPosition();
-
 
     /**
      * @return the reference file name that the input was read from
