@@ -7,7 +7,7 @@
 {%@define RELEASE($x)={%RELEASE_N {%RELEASE:$x%}%}%}
 
 NOTE: The known bugs sections in the releases are updated after the release.
-Plese consult the latest SNAPSHOT version available online at https://github.com/verhas/jamal/blob/master/RELEASES.adoc[GitHub Jamal RELEASES.adoc]
+Please consult the latest SNAPSHOT version available online at https://github.com/verhas/jamal/blob/master/RELEASES.adoc[GitHub Jamal RELEASES.adoc]
 
 {%RELEASE HARKIV%}
 
@@ -22,6 +22,9 @@ __currently there are no known bugs in this release__
 * When starting the command line version using `-debug` without value it will start the HTTP debugger on the port `8080`.
 If you need to start it on a different port use the ``-debug=http:port`` option.
 Here `http:` is a literal string, and `port` is the port number.
+
+* Error messages are more informative, including the macros in the stack trace that caused the error.
+If there are user-defined macros calling one another, their names are listed after the file name.
 
 * There is a macro module to read a local GIT repository, which is experimental in this release.
 

@@ -19,6 +19,6 @@ public class TestLogging {
         test.results("");
         final var logs = test.getLogs();
         Assertions.assertEquals(1,logs.size());
-        Assertions.assertEquals("[WARNING] Repeat is zero. at null/1:27",logs.get(0));
+        Assertions.assertEquals("[WARNING] Repeat is zero. at null[mock]/1:27",logs.get(0));
     }
 }

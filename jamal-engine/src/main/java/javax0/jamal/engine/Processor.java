@@ -413,6 +413,8 @@ public class Processor implements javax0.jamal.api.Processor {
         } else {
             tr.type(TraceRecord.Type.USER_DEFINED_MACRO);
             final String rawResult;
+            final var rf = qualifier.input.getPosition().cloneOf;
+            final var segmentsSize = rf.segment.size();
             try {
                 rawResult = evalUserDefinedMacro(qualifier.input, tr, qualifier);
                 locker.run();
@@ -440,6 +442,10 @@ public class Processor implements javax0.jamal.api.Processor {
                 throw bsAt;
             } catch (BadSyntax bs) {
                 throw new BadSyntaxAt(bs, ref);
+            } finally {
+                if( segmentsSize < rf.segment.size() ) {
+                    rf.popSegment();
+                }
             }
         }
     }
@@ -454,7 +460,7 @@ public class Processor implements javax0.jamal.api.Processor {
     private String evaluateBuiltInMacro(TraceRecord tr, MacroQualifier qualifier, Runnable popper) throws BadSyntax {
         final var ref = qualifier.input.getPosition();
         tr.type(TraceRecord.Type.MACRO);
-        final String result = safeEvaluate(() -> evaluateBuiltinMacro(qualifier.input, ref, qualifier), popper);
+        final String result = safeEvaluate(() -> evaluateBuiltinMacro(qualifier.input, qualifier), popper);
         final var postEvaluated = postEvaluate(result, qualifier.postEvalCount, ref.fork());
         tr.appendAfterEvaluation(postEvaluated);
         return postEvaluated;
@@ -508,20 +514,19 @@ public class Processor implements javax0.jamal.api.Processor {
         }
     }
 
-    private String evaluateBuiltinMacro(final Input input, final Position ref, final MacroQualifier qualifier) throws BadSyntaxAt {
+    private String evaluateBuiltinMacro(final Input input, final MacroQualifier qualifier) throws BadSyntaxAt {
+        final Position ref = input.getPosition().cloneOf;
         try {
             lastInvokedBuiltInMacro = qualifier.macroId;
-            input.getPosition().cloneOf.pushSegment(qualifier.macro.getId());
+            ref.pushSegment(qualifier.macro.getId());
             final String s;
-            try {
-                s = qualifier.macro.evaluate(input, this);
-            } finally {
-                input.getPosition().cloneOf.popSegment();
-            }
+            s = qualifier.macro.evaluate(input, this);
             return s;
         } catch (BadSyntax bs) {
-            pushBadSyntax(bs, ref);
+            pushBadSyntax(bs, ref.clone());
             return "";
+        } finally {
+            ref.popSegment();
         }
     }
 
@@ -542,6 +547,7 @@ public class Processor implements javax0.jamal.api.Processor {
     private String evalUserDefinedMacro(final Input input, final TraceRecord tr, final MacroQualifier qualifier)
             throws BadSyntax {
         var pos = input.getPosition();
+        final var ref = pos.cloneOf;
         skipWhiteSpaces(input);
         final boolean reportUndefBeforeEval = doesStartWithQuestionMark(input);
         final Input evaluatedInput = evaluateMacroStart(input);
@@ -550,6 +556,8 @@ public class Processor implements javax0.jamal.api.Processor {
         skipWhiteSpaces(evaluatedInput);
 
         final String id = fetchId(evaluatedInput);
+        ref.pushSegment(id);
+        pos.pushSegment(id);
         qualifier.macroId = id;
         skipWhiteSpaces(evaluatedInput);
         final Optional<Identified> identifiedOpt;
@@ -576,7 +584,8 @@ public class Processor implements javax0.jamal.api.Processor {
             tr.setParameters(parameters);
             try {
                 qualifier.udMacro.setCurrentId(id);
-                return qualifier.udMacro.evaluate(parameters);
+                final var s = qualifier.udMacro.evaluate(parameters);
+                return s;
             } catch (BadSyntax bs) {
                 pushBadSyntax(bs, pos);
                 return "";

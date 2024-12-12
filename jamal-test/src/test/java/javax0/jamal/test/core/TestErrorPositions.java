@@ -19,9 +19,9 @@ public class TestErrorPositions {
             //                 1234567890123456789012345678901234567890123456789012345678901234567890123
             TestThat.theInput("{@options failfast}{@define gulp(1,2,3)={zumi123}}{gulp /one/tw{o}/three}").results("");
         } catch (final BadSyntax bs) {
-            final var pos = bs.getMessage().indexOf("at null/");
+            final var pos = bs.getMessage().indexOf("at null[gulp>o]/");
             final var posMessage = bs.getMessage().substring(pos);
-            Assertions.assertEquals("at null/1:61", posMessage);
+            Assertions.assertEquals("at null[gulp>o]/1:61", posMessage);
         }
     }
 
@@ -31,4 +31,15 @@ public class TestErrorPositions {
         //                 12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234
         TestThat.theInput("{@options failfast}{@define gulp(1,2,3)={zumi123}}{@define zumione=kakk}{gulp /one/{@ident {two}}/three}").throwsBadSyntax("User macro '\\{two ...' is not defined. Did you mean '@try'.*");
     }
+
+    @Test
+    void testErrorPosition() throws Exception {
+        try{
+        TestThat.theInput("{@define a={uppsi}}{@define b={a}}{b}").atPosition("baba.adoc.jam", 1, 1).results("");
+        }catch (final BadSyntax bs) {
+            // asserting that is throws with the support methods checks up to the " at" and we need here to check the position output
+         Assertions.assertEquals("User macro '{uppsi ...' is not defined. Did you mean '@use', '@pos'? at baba.adoc.jam[b>a>uppsi]/1:40",bs.getMessage());
+        }
+    }
+
 }

@@ -48,6 +48,7 @@ public class Position {
             column = clone.column;
             parent = clone.parent;
             charpos = clone.charpos;
+            segment.addAll(clone.segment);
         }
     }
 
@@ -93,7 +94,9 @@ public class Position {
      * the same time the hierarchy will also contain the position of the character in the file where the macro started.
      */
     public Position fork() {
-        return new Position(file, line, column, this);
+        final var forked = new Position(file, line, column, this);
+        forked.segment.addAll(segment);
+        return forked;
     }
 
     /**
@@ -114,7 +117,7 @@ public class Position {
         if (segment.isEmpty()) {
             return file + "/" + line + ":" + column;
         } else {
-            return file + "[" + String.join(">", segment) + "]" + line + ":" + column;
+            return file + "[" + String.join(">", segment) + "]/" + line + ":" + column;
         }
     }
 

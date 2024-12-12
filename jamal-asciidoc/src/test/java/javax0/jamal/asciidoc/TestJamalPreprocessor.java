@@ -22,8 +22,9 @@ public class TestJamalPreprocessor {
     private static final String TEST_INPUT = TEST_OUTPUT + ".jam";
     private static final String TEST_IMPORT = TEST_OUTPUT + ".jim";
     private static final String LOG_OUTPUT = TEST_OUTPUT + ".log";
+    private static final String SEGMENT = "[zebra]/1:3\n";
 
-    @BeforeEach // better safe than sorry
+    @BeforeEach // better safe, than sorry
     @AfterEach
     void clean() {
         // new File(TEST_INPUT).delete(); <-- it is not physically created, it is only a virtual name as a reference
@@ -82,21 +83,21 @@ public class TestJamalPreprocessor {
         assertStartsWith(
                 "[WARNING]\n" +
                         "--\n" +
-                        "* User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
+                        "* User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + SEGMENT +
                         "--\n" +
                         "abrakadabra\n" +
                         "[WARNING]\n" +
                         "--\n" +
-                        "* User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
+                        "* User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + SEGMENT +
                         "--\n" +
                         "{%zebra%}\n" +
                         "[WARNING]\n" +
                         "--\n" +
-                        "* User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n" +
+                        "* User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + SEGMENT +
                         "--\n" +
                         "[source]\n" +
                         "----\n" +
-                        "User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + "/1:3\n"
+                        "User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + SEGMENT
                 , actual);
     }
 
