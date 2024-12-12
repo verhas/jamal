@@ -48,7 +48,7 @@ will result
 .output
 [source]
 ----
-The current version 2.8.2 is older than the required version. It has to be newer.
+The current version 2.8.3-SNAPSHOT is older than the required version. It has to be newer.
 ----
 
 
@@ -72,11 +72,11 @@ will result in
 .output
 [source]
 ----
-This documentation was processed using the version 2.8.2
+This documentation was processed using the version 2.8.3-SNAPSHOT
 ----
 
 
 NOTE: In the documentation of Jamal (this document and other modules) we do not use this macro.
 The documentation is about the version of Jamal, which is the source code and not the one running.
 They may be different.
-The version of the documented code is in the `pom.xml` file: `2.8.2`.
+The version of the documented code is in the `pom.xml` file: `2.8.3-SNAPSHOT`.
