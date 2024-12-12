@@ -17,4 +17,4 @@ rm ../jamal-debug/src/main/resources/ui/static/css/*.map
 rm ../jamal-debug/src/main/resources/ui/static/js/*.map
 echo "adding new files to git"
 git add --all ../jamal-debug/src/main/resources
-echo "done... you can now build the maim project including the new version of the debugger UI"
+echo "done... you can now build the main project including the new version of the debugger UI"

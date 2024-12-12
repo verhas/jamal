@@ -21,7 +21,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 We do not upgrade to beta versions.
 
 
-* `*[red]#NO#*`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.10.1` `*[red]#upgrade to 3.11.2#*`
+* `OK`  `MAVEN_JAVADOC_PLUGIN_VERSION` `3.11.2` 
 
 * `OK`  `MAVEN_GPG_PLUGIN_VERSION` `3.2.7` 
 

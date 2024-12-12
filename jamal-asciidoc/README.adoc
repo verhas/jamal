@@ -5,7 +5,7 @@ Use Jamal in IntelliJ or AsciidocFX interactively with AsciiDoc utilizing the As
 
 image:images/splash.png[width=100%]
 
-This document is the readme file for the Jamal AsciiDoc extension version `2.8.2-SNAPSHOT`.
+This document is the readme file for the Jamal AsciiDoc extension version `2.8.2`.
 
 == Introduction
 
@@ -43,7 +43,7 @@ This preprocessor works for any JetBrains IDE that supports the Asciidoctor plug
 The easiest way to install the extension is to use the Jamal command line tool.
 The command line version can be installed using the platform-specific installation kit downloadable from the GitHub release page.
 
-https://github.com/verhas/jamal/releases/tag/v2.8.1
+https://github.com/verhas/jamal/releases/tag/v2.8.2
 
 Download the installation kit and start it up.
 The installation kit will install the command line version of Jamal into the system.
@@ -60,7 +60,7 @@ Unfortunately, there is no simple way to install Jamal globally for all the proj
 
 If you want to use a different version of the extension, you can specify the version number as a parameter to the `jamalize` command:
 
-   jamal -jamalize version=2.8.1
+   jamal -jamalize version=2.8.2
 
 If you omit the `version` parameter, then the version of the installing command line version Jamal will be used.
 
@@ -76,28 +76,28 @@ You can install the extension manually.
 You may want to do this installation if you do not have and do not intend to use the command line version of Jamal.
 The manual installation described below is exactly what the automated installation does.
 
-To install the extension together with the IntelliJ AsciiDoc plugin, you need the file `jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip`.
+To install the extension together with the IntelliJ AsciiDoc plugin, you need the file `jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip`.
 
 You can download this file from the central Maven repository using the URLs:
 
 
 
-* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip``]
+* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip``]
 +
 Is the ZIP file.
 This is the only file you really need.
 The other files are checksum files.
 
-* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.asc``]
+* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.asc``]
 +
 This is the PGP signature of the ZIP file.
 Using this file, you can ensure that the downloaded ZIP file is really from the original author.
 
-* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.md5``]
+* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.md5``]
 +
 This is the MD5 checksum of the ZIP file.
 
-* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.sha1``]
+* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.sha1``]
 +
 This is the SHA1 checksum of the ZIP file.
 
@@ -161,22 +161,22 @@ Asciidoctor itself is writen in Ruby, and it mistakenly thinks so is everything 
 The installation for AsciidocFX needs to copy all the JAR files downloadable from Maven central
 
 
-* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip``]
+* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip``]
 +
 Is the ZIP file.
 This is the only file you really need.
 The other files are checksum files.
 
-* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.asc``]
+* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.asc[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.asc``]
 +
 This is the PGP signature of the ZIP file.
 Using this file, you can ensure that the downloaded ZIP file is really from the original author.
 
-* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.md5``]
+* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.md5[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.md5``]
 +
 This is the MD5 checksum of the ZIP file.
 
-* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.1/jamal-AsciiDoc-2.8.1-jamal-AsciiDoc-distribution.zip.sha1``]
+* https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.sha1[``https://repo.maven.apache.org/maven2/com/javax0/jamal/jamal-AsciiDoc/2.8.2/jamal-AsciiDoc-2.8.2-jamal-AsciiDoc-distribution.zip.sha1``]
 +
 This is the SHA1 checksum of the ZIP file.
 

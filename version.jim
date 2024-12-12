@@ -43,7 +43,7 @@ $x
 --
 --------------------------------------------------------------------------------------------------------------------
 
-VERSION=2.8.2-SNAPSHOT                     -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
+VERSION=2.8.2                              -- https://repo.maven.apache.org/maven2/com/javax0/jamal/
 
 GROUPID=com.javax0.jamal                   -- the project groupId.
 
@@ -62,7 +62,7 @@ LEVENSHTEIN_VERSION=1.0.0                  -- https://repo.maven.apache.org/mave
 -- plugin dependencies
 MAVEN_COMPILER_PLUGIN_VERSION=3.13.0       -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-compiler-plugin
 --- failing release
-MAVEN_JAVADOC_PLUGIN_VERSION=3.10.1        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-javadoc-plugin
+MAVEN_JAVADOC_PLUGIN_VERSION=3.11.2        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-javadoc-plugin
 MAVEN_GPG_PLUGIN_VERSION=3.2.7             -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-gpg-plugin/
 MAVEN_ASSEMBLY_PLUGIN_VERSION=3.7.1        -- https://repo.maven.apache.org/maven2/org/apache/maven/plugins/maven-assembly-plugin/
 MAVEN_PLUGIN_API=3.9.9                     -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-plugin-api/
