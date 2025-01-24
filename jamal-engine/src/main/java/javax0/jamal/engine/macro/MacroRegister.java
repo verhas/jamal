@@ -11,6 +11,32 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+/**
+ * The {@code MacroRegister} class is responsible for managing the lifecycle and organization
+ * of macros within the Jamal macro processing engine. This class implements the
+ * {@link javax0.jamal.api.MacroRegister} and {@link Debuggable.MacroRegister} interfaces to
+ * provide functionality for defining, retrieving, exporting, and managing macros and
+ * their scopes.
+ *
+ * <p>The class handles user-defined macros, built-in macros, and their associated scopes,
+ * ensuring proper encapsulation and isolation of macro definitions. It also enforces statelessness
+ * for macros unless explicitly annotated as {@code Stateful} to maintain thread safety.
+ *
+ * <p>MacroRegister also provides features such as:
+ * <ul>
+ *   <li>Managing scope lifecycles (push, pop, lock, etc.)</li>
+ *   <li>Checking macro class statefulness to ensure proper usage</li>
+ *   <li>Handling delimiters for macro opening and closing strings</li>
+ *   <li>Suggesting macros based on Levenshtein distance for user convenience</li>
+ * </ul>
+ *
+ * <p>Example usage:
+ * <pre>{@code
+ * MacroRegister register = new MacroRegister(processor);
+ * register.define(new MyMacro());
+ * Optional<Macro> macro = register.getMacro("myMacroId");
+ * }</pre>
+ */
 public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable.MacroRegister {
 
     private static final int TOP_LEVEL = 0;
@@ -21,7 +47,8 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     /**
-     * Stores the data that describes the scopes that are stacked.
+     * Encapsulates the data and behavior of a single macro scope, including user-defined macros,
+     * built-in macros, and associated delimiters.
      */
     public static class Scope implements Debuggable.Scope {
         /**

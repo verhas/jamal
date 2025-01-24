@@ -9,7 +9,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 == Jamal version check
 
-* `OK`  `LAST_RELEASE` `2.8.1` 
+* `OK`  `LAST_RELEASE` `2.8.2` 
 
 == Dependencies
 
@@ -27,7 +27,7 @@ We do not upgrade to beta versions.
 
 * `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.7.1` 
 
-* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `3.9.9` `*[red]#upgrade to 4.0.0-rc-1#*`
+* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `3.9.9` `*[red]#upgrade to 4.0.0-rc-2#*`
 +
 We do not upgrade to beta versions.
 
@@ -51,25 +51,25 @@ We do not upgrade to beta versions.
 
 * `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.8.1` 
 
-* `OK`  `JUPITER_VERSION` `5.11.3` 
+* `OK`  `JUPITER_VERSION` `5.11.4` 
 
-* `OK`  `MOCKITO_VERSION` `5.14.2` 
+* `OK`  `MOCKITO_VERSION` `5.15.2` 
 
-* `OK`  `JRUBY_VERSION` `9.4.9.0` 
+* `OK`  `JRUBY_VERSION` `9.4.10.0` 
 
 * `OK`  `GROOVY_VERSION` `3.0.23` 
 
-* `OK`  `OGNL_VERSION` `3.4.3` 
+* `OK`  `OGNL_VERSION` `3.4.5` 
 
 * `OK`  `SNAKEYAML_VERSION` `2.3` 
 
-* `OK`  `JSON_ORG_VERSION` `20240303` 
+* `OK`  `JSON_ORG_VERSION` `20250107` 
 
 * `OK`  `FLEXMARK_VERSION` `0.64.8` 
 
-* `OK`  `APACHE_POI_VERSION` `5.3.0` 
+* `OK`  `APACHE_POI_VERSION` `5.4.0` 
 
-* `OK`  `APACHE_POI_VERSION` `5.3.0` <- OOXML
+* `OK`  `APACHE_POI_VERSION` `5.4.0` <- OOXML
 
 [NOTE]
 ====
@@ -103,10 +103,10 @@ When the new Asciidoctor version is released and used as an IntelliJ plugin we w
 * `OK`  `SOURCE_BUDDY` `2.5.3` 
 +
 Version 2.5.2 changed the name of the module.
-If we change the name of the module some tests that depend on prior versions of Jamal do not work.
+If we change the name of the module, some tests that depend on prior versions of Jamal do not work.
 To upgrade we have to remove the dependency from the snippet module and move the dependent macros to a different module.
 
-* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `3.9.8` `*[red]#upgrade to 4.0.0-rc-1#*`
+* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `3.9.8` `*[red]#upgrade to 4.0.0-rc-2#*`
 +
 We do not upgrade to beta versions.
 
@@ -120,6 +120,6 @@ We do not upgrade to beta versions.
 
 * `OK`  `H2_VERSION` `2.3.232` 
 
-* `OK`  `JSQLPARSER_VERSION` `5.0` 
+* `OK`  `JSQLPARSER_VERSION` `5.1` 
 
 * `OK`  `JSOUP_VERSION` `1.18.3` 

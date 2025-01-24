@@ -6,7 +6,17 @@ import java.util.Map;
  * A segment is a string and a "pointer" to the next segment.
  * <p>
  * During macro evaluation, the actual values replace the names of the parameters in the content.
- * However, parameter names, which appear in the text during the evaluation of the macro, must not be replaced.
+ * However, parameter names, which appear in the text only during the evaluation of the macro, must not be replaced.
+ * For example
+ * <pre>
+ * {@code
+ *    {@define A(X)=X{B}X}{@define B=X}{A/3}
+ * }
+ * </pre>
+ *
+ * should result {@code 3X3} and not {@code 333}
+ *
+ * <p>
  * In other words, if the actual value of a parameter contains the name of another, or the same parameter, then
  * that name must not be replaced.
  * <p>

@@ -472,6 +472,8 @@ They are
 
 * link:documentation/macros/use.adoc[`use.adoc`]
 
+* link:documentation/macros/tmp.adoc[`tmp.adoc`]
+
 * link:documentation/macros/sep.adoc[`sep.adoc`]
 
 * link:documentation/macros/ident.adoc[`ident.adoc`]

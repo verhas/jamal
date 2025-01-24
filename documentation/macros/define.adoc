@@ -263,7 +263,7 @@ This is mainly used for debugging and, in this case, for documentation purposes.
 
 == Verbatim Macros
 
-When a user defined macro is evaluated, the result of the macro is evaluated, resolving all the macros that happen to be in the result.
+When a user defined macro is evaluated, the result of the macro is also evaluated, resolving all the macros that happen to be in the result.
 This can be prevented using the link:verbatim[`verbatim`] macro.
 You can also read more details on the macro evaluation order in link:evaluation_order[`evaluation_order`].
 
@@ -486,12 +486,11 @@ wupppss
 
 [NOTE]
 ====
-During the design, there were two possibilities.
-One, to let the `{?...}` macro use perform the same way as if there was no defined `default` macro.
-The other, to let the `{?...}` use the `default` macro.
-We selected the second option because in that case, there is a fallback.
-You can simply write `{#ident {@undefine default}{?...}}`.
-If we selected the first option, then the `{?...}` macro would not have and alternative way to use the default macro.
+The `{?...}` invokes the `default` macro if there is one.
+If you want to get the empty string for an undefined macro while having a `default` macro defined using `{?...}` you can
+```
+      {#ident {@undefine default}{?...}}
+```
 ====
 
 .Jamal source
@@ -608,7 +607,7 @@ DEFAULT
 
 When you define a macro, it gets into the local scope unless you define it global.
 It is possible to export a macro after it was defined.
-Exporting a macro right after the definition is so common that the option `export` of the macro `define` does the same.
+Exporting a macro right after the definition is so common that the option `export` does the same.
 For example, the following sample
 
 .Jamal source
@@ -909,16 +908,17 @@ results in
 ----
 
 
-When `a` is evaluated the result is `|z.{z}` on both lines.
+When `a` is evaluated the result is `|z.{z}` on all three lines.
 In the next step this result is evaluated, because the macro is not a `verbatim` one.
-In the first case the macro a normal one and the evaluation knows that the macro opening and closing strings were `|` and `.`.
-In this case the evaluation also knows that the characters `{` and `}` are just ordinary characters.
+In the first case the macro is normal, not pure.
+In this case the evaluation knows that the macro opening and closing strings were `|` and `.`, and the characters `{` and `}` are just ordinary characters.
 
-In the second and the third case, however, the macro is a "pure" macro.
+In the second and in the third case, however, the macro is a "pure" macro.
 It is evaluated using the actual macro opening and closing strings.
+In that case `|` and `.` are normal characters and `{` and `}` the macro opening and closing strings.
 
 Note that when there are no parameters, and the macro definition does not use the optional `()` after the name of the macro the `:=` would be ambiguous.
-To avoid this ambiguity, you have to use `()` after the name of the macro if the name of the macro finishes with a `:` character.
+To avoid this ambiguity, you have to use `()` after the name of the macro if the name of the macro finishes with a `:` character or you use `:=` to define a pure macro.
 
 
 == Optional Arguments
@@ -1027,20 +1027,24 @@ The version 1.12.3 introduced options to the macro `define`.
 The options you can use are:
 
 * `verbatim` says that the macro is verbatim.
-you can use this option instead of the `~` character.
+Verbatim macros are used without further evaluation.
+You can use this option instead of the `~` character.
 
 * `optional`, `ifNotDefined` says that the macro is optional.
+The macro will get the value assigned by this `define` only if it was not defined yet.
 You can use this option instead of the `?` character.
 
 * `pure` says that the macro is pure.
+Pure macros are interpreted using their text as they are no matter what the macro opening and closing strings were by the time the macro was defined.
+The default mode is not pure, which means you do not need to care about what the macro opening and closing strings are at the place the macro is going to be used.
 You can use this option instead of the `:=` assignment.
 
 * `noRedefine`, `fail`, `noRedef`, `failIfDefined` says that the macro should not be redefined.
 You can use this option instead of the `!` character.
-The option `noRedefine` can also be used in the link:options[`options`] macro setting this behaviour for all the macros defined after it within the scope of the option.
+The option `noRedefine` can also be used in the link:options[`options`] macro setting this behavior for all the macros defined after it within the scope of the option.
 
-* `tail` says that the macro parameters should be parsed splitting the input string into exactly the number of the arguments.
-If there are more separator characters, then those became part of the last argument.
+* `tail` says that the macro parameters should be parsed, splitting the input string into exactly the number of the arguments.
+If there are more separator characters, then those become part of the last argument.
 Care should be exercised when using this option because it can lead to hard to read macro invocations.
 
 * `global` says that the macro should be defined in the global scope.
@@ -1054,7 +1058,7 @@ In other words, the macro will be defined in the surrounding scope instead of th
 In this case, the syntax of the macro invocation is different from the usual one.
 The use of this parop is described in detail in the next section.
 
-These options are technically aliases, meaning that none of them can be defined as a global option or as a macro.
+These options are technically all aliases, meaning that none of them can be defined as a global option or as a macro.
 Was it a name, the special macro `default` would collide with the parop `default`.
 
 It is generally recommended to use the options instead of the modifying characters.
@@ -1064,12 +1068,13 @@ You cannot use an option and the respective modifying character at the same time
 However, you can use one of the modifying characters and the other option, unless they are mutually exclusive (`?` and `!`).
 
 The option `global` makes the macro global, even if the macro does not have a `:` in the name.
-Using the option as `global=false`, however, will not make a macro containing one or more `:` characters local.
-This option can be used together with the name containing `:`.
+This option can be used together with the name containing `:`, though it is superfluous in this case.
+
+Using the option as `global=false`, however, will NOT make a macro containing one or more `:` characters local.
 
 == Default Parameters
 
-The option `named` can be used to create a user-defined macro that ues named parameters.
+The option `named` can be used to create a user-defined macro that uses named parameters.
 When this option is used, the macro invocation has a different syntax.
 In this case, the parameters are given with the names in a similar syntax to the parops of the built-in macros.
 

@@ -76,19 +76,19 @@ MAVEN_DEPENDENCY_PLUGIN_VERSION=3.8.1      -- https://repo.maven.apache.org/mave
 KOTLIN_VERSION=1.7.10
 
 -- test dependency
-JUPITER_VERSION=5.11.3                     -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
+JUPITER_VERSION=5.11.4                     -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-api
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-engine
                                            -- https://repo.maven.apache.org/maven2/org/junit/jupiter/junit-jupiter-params
-MOCKITO_VERSION=5.14.2                     -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
+MOCKITO_VERSION=5.15.2                     -- https://repo.maven.apache.org/maven2/org/mockito/mockito-core/
 
 -- dependencies needed for the Jamal libraries
-JRUBY_VERSION=9.4.9.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
+JRUBY_VERSION=9.4.10.0                      -- https://repo.maven.apache.org/maven2/org/jruby/jruby-complete
 GROOVY_VERSION=3.0.23                      -- https://repo.maven.apache.org/maven2/org/codehaus/groovy/groovy-jsr223
-OGNL_VERSION=3.4.3                         -- https://repo.maven.apache.org/maven2/ognl/ognl
+OGNL_VERSION=3.4.5                         -- https://repo.maven.apache.org/maven2/ognl/ognl
 SNAKEYAML_VERSION=2.3                      -- https://repo.maven.apache.org/maven2/org/yaml/snakeyaml
-JSON_ORG_VERSION=20240303                  -- https://repo.maven.apache.org/maven2/org/json/json/
+JSON_ORG_VERSION=20250107                  -- https://repo.maven.apache.org/maven2/org/json/json/
 FLEXMARK_VERSION=0.64.8                    -- https://repo.maven.apache.org/maven2/com/vladsch/flexmark/flexmark-all
-APACHE_POI_VERSION=5.3.0                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
+APACHE_POI_VERSION=5.4.0                   -- https://repo.maven.apache.org/maven2/org/apache/poi/poi-ooxml
 ASCIIDOCTORJ_VERSION=3.0.0-alpha.1         -- https://repo.maven.apache.org/maven2/org/asciidoctor/asciidoctorj
 JSCRIPTBASIC_VERSION=3.0.0                 -- https://repo.maven.apache.org/maven2/com/scriptbasic/jscriptbasic/
 MARKDOWN_TO_ASCIIDOC=2.0.1                 -- https://repo.maven.apache.org/maven2/io/github/markdown-asciidoc/markdown-to-asciidoc/
@@ -100,7 +100,7 @@ SLF4J=2.0.7                                -- https://repo.maven.apache.org/mave
 ASM_VERSION=9.7.1                          -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm/
 ASM_TREE_VERSION=9.7.1                     -- https://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/
 H2_VERSION=2.3.232                         -- https://repo.maven.apache.org/maven2/com/h2database/h2/
-JSQLPARSER_VERSION=5.0                     -- https://repo.maven.apache.org/maven2/com/github/jsqlparser/jsqlparser/
+JSQLPARSER_VERSION=5.1                     -- https://repo.maven.apache.org/maven2/com/github/jsqlparser/jsqlparser/
 -- dependencies needed for the Maven extension (not the plugin)
 MAVEN_CORE_VERSION=3.9.8                   -- https://repo.maven.apache.org/maven2/org/apache/maven/maven-core
 PLEXUS_COMPONENT_METADATA_VERSION=2.2.0    -- https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-component-metadata

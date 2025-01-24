@@ -1,5 +1,11 @@
 package javax0.jamal.engine.macro;
 
+/**
+ * Represents a text segment in a chain of segments.
+ * <p>
+ * A {@code TextSegment} contains plain text and supports splitting based on
+ * parameter names, facilitating dynamic replacement during macro evaluation.
+ */
 public class TextSegment extends Segment {
     public TextSegment(Segment next, String content) {
         this.nextSeg = next;

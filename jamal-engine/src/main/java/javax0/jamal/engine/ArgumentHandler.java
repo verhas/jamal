@@ -27,7 +27,7 @@ class ArgumentHandler {
     private final Identified owner;
     private final int max;
     private final int min;
-    private static final String ELIPSIS = "...";
+    private static final String ELLIPSIS = "...";
 
     /**
      * Constructs an ArgumentHandler object with the specified owner and parameters.
@@ -36,26 +36,31 @@ class ArgumentHandler {
      * It parses the parameters to determine the minimum and maximum number of arguments accepted.
      * The special syntax '...' (ellipsis) is used to indicate variable argument lengths.
      *
-     * @param owner      The identified owner of the ArgumentHandler.
+     * @param owner      The identified owner of the ArgumentHandler. That is the macro that this handler belongs to.
+     *                   It is used to create meaningful error messages and also to check if the handler belongs to the
+     *                   default macro that has some special rules for handling the arguments.
      * @param parameters An array of Strings representing the parameter names.
      * @throws BadSyntax If the syntax of the parameters is incorrect. This exception is thrown in the following cases:
      * <ul>
      *
      *                   <li> If more than one parameter contains the '...' syntax.
      *                   <li> If the '...' syntax is used improperly, such as having 'xxx...' in a single parameter macro,
-     *                   or having a 'xxx...' argument that is not the last one in the array.
-     *                   <p>
+     *                   or having a 'xxx...' argument, that is not the last one in the array.
      *                   <li>The constructor performs the following operations:
-     *                   1. If only one parameter is provided, and it equals '...', sets min to 0 and max to Integer.MAX_VALUE.
-     *                   2. If multiple parameters are provided, it checks each parameter for the presence of '...' at the start or end.
+     *                   <ol>
+     *                   <li> If only one parameter is provided, and it equals '...', sets min to 0 and max to Integer.MAX_VALUE.
+     *                   <li> If multiple parameters are provided, it checks each parameter for the presence of '...' at the start or end.
+     *                   <ul>
      *                   <li> If '...' is found at the start (indicating a minimum number of arguments), the method sets the 'min' field.
      *                   <li> If '...' is found at the end (indicating an unlimited maximum number of arguments), the method sets the 'max' field.
-     *                   3. If no special syntax is found, it sets 'min' and 'max' to the length of the 'parameters' array.
+     *                   </ul>
+     *                   <li> If no special syntax is found, it sets 'min' and 'max' to the length of the 'parameters' array.
+     *                   </ol>
      * </ul>
      */
     public ArgumentHandler(Identified owner, String[] parameters) throws BadSyntax {
         this.owner = owner;
-        if (parameters.length == 1 && parameters[0].equals(ELIPSIS)) {
+        if (parameters.length == 1 && parameters[0].equals(ELLIPSIS)) {
             min = 0;
             max = Integer.MAX_VALUE;
             this.parameters = new String[0];
@@ -64,19 +69,19 @@ class ArgumentHandler {
         int min = -1, max = -1;
         if (parameters.length > 0) {
             for (int i = 0; i < parameters.length; i++) {
-                if (parameters[i].startsWith(ELIPSIS)) {
+                if (parameters[i].startsWith(ELLIPSIS)) {
                     if (min == -1) {
                         min = i;
-                        parameters[i] = parameters[i].substring(ELIPSIS.length()).trim();
+                        parameters[i] = parameters[i].substring(ELLIPSIS.length()).trim();
                     } else {
                         throw new BadSyntax("There can only be one '...xxx' argument in a define.");
                     }
                 }
-                if (parameters[i].endsWith(ELIPSIS)) {
+                if (parameters[i].endsWith(ELLIPSIS)) {
                     BadSyntax.when(parameters.length == 1, "One parameter macro cannot have 'xxx...' argument.");
                     if (max == -1 && i == parameters.length - 1) {
                         max = Integer.MAX_VALUE;
-                        parameters[i] = parameters[i].substring(0, parameters[i].length() - ELIPSIS.length()).trim();
+                        parameters[i] = parameters[i].substring(0, parameters[i].length() - ELLIPSIS.length()).trim();
                     } else {
                         throw new BadSyntax("There can only be one 'xxx...' argument in a define, and it has to be the last one.");
                     }

@@ -50,18 +50,20 @@ public class JamalEngineFactory implements ScriptEngineFactory {
 
     @Override
     public Object getParameter(final String key) {
-        if (key.equals(ScriptEngine.ENGINE))
-            return getEngineName();
-        if (key.equals(ScriptEngine.ENGINE_VERSION))
-            return getEngineVersion();
-        if (key.equals(ScriptEngine.NAME))
-            return getNames();
-        if (key.equals(ScriptEngine.LANGUAGE))
-            return getLanguageName();
-        if (key.equals(ScriptEngine.LANGUAGE_VERSION))
-            return getLanguageVersion();
-        if (key.equals("THREADING"))
-            return "STATELESS";
+        switch (key) {
+            case ScriptEngine.ENGINE:
+                return getEngineName();
+            case ScriptEngine.ENGINE_VERSION:
+                return getEngineVersion();
+            case ScriptEngine.NAME:
+                return getNames();
+            case ScriptEngine.LANGUAGE:
+                return getLanguageName();
+            case ScriptEngine.LANGUAGE_VERSION:
+                return getLanguageVersion();
+            case "THREADING":
+                return "STATELESS";
+        }
         return null;
     }
 

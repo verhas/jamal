@@ -169,6 +169,14 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
         }
     }
 
+    /**
+     * Calculate the estimate size of the resulting output for the macro adding the segment lengths.
+     * This method is used as a premature optimization to improve performance.
+     *
+     * @param root   the root segment that starts the list of segments
+     * @param values the values that replace the macro parameter strings in parameter segments
+     * @return the size of the resulting string
+     */
     private int segmentsLengthSum(Segment root, Map<String, String> values) {
         int size = 0;
         for (Segment segment = root; segment != null; segment = segment.next()) {

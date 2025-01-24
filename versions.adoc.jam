@@ -83,7 +83,7 @@ When the new Asciidoctor version is released and used as an IntelliJ plugin we w
 〔CHECK :SOURCE_BUDDY:com/javax0/sourcebuddy/SourceBuddy〕
 +
 Version 2.5.2 changed the name of the module.
-If we change the name of the module some tests that depend on prior versions of Jamal do not work.
+If we change the name of the module, some tests that depend on prior versions of Jamal do not work.
 To upgrade we have to remove the dependency from the snippet module and move the dependent macros to a different module.
 〔CHECK :MAVEN_CORE_VERSION:org/apache/maven/maven-core〕
 〔NO_BETA〕
