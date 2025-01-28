@@ -71,7 +71,11 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
      */
     private final BlockingQueue<Task> requestQueue = new LinkedBlockingQueue<>(1);
 
-    private String handleState;
+    private enum State {
+        BEFORE, AFTER
+    }
+
+    private State handleState;
 
     /**
      * Structure describing the task, what the debugger is asked to do.
@@ -140,7 +144,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         }
 
         /**
-         * The debugger thread calls this method to signal that the task is finished and the HTTP server thread can use
+         * The debugger thread calls this method to signal that the task is finished, and the HTTP server thread can use
          * the task to create the response.
          */
         void done() {
@@ -180,7 +184,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     public void setStart(CharSequence macro) {
         if (weDebug()) {
             macros = macro.toString();
-            handleState = "BEFORE";
+            handleState = State.BEFORE;
             handle();
         }
     }
@@ -202,7 +206,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         if (weDebug()) {
             inputAfter = input == null ? "" : input.toString();
             this.output = output.toString();
-            handleState = "AFTER";
+            handleState = State.AFTER;
             handle();
         }
     }
@@ -217,7 +221,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     volatile boolean isWaiting;
 
     private void handle() {
-        if (state == RunState.RUN && handleState.equals("BEFORE")) {
+        if (state == RunState.RUN && handleState.equals(State.BEFORE)) {
             for (final var breakpoint : breakpoints) {
                 if (breakpoint != null && !breakpoint.isEmpty() && macros.contains(breakpoint)) {
                     state = RunState.STEP_IN;
@@ -243,7 +247,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                         response = new HashMap<>();
                         addToResponse(task, response, Command.LEVEL, "" + currentLevel);
                         addToResponse(task, response, Command.ERRORS, new ArrayList<>(stub.errors()));
-                        addToResponse(task, response, Command.STATE, handleState);
+                        addToResponse(task, response, Command.STATE, handleState.toString());
                         addToResponse(task, response, Command.INPUT, inputAfter);
                         addToResponse(task, response, Command.OUTPUT, output);
                         addToResponse(task, response, Command.INPUT_BEFORE, inputBefore);
@@ -260,7 +264,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                         response = getJamalVersion();
                         break;
                     case STATE:
-                        task.messageBuffer = handleState;
+                        task.messageBuffer = handleState.toString();
                         break;
                     case QUIT: // exit the debugger and abort the execution of the processor
                         task.done();
@@ -356,7 +360,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                             state = stateSave;
                         }
                         break;
-                    case BUILT_IN: // list built in macros
+                    case BUILT_IN: // list built-in macros
                         response = getBuiltIns();
                         break;
                     case USER_DEFINED: // list user defined macros

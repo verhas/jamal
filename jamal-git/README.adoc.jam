@@ -9,7 +9,7 @@ The package does not support remote repositories, only local ones.
 
 This macro package is included in the prepackaged versions of Jamal.
 
-To use this module, you have to add the dependency to your Maven project, as:
+When using this module from Java code, you have to add the dependency to your Maven project, as:
 
 [source,xml]
 ----

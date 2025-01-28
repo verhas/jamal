@@ -20,9 +20,9 @@ Such a design allows for stringent control and limitation of these functionaliti
 Jamal is committed to maintaining the highest level of security and functionality in its text-processing library.
 To achieve this, **the latest release of Jamal is always actively supported**.
 
-Currently, the latest version is `+2.8.1+`.
+Currently, the latest version is `+2.8.2+`.
 
-The development version is `+2.8.2-SNAPSHOT+`
+The development version is `+2.8.3-SNAPSHOT+`
 
 Users are strongly encouraged to upgrade to the newest version to benefit from the latest features, improvements, and security patches.
 
