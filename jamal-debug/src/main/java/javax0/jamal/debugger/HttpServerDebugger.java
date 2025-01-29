@@ -482,7 +482,8 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                                 )
                         ).orElseGet(() -> Map.of(
                                 "id", macro.getId(),
-                                "type", macroDebugDisplayString(macro)
+                                "content", macroDebugDisplayString(macro),
+                                "type", macro.getClass().getName()
                         )));
             }
         }

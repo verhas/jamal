@@ -31,7 +31,7 @@ const ErrorsDisplay: FC<ErrorsDisplayProps> = () => {
                         {errors.map((error: { [key: string]: any }) => {
                             j++;
                             return <Table.Row key={j} >
-                                <Table.Cell style={{width: "100%",}} warning verticalAlign="top">{error}</Table.Cell>
+                                <Table.Cell style={{width: "100%",}} warning verticalAlign="top">{errors}</Table.Cell>
                             </Table.Row>;
                         })}
                     </Table.Body>

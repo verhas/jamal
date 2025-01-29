@@ -106,7 +106,7 @@ The option can define multiple prefixes for the file name to be imported.
 These prefixes are separated by the `|` character.
 When performing the import operation, the first prefix that matches the file name is used.
 
-For example `{@import (in="a/|b/|c`) bumm.txt}` will try to import `a/bumm.txt`, `b/bumm.txt`, and lastly `cbumm.txt` whichever succeeds first.
+For example `{@import (in="a/|b/|c") bumm.txt}` will try to import `a/bumm.txt`, `b/bumm.txt`, and lastly `cbumm.txt` whichever succeeds first.
 
 The prefix is used at the start of the file name without any extra separator.
 
