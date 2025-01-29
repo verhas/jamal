@@ -103,9 +103,11 @@ public class ConnectionStringParser {
     }
 
     /**
-     * Parse the options from the options string. The options are separated by '&' and the key and value are separated by '='.
+     * Parse the options from the options' string.
+     * The options' string is the part following the '?' character in the last parameter.
+     * The options are separated by '&' and the key and value are separated by '='.
      *
-     * @param optionsString the options string to be parsed.
+     * @param p the parameters
      * @return a map of the options.
      */
     private Map<String, String> parseOptions(final String[] p) {
@@ -119,9 +121,7 @@ public class ConnectionStringParser {
                 .map(pair -> pair.split("=", -1))
                 .filter(pair -> pair.length > 0)
                 .map(pair -> pair.length == 2 ? pair : new String[]{pair[0], ""})
-                .forEach(pair -> {
-                    options.put(pair[0], pair[1]);
-                });
+                .forEach(pair -> options.put(pair[0], pair[1]));
         return options;
     }
 }
