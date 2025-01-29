@@ -36,7 +36,7 @@ const TitleBar: FC<TitleBarProps> = ({message}) => {
                 container
                 direction="row"
                 alignItems="flex-start"
-                justify="space-between"
+                justifyContent="space-between"
             >
                 <Grid item>
                     &nbsp;

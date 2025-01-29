@@ -55,15 +55,15 @@ const loadSource = () => {
                 state.setMacro("");
                 state.setOutput("");
                 state.setData({});
-                setTimeout( () =>{
-                    if( state.stateMessage === DISCONNECTED){
-                        const doRefresh = window.confirm("Refresh the page to retry connecting to the Jamal debugger server.\n" +
+                setTimeout(() => {
+                    if (state.stateMessage === DISCONNECTED) {
+                        const doRefresh = window.confirm("Refresh the page to retry connecting to localhost:" + debug.port + " the Jamal debugger server.\n" +
                             "Refresh now?");
-                        if( doRefresh ){
+                        if (doRefresh) {
                             window.location.reload();
                         }
                     }
-                },REFRESH_MESSAGE_DELAY);
+                }, REFRESH_MESSAGE_DELAY);
             }
         });
 };

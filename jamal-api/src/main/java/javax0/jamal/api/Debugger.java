@@ -76,12 +76,14 @@ public interface Debugger extends AutoCloseable, ServiceLoaded {
 
     /**
      * Give the content of the current macro to be evaluated to the debugger before the macro is evaluated. The
-     * processor invokes this method on the debugger before it invokes a macro evaluation, or before it appends a text
+     * processor invokes this method on the debugger before it invokes a macro evaluation or before it appends a text
      * segment to the output.
      * <p>
      * Note that the {@code macro} is a character sequence and this it is mutable. The processor does mutate the
-     * instance afterwards. So if the debugger wants to save the state of the input it has to make a copy of the
-     * content, for example applying {@link CharSequence#toString() toString()}.
+     * instance afterward. So if the debugger wants to save the state of the input, it has to make a copy of the
+     * content, for example, applying {@link CharSequence#toString() toString()}. (Using {@link CharSequence#toString()
+     * toString()} you either get a copy or the original object, but since it is a string, it is guaranteed it will not
+     * change.)
      * <p>
      * It is guaranteed that this method will be invoked after {@link #setBefore(int, CharSequence) setBefore()} while
      * still before the evaluation. That way the debugger can be sure the that the {@code macro} belongs to the same

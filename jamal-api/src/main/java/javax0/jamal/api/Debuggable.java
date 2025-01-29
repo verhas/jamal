@@ -55,10 +55,13 @@ public interface Debuggable<T> {
      * Methods of the user defined macro class available only for the debugger
      */
     interface UserDefinedMacro {
+        /**
+         * @return the names of the parameters
+         */
         String[] getParameters();
 
         /**
-         * Get the content of the user defined macro.
+         * Get the content of the user-defined macro.
          * @return the content text (the text following the '=' in the define macro)
          */
         String getContent();

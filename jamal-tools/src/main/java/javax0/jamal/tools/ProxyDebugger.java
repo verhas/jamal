@@ -5,9 +5,10 @@ import javax0.jamal.api.Debugger;
 /**
  * A sample implementation of the {@link Debugger} interface that calls another debugger.
  * By default, the debugger calls the null debugger.
- * The used debugger can be set any time calling the }{link #setDebugger(Debugger) setDebugger} method.
- * It is also possible to switch off debugging calling the {@link #off() off} method.
- * When a debugger was already set and the debugging was switched off you can switch it on calling the {@link #on() on} method.
+ * The used debugger can be set any time calling the {@link #setDebugger(Debugger) setDebugger} method.
+ * It is also possible to switch off debugging calling the {@link #off()} method.
+ * When a debugger was already set and the debugging was switched off you can switch it on calling the {@link #on()}
+ * method.
  */
 public class ProxyDebugger implements Debugger {
     private static final Debugger nullDebugger = new NullDebugger();

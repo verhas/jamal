@@ -13,8 +13,8 @@ public class TestConnectionStringParser {
         Assertions.assertEquals("param1", sut.getParameters()[0]);
         Assertions.assertEquals("param2", sut.getParameters()[1]);
         Assertions.assertEquals("param3", sut.getParameters()[2]);
-        Assertions.assertEquals("1", sut.getOption("option1").get());
-        Assertions.assertEquals("", sut.getOption("option2").get());
+        Assertions.assertEquals("1", sut.getOption("option1").orElse(null));
+        Assertions.assertEquals("", sut.getOption("option2").orElse(null));
     }
 
     @Test

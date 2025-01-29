@@ -3540,7 +3540,7 @@ will result
 - SnipList.java: 1,078 bytes
 - ShellVar.java: 5,301 bytes
 - Locate.java: 5,824 bytes
-- XmlDocument.java: 5,928 bytes
+- XmlDocument.java: 6,273 bytes
 - References.java: 9,142 bytes
 - Java.java: 11,364 bytes
 - ReplaceLines.java: 3,320 bytes
@@ -3816,7 +3816,7 @@ will result in the output
 .output
 [source]
 ----
-2025-01-28 09:43:40
+2025-01-28 19:11:35
 ----
 
 

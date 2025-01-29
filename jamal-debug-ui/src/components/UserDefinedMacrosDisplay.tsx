@@ -9,6 +9,7 @@ type UserDefinedMacrosDisplayProps = {
     data: Data;
     captionSetter: (caption: string) => void;
     contentSetter: (caption: string) => void;
+    filter : string;
 };
 
 type Macro = {
@@ -18,7 +19,7 @@ type Macro = {
 }
 
 const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
-                                                                         data, captionSetter, contentSetter
+                                                                         data, captionSetter, contentSetter, filter
                                                                      }) => {
 
     const rows: Macro[] = [];
@@ -35,6 +36,7 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
 
     let j = 0;
     let i = 0;
+    const rx = filter.length === 0 ? new RegExp(".*", "") : new RegExp(filter, "i");
     return (
         <div style={{height: "310px", width: "100%", marginTop: "10px", overflowY: "auto", backgroundColor: "#d2eaff"}}>
             <Table celled size="small" sortable striped style={{fontSize: "12px", backgroundColor: "#d2eaff"}}>
@@ -50,7 +52,9 @@ const UserDefinedMacrosDisplay: FC<UserDefinedMacrosDisplayProps> = ({
                 <Table.Body>
                     {(data?.userDefined?.scopes || []).map((macros: { [key: string]: any }) => {
                             i++;
-                            return macros.map((macro: UserDefinedMacro) => {
+                            return macros
+                                .filter((macro: UserDefinedMacro): boolean => rx.test(macro.id))
+                                .map((macro: UserDefinedMacro) => {
                                     j++;
                                     return <Table.Row key={j} onClick={((rowNr: number) => () => {
                                         const row = rows[rowNr];

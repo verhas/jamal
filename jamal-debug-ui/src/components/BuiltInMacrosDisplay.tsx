@@ -5,13 +5,15 @@ import 'semantic-ui-css/semantic.min.css';
 import type Data from '../server/Data'
 
 type BuiltInMacrosDisplayProps = {
-    data: Data
+    data: Data,
+    filter: string
 };
 
-const BuiltInMacrosDisplay: FC<BuiltInMacrosDisplayProps> = ({data}) => {
+const BuiltInMacrosDisplay: FC<BuiltInMacrosDisplayProps> = ({data, filter}) => {
 
     let j = 0;
     let i = 0;
+    const rx = filter.length === 0 ? new RegExp(".*", "") : new RegExp(filter, "i");
     return (
         <div style={{height: "310px"}}>
 
@@ -32,19 +34,22 @@ const BuiltInMacrosDisplay: FC<BuiltInMacrosDisplayProps> = ({data}) => {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
-                        {(data?.macros?.macros || []).map((macros: { [key: string]: any }) => {
-                                i++;
-                                return macros.macros.map((macro: { [key: string]: any }) => {
-                                        j++;
-                                        return <Table.Row key={j}>
-                                            <Table.Cell style={{width: 30}}>{j}</Table.Cell>
-                                            <Table.Cell style={{width: 30}}>{i}</Table.Cell>
-                                            <Table.Cell style={{width: "100%"}}>{macro}</Table.Cell>
-                                        </Table.Row>;
-                                    }
-                                );
-                            }
-                        )}
+                        {(data?.macros?.macros || [])
+                            .map((macros: any) => {
+                                    i++;
+                                    return macros.macros
+                                        .filter((macro: string): boolean => rx.test(macro))
+                                        .map((macro: string) => {
+                                                j++;
+                                                return <Table.Row key={j}>
+                                                    <Table.Cell style={{width: 30}}>{j}</Table.Cell>
+                                                    <Table.Cell style={{width: 30}}>{i}</Table.Cell>
+                                                    <Table.Cell style={{width: "100%"}}>{macro}</Table.Cell>
+                                                </Table.Row>;
+                                            }
+                                        );
+                                }
+                            )}
                     </Table.Body>
                 </Table>
             </div>

@@ -168,27 +168,30 @@ Use a connection string, like
 ----
 
 The HTTP server debugger will handle a connection string if it starts with `http:`.
-The `p1` parameter is the port, so the server listens for incoming HTTP requests on `localhost:p1`.
+The `p1` parameter (the `8080` in the example) is the port, so the server listens for incoming HTTP requests on `localhost:p1`.
 The URLs have the format `http://localhost:p1/command`.
 
 The connection string can also contain two options:
 
 . `client` is the address, as a string of the accepted client.
-A connection coming from a different client will be refused.
-Usually, it is `127.0.0.1`, but it may be different if you use IPv6.
-To see the actual string that the debugger sees when you connect to it, delete this option and then GET `http://localhost:p1/client`.
+Connections coming from a different client are refused.
+Usually, it is `127.0.0.1`.
++
+To see the actual string that the debugger sees GET `http://localhost:p1/client`.
 The debugger will answer with the actual string as it sees your client.
-Then stop the debugger and configure this string to be safe.
+Then stop the debugger and configure this string to be safe using the `client=...` option.
 
 . `cors` is the option to add an `Access-Control-Allow-Origin` header to the responses.
 The default is not to add this header.
-It is needed if you start the JavaScript code of the debugger from a different server.
+It is necessary if you start the JavaScript code of the debugger from a different server.
 This is mainly during the development of the debugger application, so generally you do not need this option.
++
+You may use `"` around the `cors` parameters if you run Jamal on Unix from shell and you use `*`.
 
 === HTTP Server Debugger Commands
 
 The commands are URL queries in this case.
-Each URL can be queried either using the method a`GET` or `POST` as documented.
+Each URL can be queried either using the method a `GET` or `POST` as documented.
 If you use any other method than the one the command handles, you will get an error.
 
 The documentation of the commands will include the URL, the usable method, either `GET` or `POST`, never both, the supposed content of the request if there is any required, the content of the response.

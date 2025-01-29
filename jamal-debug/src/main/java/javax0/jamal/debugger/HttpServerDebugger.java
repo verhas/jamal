@@ -12,6 +12,7 @@ import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 import static java.net.HttpURLConnection.*;
 
@@ -71,6 +72,20 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
      */
     private final BlockingQueue<Task> requestQueue = new LinkedBlockingQueue<>(1);
 
+    /**
+     * The debugger can stop at two places during macro evaluation.
+     *
+     * <ol>
+     *     <li> Before evaluating a macro.
+     *     <li> After a macro was evaluated.
+     * </ol>
+     * <p>
+     * To signal which it is, the processor calls  {@link #setBefore(int, CharSequence)},
+     * {@link #setAfter(int, CharSequence)}, and {@link #setStart(CharSequence)}.
+     * <p>
+     * For more explanation consult the Javadoc of these methods as they are defined in the {@link Debugger} interface.
+     * (Not in this class.)
+     */
     private enum State {
         BEFORE, AFTER
     }
@@ -169,6 +184,23 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
     String macros = "";
     int port;
 
+    /**
+     * Returns true if we are in a debugging state. In other cases the debugger will not stop, just perform the
+     * underlying action.
+     * <p>
+     *
+     * <ul>
+     *     <li>If the state is {@code NODEBUG}, we do not debug, no matter what.
+     *     <li>If the state is {@code STEP_IN}, we debug, no matter what.
+     *     <li>In all other cases we debug when we are on the top level or the current level is the same or lower than
+     *     the step level.
+     * </ul>
+     * <p>
+     * The last case is when we stepped over a macro, we went whatever deep, and we just returned after the whole
+     * shenanigan was evaluated without stepping into the details.
+     *
+     * @return {@code true} if we debug stopping and {@code false} if we don't stop.
+     */
     private boolean weDebug() {
         switch (state) {
             case NODEBUG:
@@ -218,7 +250,25 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         }
     }
 
+    /**
+     * Indicates whether the debugger is currently in a waiting state, ready to accept and process tasks from the HTTP server.
+     * <p>
+     * The {@code isWaiting} flag serves two primary purposes:
+     * <ul>
+     *     <li>To signal the HTTP server that the debugger is actively waiting for commands, enabling it to process incoming requests.</li>
+     *     <li>To prevent the HTTP server from queuing tasks when the debugger is not in a valid state to handle them.
+     *     Instead of queuing commands, the server responds with an error to inform the client that the debugger is busy.
+     *     This avoids unintended behavior, such as executing multiple queued commands when the user only intended to issue a single command.
+     *     For example, if the debugger is lagging and the user presses the "STEP" button several times, queuing those actions
+     *     could result in multiple steps being executed, which may not align with the user's intent.</li>
+     * </ul>
+     * <p>
+     * This field is set to {@code true} when the debugger enters a waiting state (e.g., while handling tasks in
+     * the {@link #handle()} method) and is reset to {@code false} when the debugger exits the waiting state
+     * (e.g., after completing task processing or encountering an error).
+     */
     volatile boolean isWaiting;
+
 
     private void handle() {
         if (state == RunState.RUN && handleState.equals(State.BEFORE)) {
@@ -235,12 +285,7 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
         try {
             isWaiting = true;
             while (true) {
-                final Task task;
-                try {
-                    task = requestQueue.take();
-                } catch (InterruptedException e) {
-                    throw new IllegalArgumentException("Debugger thread was interrupted", e);
-                }
+                final Task task = fetchNextTaskWaiting();
                 Map<String, Object> response = null;
                 switch (task.command) {
                     case ALL:
@@ -377,15 +422,39 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
             }
         } finally {
             isWaiting = false;
-            try {
-                Task task;
-                while ((task = requestQueue.poll(0, TimeUnit.NANOSECONDS)) != null) {
-                    task.cancel();
-                }
-            } catch (InterruptedException e) {
-                throw new IllegalArgumentException("Debugger thread was interrupted", e);
-            }
+            deleteAllTasksFromTheRequestQueue();
         }
+    }
+
+    private Task fetchNextTaskWaiting() {
+        try {
+            return requestQueue.take();
+        } catch (InterruptedException e) {
+            throw new IllegalArgumentException("Debugger thread was interrupted", e);
+        }
+    }
+
+    /**
+     * Fetch the next task from the queue and cancel it.
+     *
+     * @return {@code true} if the task was cancelled and {@code false} if the queue was empty.
+     */
+    private boolean cancelNextTask() {
+        try {
+            return Optional.ofNullable(requestQueue.poll(0, TimeUnit.NANOSECONDS))
+                    .map(t -> {
+                        t.cancel();
+                        return true;
+                    })
+                    .orElse(false);
+        } catch (InterruptedException e) {
+            throw new IllegalArgumentException("Debugger thread was interrupted", e);
+        }
+    }
+
+    private void deleteAllTasksFromTheRequestQueue() {
+        //noinspection StatementWithEmptyBody
+        while (cancelNextTask()) ;
     }
 
     private Map<String, Object> getJamalVersion() {
@@ -413,39 +482,48 @@ public class HttpServerDebugger implements Debugger, AutoCloseable {
                                 )
                         ).orElseGet(() -> Map.of(
                                 "id", macro.getId(),
-                                "type", macro.getClass().getName()
+                                "type", macroDebugDisplayString(macro)
                         )));
             }
         }
         return response;
     }
 
+    private String macroDebugDisplayString(Identified macro) {
+        if (macro instanceof DebugDisplay) {
+            final var dd = (DebugDisplay) macro;
+            return dd.debugDisplay();
+        } else {
+            return macro.getClass().getName();
+        }
+    }
+
     private Map<String, Object> getBuiltIns() {
-        final Map<String, Object> response = new HashMap<>();
-        final List<Debuggable.Scope> scopes = stub.getScopeList();
-        final var scopeList = new ArrayList<Map<String, ?>>(scopes.size());
-        response.put("macros", scopeList);
-        for (final var scope : scopes) {
-            final var macros = scope.getMacros();
+        final var scopeList = new ArrayList<Map<String, ?>>();
+        for (final var scope : stub.getScopeList()) {
             final var delimiters = scope.getDelimiterPair();
-            final List<String> macrosList = new ArrayList<>(macros.size());
-            for (final var macro : macros.values()) {
-                macrosList.add(macro.getId());
-            }
+            final var macrosList = scope.getMacros().values().stream().map(Identified::getId).collect(Collectors.toList());
             if (delimiters.open() != null && delimiters.close() != null) {
                 scopeList.add(Map.of("delimiters", Map.of("open", delimiters.open(), "close", delimiters.close()),
                         "macros", macrosList));
             }
         }
-        return response;
+        return Map.of("macros", scopeList);
     }
 
+    /**
+     * Cast the macro to a debuggable user-defined macro type and return it in an optional if it can be cast.
+     *
+     * @param macro something that identifiable, like a macro
+     * @return an optional with a macro in it guaranteed that this is a user-defined macro and debuggable, or else an
+     * empty optional.
+     */
     private Optional<Debuggable.UserDefinedMacro> getDebuggable(Identified macro) {
         final Optional<?> debuggable;
         if (macro instanceof Debuggable
                 && (debuggable = ((Debuggable<?>) macro).debuggable()).isPresent()
                 && debuggable.get() instanceof Debuggable.UserDefinedMacro) {
-            return (Optional<Debuggable.UserDefinedMacro>) debuggable;
+            return Optional.of((Debuggable.UserDefinedMacro) debuggable.get());
         } else {
             return Optional.empty();
         }

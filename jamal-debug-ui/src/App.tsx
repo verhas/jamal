@@ -25,6 +25,7 @@ import LevelDisplay from "./components/LevelDisplay";
 import EvaluateOutput from "./components/EvaluateOutput";
 import ErrorsDisplay from "./components/ErrorsDisplay";
 import {BEFORE, DISCONNECTED} from "./Constants";
+import MacroFilter from "./components/MacroFilter";
 
 const App = () => {
 
@@ -47,7 +48,8 @@ const App = () => {
         stateMessage: "",
         serverVersion: "unknown",
         currentTabStop: 0,
-        wasErrorAlerted: false
+        wasErrorAlerted: false,
+        filter: ""
     });
 
     useEffect(() => {
@@ -85,7 +87,7 @@ const App = () => {
             <Grid
                 container
                 direction="row"
-                justify="space-around"
+                justifyContent="space-around"
                 alignContent="center"
             >
                 <Button onClick={() => state.setShowP(!state.showP)}
@@ -112,7 +114,7 @@ const App = () => {
                 container
                 direction="row"
                 xs={3}
-                justify="space-around"
+                justifyContent="space-around"
                 alignItems="flex-end"
                 alignContent="flex-end"
             >
@@ -123,7 +125,7 @@ const App = () => {
 
     const builtInMacroList = (
         <Paper className="App_Paper, App_MacroList">
-            <BuiltInMacrosDisplay data={state.data}/>
+            <BuiltInMacrosDisplay data={state.data} filter={state.filter}/>
         </Paper>
     );
 
@@ -133,6 +135,7 @@ const App = () => {
                 data={state.data}
                 captionSetter={state.setResultCaption}
                 contentSetter={state.setEvalOutput}
+                filter={state.filter}
             />
         </Paper>
     );
@@ -141,8 +144,8 @@ const App = () => {
         <Grid item xs={6}>
             <Paper className="App_Paper, run_input">
                 <div style={{marginLeft: "5px", fontSize: "10pt", fontWeight: "bold"}}>{"input"}</div>
-                <Input text={state.stateMessage !== BEFORE ? state.inputAfter : state.inputBefore}
-                       macro={state.stateMessage !== BEFORE ? '' : state.macro}/>
+                <Input text={state.stateMessage === BEFORE ? state.inputBefore : state.inputAfter}
+                       macro={state.stateMessage === BEFORE ? state.macro : ''}/>
             </Paper>
         </Grid>
     );
@@ -185,11 +188,14 @@ const App = () => {
                     direction="row"
                     spacing={2}
                     style={{width: "100%"}}
-                    justify="space-around"
+                    justifyContent="space-around"
                 >
                     {runInput}
 
                     <Grid item xs={6}>
+                        <div>
+                            <MacroFilter filter={state.filter} id={"filter"} onFilterChange={(newFilter:string) =>{state.setFilter(newFilter)}}/>
+                        </div>
                         <Tabs
                             value={state.currentTabStop}
                             onChange={tabPanelChange}
@@ -201,7 +207,8 @@ const App = () => {
                             <Tab value={1} label="user defined" disabled={state.stateMessage === DISCONNECTED}/>
                             <Tab value={2} label={<>
                                 <Button onClick={() => evaluate(input2Evaluate)} color="blue"
-                                        caption={"Evaluate"} disabled={state.currentTabStop !== 2 || state.stateMessage === DISCONNECTED}>{<></>}</Button>
+                                        caption={"Evaluate"}
+                                        disabled={state.currentTabStop !== 2 || state.stateMessage === DISCONNECTED}>{<></>}</Button>
                             </>} disabled={state.stateMessage === DISCONNECTED}/>
                             <Tab value={3} label="breakpoints" disabled={state.stateMessage === DISCONNECTED}/>
                             <Tab value={4}
@@ -231,7 +238,7 @@ const App = () => {
                     direction="row"
                     spacing={2}
                     style={{width: "100%"}}
-                    justify="space-around"
+                    justifyContent="space-around"
                 >
                     <Grid item xs={6}>
                         {runOutput}
@@ -246,7 +253,7 @@ const App = () => {
                     direction="row"
                     spacing={2}
                     style={{width: "100%"}}
-                    justify="space-around"
+                    justifyContent="space-around"
                 >
                     <Grid item xs={12}>
                         <div className="App_LicenseLine">

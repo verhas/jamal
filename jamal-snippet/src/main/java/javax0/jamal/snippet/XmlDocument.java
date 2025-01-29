@@ -22,7 +22,7 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 
-public class XmlDocument implements Identified, Evaluable, ObjectHolder<Document> {
+public class XmlDocument implements Identified, Evaluable, ObjectHolder<Document>, DebugDisplay {
     final String id;
     final Document doc;
     final XPath xPath;
@@ -155,5 +155,19 @@ public class XmlDocument implements Identified, Evaluable, ObjectHolder<Document
     @Override
     public Document getObject() {
         return doc;
+    }
+
+    @Override
+    public String debugDisplay() {
+        try {
+            final var s = evaluate();
+            if( s.length() > 40 ) {
+                return s.substring(0, 40) + "...";
+            }else{
+                return s;
+            }
+        } catch (BadSyntax e) {
+            return e.getMessage();
+        }
     }
 }

@@ -1,4 +1,5 @@
 = Jamal Debugger UI
+{%@import ../version.jim%}\
 
 This directory contains the source code for the UI part of the Jamal debugger.
 The Jamal debugger UI is a JavaScript React app that works in a web browser.
@@ -7,6 +8,8 @@ The debugger module can also help download the UI code to the browser.
 
 The server part of the debugger is in the `jamal-debug` module.
 
+== Creating Release
+
 You can use NPM to develop the application, and when it is ready, you should execute the shell
 
    ./deployprod
@@ -14,7 +17,7 @@ You can use NPM to develop the application, and when it is ready, you should exe
 This script will do the following:
 
 * Fetch the version of the project from the `../version.jim` file.
-It is needed by the application to know check the compatibility with the server.
+It is necessary for the application to know check the compatibility with the server.
 If the two versions are not compatible, the application will not work.
 
 * Build the application with the `npm run build` command.
@@ -47,3 +50,36 @@ After the test is started, the execution will wait for a debugger to connect.
 * Debug the Jamal macros, play with the debugger.
 
 * When the execution has finished, the test will also exit.
+
+== Testing The UI
+
+To start the UI, execute
+
+  npm run start
+
+This will start a server at the port 3000 from which you can download the front-end in the browser.
+Npm also starts the default browser usually for this URL.
+
+To have something to debug you also need to start Jamal in debug mode.
+To do that you can use the command
+
+  sh ./jamal.{%VERSION%}.sh -T7 "-debug=http:8080?cors=*" README.adoc.jam README.txt
+
+This will start the debugger on the port `8080` with CORS enabled.
+This way, the debugger front-end downloaded from the port `3000` will be allowed to use the server.
+
+At this point your URL in the browser will be
+
+  localhost:3000
+
+which should be extended to
+
+  localhost:3000?port=8080
+
+to tell the front-end that we want to debug the process listening on the port `8080`.
+
+
+
+
+
+
