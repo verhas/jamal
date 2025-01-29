@@ -100,11 +100,15 @@ This way you can freely include resource files provided in JAR file or through t
 
 == `in`
 
-The release 2.5.0 introduced the option `in`.
+
 The option can define multiple prefixes for the file name to be included.
 These prefixes are separated by the `|` character.
 When performing the include operation, the first prefix that matches the file name is used.
 
+For example `{@include (in="a/|b/|c") bumm.txt}` will try to include `a/bumm.txt`, `b/bumm.txt`, and lastly `cbumm.txt` whichever succeeds first.
+
 The prefix is used at the start of the file name without any extra separator.
 
 This option can be used for relative file names, where the location of the file may be different depending on the context.
+
+The release 2.5.0 introduced the option `in`.

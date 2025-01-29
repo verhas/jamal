@@ -101,14 +101,19 @@ The macros defined in the imported file will be available in the importing file 
 
 == `in`
 
-The release 2.5.0 introduced the option `in`.
+
 The option can define multiple prefixes for the file name to be imported.
 These prefixes are separated by the `|` character.
 When performing the import operation, the first prefix that matches the file name is used.
 
+For example `{@import (in="a/|b/|c`) bumm.txt}` will try to import `a/bumm.txt`, `b/bumm.txt`, and lastly `cbumm.txt` whichever succeeds first.
+
 The prefix is used at the start of the file name without any extra separator.
 
 This option can be used for relative file names, where the location of the file may be different depending on the context.
+
+The release 2.5.0 introduced the option `in`.
+
 
 == `global` (boolean)
 
