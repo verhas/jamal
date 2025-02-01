@@ -1,0 +1,137 @@
+= Jamal Python Macros
+{%@import res:jamal.jim%}
+{%@snip:xml pom=pom.xml%}\
+{%#define VERSION={%pom /project/version/text()%}%}\
+
+Python integration module for
+
+This macro package can be used to create built-in macros defined in Python.
+A Python defined macro is a function ``def``-ined.
+The name of the macro is the name of the function.
+The function gets one ``str`` argument.
+The result of the macro is what the function prints to the standard output.
+
+For example:
+{%@comment We have to run the pyton samples in isolated processes, because the
+used output command in Jamal:jamal closes the processor and that way kills the Python process.
+It is not feasible to change the output macro, because it is also used to demonstrate full processing
+that shows the effect of closing, what happens at the end of the process.
+
+This way each {output} call will span a new python interpreter. A bit slow, but bearable.
+%}
+{%@option isolatedOutput%}{%@define Boaaaa=Boaaaa%}
+{%#def simple_sample={%sample/
+{@python
+def chubakka(input):
+    print("Chubakka says: " + input, end='')
+}
+{@chubakka {%Boaaaa%}}
+%}%}
+
+will result in:
+
+{%output%}
+
+To successfully use this macro, you must have a Python interpreter installed.
+
+The macro package is part of the
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>{%pom /project/artifactId/text()%}</artifactId>
+    <version>{%VERSION%}</version>
+</dependency>
+----
+
+
+== Macros Implemented
+
+{%@snip:collect from=src/main/ exclude=.DS%}
+
+=== `python`
+
+The macro `python` is used to define a built-in macro in Python.
+For example, the following call will define the built-in macro ``chubakka``.
+
+{%simple_sample%}
+
+The first line of the code
+
+    {%#ranges range=5
+{%simple_sample%}%}
+
+defines a function.
+The function name will be used as the macro name.
+The parameter `input` will be the string, which follows the macro name, in the example above `{%Boaaaa%}`.
+The result of the macro is what the Python code prints to the standard output.
+
+[NOTE]
+====
+The regular expression to find the name of the macro is
+
+  {%@snip PYTHON_START_REGEX /"(.*)"/%}
+
+====
+
+Sometimes you cannot rely on the Python code structure to let the macro figure out the macro and function name.
+You may even want to have the names different.
+In that case you can use the `id` and `function` parops.
+Using `id` or `id ` and `function` together will skip the pattern matching seeking for function head.
+
+{%sample/
+{@python (id=OO7 function=agent)
+# This is a code that has many methods, and thus we cannot use the built-in pattern mathcing
+def name():
+    print(" Bond",end='')
+def agent(txt):
+    name()
+    print(",",txt,end='')
+    name()
+}{@OO7 James}%}
+
+will result in
+
+{%output%}
+
+The reference list of the parops for this macro is the following:
+
+{%#replaceLines replace="~\\s*//\\s*~~" replace="/^.*?\"(.*)\".*/* `$1`/" replace="/\",\\s*\"/`, alias `/"
+{%@snip PYTHON_PAROPS%}%}
+
+== Python Location
+
+To use these macros, there must be an installed Python interpreter on the system.
+The macro will try to locate the interpreter searching on well-known locations.
+
+If there are multiple interpreters available, it will select the one with the highest version.
+If there are multiple interpreters of the same version, the first found will be used.
+
+These locations are the following:
+
+=== Windows
+
+{%#replaceLines replace="/\"//" replace="/,//" replace="/System.getenv\\((.*)\\)/$1/"
+{%@snip windows_locations_list%}%}
+
+=== macOS
+
+{%#replaceLines replace="/\"//" replace="/,//"
+{%@snip mac_locations_list%}%}
+
+
+=== Linux
+
+{%#replaceLines replace="/\"//" replace="/,//"
+{%@snip linux_locations_list%}%}
+
+
+=== Common
+
+If the above operating system specific locations fail, then the code will try
+
+=== Configuration
+
+If the environment variable ``{%@snip ENV_JAMAL_PYTHON_INTERPRETER%}`` is defined then the value of it will be used and the whole search for Python interpreter is skipped.
+It is recommended to configure the interpreter this way because the search can use significant processing power starting the different interpreters as separate processes querying their version.

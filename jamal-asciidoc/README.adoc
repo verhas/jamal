@@ -733,6 +733,8 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-git`
 
+* `jamal-py`
+
 * `jamal-test`
 
 * `jamal-debug`

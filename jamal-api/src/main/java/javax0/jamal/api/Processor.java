@@ -503,7 +503,7 @@ public interface Processor extends AutoCloseable {
      *
      * @param m             the macro object
      * @param stateSupplier used to create the state upon the first call.
-     *                      It is usually a {@code T::next} method reference.
+     *                      It is usually a {@code T::new} method reference.
      * @param <T>           the type of the state object
      * @return the state object
      */

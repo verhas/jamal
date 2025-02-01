@@ -195,6 +195,9 @@ Macros implementing SQL interface.
 {chapter :xls:macro}
 Macros implementing Excel interface.
 
+{chapter :py:macro}
+Macros implementto help defining macros in Python.
+
 {chapter :rest:macro}
 Macros implementing REST interface.
 

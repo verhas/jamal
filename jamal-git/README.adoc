@@ -216,7 +216,7 @@ result in:
 .output
 [source]
 ----
-The latest commit to Jamal is: "mainly javadoc and dependency version updates"
+The latest commit to Jamal is: "some code is fixed, dependencies updated"
 ----
 
 

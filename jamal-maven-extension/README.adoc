@@ -285,6 +285,10 @@ For further information read the link:../jamal-rest/README.adoc[documentation] o
 
 For further information read the link:../jamal-git/README.adoc[documentation] of the module.
 
+===  `python`
+
+For further information read the link:../jamal-py/README.adoc[documentation] of the module.
+
 
 
 

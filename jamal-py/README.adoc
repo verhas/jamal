@@ -1,0 +1,186 @@
+= Jamal Python Macros
+
+
+Python integration module for
+
+This macro package can be used to create built-in macros defined in Python.
+A Python defined macro is a function ``def``-ined.
+The name of the macro is the name of the function.
+The function gets one ``str`` argument.
+The result of the macro is what the function prints to the standard output.
+
+For example:
+
+
+.Jamal source
+[source]
+----
+{@python
+def chubakka(input):
+    print("Chubakka says: " + input, end='')
+}
+{@chubakka Boaaaa}
+----
+
+will result in:
+
+.output
+[source]
+----
+Chubakka says:  Boaaaa
+----
+
+
+To successfully use this macro, you must have a Python interpreter installed.
+
+The macro package is part of the
+
+[source,xml]
+----
+<dependency>
+    <groupId>com.javax0.jamal</groupId>
+    <artifactId>jamal-py</artifactId>
+    <version>2.8.3-SNAPSHOT</version>
+</dependency>
+----
+
+
+== Macros Implemented
+
+
+
+=== `python`
+
+The macro `python` is used to define a built-in macro in Python.
+For example, the following call will define the built-in macro ``chubakka``.
+
+.Jamal source
+[source]
+----
+{@python
+def chubakka(input):
+    print("Chubakka says: " + input, end='')
+}
+{@chubakka Boaaaa}
+----
+
+The first line of the code
+
+    def chubakka(input):
+
+
+defines a function.
+The function name will be used as the macro name.
+The parameter `input` will be the string, which follows the macro name, in the example above `Boaaaa`.
+The result of the macro is what the Python code prints to the standard output.
+
+[NOTE]
+====
+The regular expression to find the name of the macro is
+
+  def\\s+(\\w[a-zA-Z0-9]*)\\s*\\(.*\\)\\s*:\\s*\n
+
+====
+
+Sometimes you cannot rely on the Python code structure to let the macro figure out the macro and function name.
+You may even want to have the names different.
+In that case you can use the `id` and `function` parops.
+Using `id` or `id ` and `function` together will skip the pattern matching seeking for function head.
+
+.Jamal source
+[source]
+----
+{@python (id=OO7 function=agent)
+# This is a code that has many methods, and thus we cannot use the built-in pattern mathcing
+def name():
+    print(" Bond",end='')
+def agent(txt):
+    name()
+    print(",",txt,end='')
+    name()
+}{@OO7 James}
+----
+
+will result in
+
+.output
+[source]
+----
+Bond,  James Bond
+----
+
+
+The reference list of the parops for this macro is the following:
+
+* `id`, alias `name`, alias `macro`
+defines the name of the macro.
+If this is not defined, the macro will try to use pattern matching, finding the `def XXXX(txt):` structure in the code.
+* `function`, alias `def`
+defines the name of the function if it is different from the name of the macro.
+It is an error using this parop without using `id` (or one of its aliases).
+
+
+The parops are all aliases technically.
+It means that you cannot define them as user-defined macros.
+They have to be present on the macro between `(` and `)` characters.
+
+
+== Python Location
+
+To use these macros, there must be an installed Python interpreter on the system.
+The macro will try to locate the interpreter searching on well-known locations.
+
+If there are multiple interpreters available, it will select the one with the highest version.
+If there are multiple interpreters of the same version, the first found will be used.
+
+These locations are the following:
+
+=== Windows
+
+                    C:\\Python310\\python.exe
+                    C:\\Python39\\python.exe
+                    C:\\Python38\\python.exe
+                    C:\\Python37\\python.exe
+                    C:\\Python36\\python.exe
+                    C:\\Python35\\python.exe
+                    C:\\Python34\\python.exe
+                    C:\\Python33\\python.exe
+                    C:\\Python32\\python.exe
+                    C:\\Python31\\python.exe
+                    C:\\Python30\\python.exe
+                    LOCALAPPDATA + \\Programs\\Python\\Python310\\python.exe
+                    LOCALAPPDATA + \\Programs\\Python\\Python39\\python.exe
+                    LOCALAPPDATA + \\Programs\\Python\\Python38\\python.exe
+                    LOCALAPPDATA + \\Programs\\Python\\Python37\\python.exe
+
+
+=== macOS
+
+                    /usr/local/bin/python3
+                    /usr/bin/python3
+                    /opt/homebrew/bin/python3
+                    /usr/local/bin/python
+                    /usr/bin/python
+                    /opt/homebrew/bin/python
+
+
+
+=== Linux
+
+                    /usr/bin/python3
+                    /usr/local/bin/python3
+                    /bin/python3
+                    /usr/bin/python
+                    /usr/local/bin/python
+                    /bin/python
+
+
+
+=== Common
+
+If the above operating system specific locations fail, then the code will try
+
+=== Configuration
+
+If the environment variable ``JAMAL_PYTHON_INTERPRETER`` is defined then the value of it will be used and the whole search for Python interpreter is skipped.
+It is recommended to configure the interpreter this way because the search can use significant processing power starting the different interpreters as separate processes querying their version.

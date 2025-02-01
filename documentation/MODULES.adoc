@@ -265,29 +265,34 @@ Macros implementing SQL interface.
 
 Macros implementing Excel interface.
 
-=== 38. link:https://github.com/verhas/jamal/blob/master/jamal-rest/README.adoc[REST] ^_macro_^
+=== 38. link:https://github.com/verhas/jamal/blob/master/jamal-py/README.adoc[PY] ^_macro_^
+
+
+Macros implementto help defining macros in Python.
+
+=== 39. link:https://github.com/verhas/jamal/blob/master/jamal-rest/README.adoc[REST] ^_macro_^
 
 
 Macros implementing REST interface.
 
-=== 39. link:https://github.com/verhas/jamal/blob/master/jamal-java/README.adoc[JAVA] ^_debugger_^
+=== 40. link:https://github.com/verhas/jamal/blob/master/jamal-java/README.adoc[JAVA] ^_debugger_^
 
 
 Experimental module integrating the Java compiler into Jamal as macros.
 
-=== 40. link:https://github.com/verhas/jamal/blob/master/jamal-debug-ui/README.adoc[DEBUG-UI] ^_debugger_^
+=== 41. link:https://github.com/verhas/jamal/blob/master/jamal-debug-ui/README.adoc[DEBUG-UI] ^_debugger_^
 
 
 This is not a module.
 The code in the directory `jamal-debug-ui` contains the REACT.js based ui for the debugger.
 
-=== 41. link:https://github.com/verhas/jamal/blob/master/jamal-docker/README.adoc[DOCKER] ^_embed_^
+=== 42. link:https://github.com/verhas/jamal/blob/master/jamal-docker/README.adoc[DOCKER] ^_embed_^
 
 
 This is not a module.
 The code in the directory `jamal-docker` contains a Dockerfile to build a Docker image with Jamal.
 
-=== 42. link:https://github.com/verhas/jamal/blob/master/jamal-packaging/README.adoc[PACKAGING] ^_packaging_^
+=== 43. link:https://github.com/verhas/jamal/blob/master/jamal-packaging/README.adoc[PACKAGING] ^_packaging_^
 
 
 

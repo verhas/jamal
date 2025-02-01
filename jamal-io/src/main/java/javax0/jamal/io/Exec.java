@@ -95,7 +95,7 @@ public class Exec implements Macro, Scanner.FirstLine {
         // It does not have any "value" and whenever the code would evaluate the macro it will result an error.
         // Similarly, the name MUST NOT be defined as a user defined macro at the time the `exec` macro is evaluated.
         // The exec macro handles the name as the core built-in macro `define` when a `!` is used after the macro name.
-        // If there is a user defined macro of the same name on the same level, an error will occur.
+        // If there is a user-defined macro of the same name on the same level, an error will occur.
         final var wait = scanner.number(null, "wait", "waitMax", "timeOut");
         // {%@define wait=This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
         // If the process does not finish in the specified time, a BadSyntax exception will be thrown.%}{%wait%}

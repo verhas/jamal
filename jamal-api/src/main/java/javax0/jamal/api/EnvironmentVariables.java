@@ -215,20 +215,25 @@ end snippet
     }
 
     /**
-     * Get a configuration parameter. The name {@code env} is the name of the environment variable.
+     * Get a configuration parameter.
+     * <p>
+     * The name {@code env} is the name of the environment variable.
+     *
+     * The search order for a {@code JAMAL_CONFIG_VALUE} is the following:
      *
      * <ol>
-     * <li>The method first looks at the system variables, to see if there is a value defined there and </li>
-     * <li>if there is none then it tries to read the environment variable.</li>
-     * <li>If the configuration parameter is not defined in either place
-     * then it tries to use the value from the properties file {@code ~/.jamal/settings.properties} or
-     * {@code ~/.jamal/settings.xml}.</li>
+     * <li>system variables (those defined after the {@code -D} on the command line) {@code jamal.config.value}
+     * <li>environment variable {@code JAMAL_CONFIG_VALUE}
+     * <li>value of {@code config.value} property from the properties file {@code ~/.jamal/settings.properties}
+     * <li>value of {@code config.value} property from the XML configuration file {@code ~/.jamal/settings.xml}
      * </ol>
      * <p>
-     * The name {@code env} is capital letters, words concatenated using
-     * {@code _}. The system variable name is the same as the environment variable name, but lower cased and using
-     * {@code .} instead of {@code _}. The property name is the same as the system variable name, but without the
+     * <ol>
+     * <li>The name in the variable {@code env} is capital letters, words concatenated using {@code _}.
+     * <li>The system variable name is the same as the environment variable name, but lower cased and using {@code .}
+     * <li>The property name is the same as the system variable name, but without the
      * leading {@code jamal.} prefix if there was any in the queried configuration.
+     * </ol>
      *
      * @param env the name of the environment variable
      * @return the string value of the system property, or the environment variable value, or {@code empty} if not
@@ -275,6 +280,7 @@ end snippet
     public static String getConfigDir() throws IOException {
         return PropertiesSingleton.jamalDirectory;
     }
+
     public static final String INSECURE_CONFIGURATION = "INSECURE CONFIGURATION: ";
 
     private static void assertPathPrivate(Path path) throws IOException {
@@ -334,8 +340,6 @@ end snippet
         assertFileSafe(Paths.get(PropertiesSingleton.jamalPFile));
         assertFileSafe(Paths.get(PropertiesSingleton.jamalXFile));
     }
-
-
 
 
     /**
