@@ -1,10 +1,12 @@
 package javax0.jamal.py;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.TimeUnit;
 
@@ -74,19 +76,13 @@ public class PythonInterpreter implements AutoCloseable {
     public Process launch() {
         try {
             // Move Python code from a resource file
-            Path pythonFile = Files.createTempFile("Processor","py");
-            try (var resourceStream = PythonInterpreter.class.getClassLoader().getResourceAsStream("Processor.py")) {
-                if (resourceStream == null) {
-                    throw new RuntimeException("Could not find Python processor source code");
-                }
-                Files.copy(resourceStream, pythonFile, StandardCopyOption.REPLACE_EXISTING);
-            }
+            Path pythonFile = Files.createTempFile("Processor", "py");
+            extractControlProgram(pythonFile);
 
             // Find a Python interpreter
-            String pythonInterpreter = new PythonFinder(false).findPythonInterpreter();
-            if (pythonInterpreter == null) {
-                throw new RuntimeException("Error: No Python interpreter found.");
-            }
+            String pythonInterpreter = new PythonFinder(false)
+                    .findPythonInterpreter()
+                    .orElseThrow(() -> new RuntimeException("Error: No Python interpreter found."));
 
             // Start the Python script
             ProcessBuilder pb = new ProcessBuilder(pythonInterpreter, pythonFile.toFile().getAbsolutePath());
@@ -95,6 +91,15 @@ public class PythonInterpreter implements AutoCloseable {
             return pb.start();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void extractControlProgram(Path pythonFile) throws IOException {
+        try (var resourceStream = PythonInterpreter.class.getClassLoader().getResourceAsStream("Processor.py")) {
+            if (resourceStream == null) {
+                throw new RuntimeException("Could not find Python processor source code");
+            }
+            Files.copy(resourceStream, pythonFile, StandardCopyOption.REPLACE_EXISTING);
         }
     }
 

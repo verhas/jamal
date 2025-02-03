@@ -10,6 +10,7 @@ public class TestPythonFinder {
     public static void checkPythonAvailability() {
         PythonFinder.interpreter.set(null);
         Assumptions.assumeTrue(new PythonFinder(true).findPythonInterpreter() != null, "Skipping tests: Python is not installed");
+        Assumptions.assumeTrue(System.getenv(PythonFinder.ENV_JAMAL_PYTHON_INTERPRETER) == null, "Skipping tests: Python is configured in environment");
     }
 
     @BeforeEach
@@ -28,9 +29,10 @@ public class TestPythonFinder {
     @Test
     @DisplayName("Find the configured python interpreter")
     void findPythonInterpreterConfiguredOK() {
-        final var interpreter = new PythonFinder(false).findPythonInterpreter();
+        final var interpreter = new PythonFinder(false).findPythonInterpreter().orElseThrow();
         System.setProperty("jamal.python.interpreter", interpreter);
-        final var configured = new PythonFinder(true).findPythonInterpreter();
+        PythonFinder.interpreter.set(null);
+        final var configured = new PythonFinder(true).findPythonInterpreter().orElseThrow();
         Assertions.assertEquals(interpreter, configured);
         System.clearProperty("jamal.python.interpreter");
     }
@@ -41,14 +43,14 @@ public class TestPythonFinder {
         System.setProperty("jamal.python.interpreter", "something nonsense");
         final var configured = new PythonFinder(true).findPythonInterpreter();
         System.clearProperty("jamal.python.interpreter");
-        Assertions.assertNull(configured);
+        Assertions.assertTrue(configured.isEmpty());
     }
 
     @Test
     @DisplayName("Configured python interpreter does not exist, but no check")
     void findPythonInterpreterConfiguredBadNoCheck() {
         System.setProperty("jamal.python.interpreter", "something nonsense");
-        final var configured = new PythonFinder(false).findPythonInterpreter();
+        final var configured = new PythonFinder(false).findPythonInterpreter().orElseThrow();
         System.clearProperty("jamal.python.interpreter");
         Assertions.assertEquals("something nonsense", configured);
     }
