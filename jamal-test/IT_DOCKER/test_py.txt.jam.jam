@@ -1,0 +1,6 @@
+{%@comment%}\
+{@comment nosave}\
+{@python def Hello(me):
+    print(f"hello {me}")
+}\
+{@hello You}

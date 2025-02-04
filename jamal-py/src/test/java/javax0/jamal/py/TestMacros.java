@@ -4,6 +4,10 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.*;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestMacros {
@@ -24,13 +28,23 @@ public class TestMacros {
     }
 
     @Test
+    @DisplayName("Just execute the code, no macro defined")
+    void testSimpleExecute() throws BadSyntax, Exception {
+        TestThat.theInput("{%@python (execute) def myMacro(text):\n" +
+                        "    print(f\">>{text}<<\",end='')\n" +
+                        "%}" +
+                        "{%@myMacro al\"ma%}").usingTheSeparators("{%", "%}")
+                .throwsBadSyntax("There is no built.in macro.*");
+    }
+
+
+    @Test
     @DisplayName("Test when the Python code is erronous")
     void testSyntaxErrorMacro() throws BadSyntax, Exception {
         TestThat.theInput("{%@python def myMacro(text):\n" +
                         "    a = a +\n" +
-                        "%}" +
-                        "{%@myMacro al\"ma%}").usingTheSeparators("{%", "%}")
-                .results("name 'myMacro' is not defined");
+                        "%}").usingTheSeparators("{%", "%}")
+                .results(s -> s.startsWith("invalid syntax"));
     }
 
     @Test
@@ -70,5 +84,61 @@ public class TestMacros {
                         "%}" +
                         "{%@myMacro al\"ma%}").usingTheSeparators("{%", "%}")
                 .results(">> al\"ma<<");
+    }
+    @Test
+    @DisplayName("Error while executing the macro")
+    void errorWhileMacro() throws BadSyntax, Exception {
+        TestThat.theInput("{%@python \n" +
+                        "def meMacro(text):\n" +
+                        "    print(f\">>{text/0}<<\",end='')\n" +
+                        "%}" +
+                        "{%@meMacro 3%}").usingTheSeparators("{%", "%}")
+                .results("unsupported operand type(s) for /: 'str' and 'int'");
+    }
+
+    @Test
+    @DisplayName("Test it is not in a venv")
+    void testNotVenv() throws BadSyntax, Exception {
+        TestThat.theInput("{%@python (execute)\n" +
+                        "import sys\n" +
+                        "\n" +
+                        "if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):\n" +
+                        "    print(\"Running inside a virtual environment.\", end='')\n" +
+                        "else:\n" +
+                        "    print(\"Not running in a virtual environment.\", end='')%}"
+                ).usingTheSeparators("{%", "%}")
+                .results("Not running in a virtual environment.");
+    }
+    @Test
+    @DisplayName("Test it is a venv")
+    void tesVenv() throws BadSyntax, Exception {
+        TestThat.theInput("{%#python (execute directory=\"{%@dev:root%}/jamal-py\")\n" +
+                        "import sys\n" +
+                        "\n" +
+                        "if hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix):\n" +
+                        "    print(\"Running inside a virtual environment.\", end='')\n" +
+                        "else:\n" +
+                        "    print(\"Not running in a virtual environment.\", end='')%}"
+                ).usingTheSeparators("{%", "%}")
+                .results("Running inside a virtual environment.");
+    }
+
+    @Test
+    @DisplayName("Test self closer")
+    void tesCloserDefined() throws BadSyntax, Exception {
+        final var file = Paths.get("test.txt").toFile();
+        final var fileName = file.getAbsolutePath();
+        if( file.exists() ){
+            //noinspection ResultOfMethodCallIgnored
+            file.delete();
+        }
+        file.deleteOnExit();
+        TestThat.theInput("{%#python (close)\n" +
+                        "with open(\""+fileName+"\",\"w\") as file:\n" +
+                        "    file.write(\"hello\")\n" +
+                        "%}"
+                ).usingTheSeparators("{%", "%}")
+                .results("");
+        Assertions.assertTrue(file.exists());
     }
 }

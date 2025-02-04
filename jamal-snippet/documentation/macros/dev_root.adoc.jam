@@ -23,7 +23,7 @@ The default list is the following:
 {%@snip PLACEHOLDERS%}%}
 +
 As you can see, the list is quite extensive.
-It is recommended to place a `ROOT.dir` file in your root directory as a last resort and use this option if even that is not a good solution for your needs.
+It is recommended to place a `ROOT.dir` file in your root directory as a last resort.
 
 * `format` (string) specifies the format of the result.
 This format is the same as the format of the `file` and `directory` macros.

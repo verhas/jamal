@@ -8,7 +8,7 @@ public class TestPythonInterpreter {
     @Test
     void testPython() throws Exception {
         final String hello;
-        try (final var python = new PythonInterpreter()) {
+        try (final var python = new PythonInterpreter(null,null)) {
             hello = python.execute("" +
                     "def a():\n" +
                     "    print(\"hello\", end='')\n" +

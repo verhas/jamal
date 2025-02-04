@@ -1,7 +1,8 @@
 #!/bin/sh
+
 export JAMAL=../../jamal.sh
 
-echo "maven.load.include=com.javax0.jamal:jamal-test:*,com.javax0.jamal:jamal-groovy:1.12.6
+echo "maven.load.include=com.javax0.jamal:jamal-test:*,com.javax0.jamal:jamal-groovy:2.8.3-SNAPSHOT
 maven.load.exclude=.com.javax0.jamal:jamal-api:*" > ~/.jamal/settings.properties
 
 chmod 0700 $JAMAL

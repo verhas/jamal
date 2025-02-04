@@ -24,16 +24,16 @@ public class PythonFinder {
     final boolean checkConfigured;
 
     // snipline ENV_JAMAL_PYTHON_INTERPRETER filter="(.*)"
-    private static final String ENV_JAMAL_PYTHON_INTERPRETER = "JAMAL_PYTHON_INTERPRETER";
+    static final String ENV_JAMAL_PYTHON_INTERPRETER = "JAMAL_PYTHON_INTERPRETER";
 
     public PythonFinder(boolean checkConfigured) {
         this.checkConfigured = checkConfigured;
     }
 
-    public String findPythonInterpreter() {
+    public Optional<String> findPythonInterpreter() {
 
         if (PythonFinder.interpreter.get() != null) {
-            return PythonFinder.interpreter.get().orElse(null);
+            return PythonFinder.interpreter.get();
         }
 
         final var optPython = EnvironmentVariables.getenv(ENV_JAMAL_PYTHON_INTERPRETER);
@@ -41,10 +41,10 @@ public class PythonFinder {
             final var pythonInterpreter = optPython.get();
             if (checkConfigured) {
                 if (getPythonVersion(pythonInterpreter) == null) {
-                    return null;
+                    return Optional.empty();
                 }
             }
-            return pythonInterpreter;
+            return optPython;
         }
 
         String os = System.getProperty("os.name").toLowerCase();
@@ -123,7 +123,7 @@ public class PythonFinder {
         // Return the newest Python interpreter (the highest version)
         final var interpreter = validInterpreters.isEmpty() ? null : validInterpreters.firstEntry().getValue();
         PythonFinder.interpreter.compareAndSet(null, Optional.ofNullable(interpreter));
-        return interpreter;
+        return PythonFinder.interpreter.get();
     }
 
     private String getPythonVersion(String pythonExecutable) {

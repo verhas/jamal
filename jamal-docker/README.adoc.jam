@@ -8,9 +8,9 @@ Building the container from the sources is only needed by the maintainers.
 You can run Jamal from the container downloading from docker hub.
 
 To run Jamal from docker, you have to issue the commands:
-{%@define CONTAINER_NAME=myJamalContainer%}
+{%@define CONTAINER_NAME=my_jamal_container%}
 
-[source,sh]
+[source,bash]
 ----
 docker build -t {%CONTAINER_NAME%} .
 docker run  --volume $(pwd):/home/jamal/q -it {%CONTAINER_NAME%} /jamal args

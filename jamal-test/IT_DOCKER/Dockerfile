@@ -1,6 +1,6 @@
 FROM alpine
 RUN apk update
-RUN apk add --no-cache openjdk17 maven git
+RUN apk add --no-cache openjdk17 maven git python3 py3-pip
 RUN addgroup TESTGROUP
 RUN adduser -G TESTGROUP -D -s /bin/bash jamal
 

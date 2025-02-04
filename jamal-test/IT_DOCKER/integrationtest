@@ -119,7 +119,7 @@ cd ../jamal-test/IT_DOCKER
 
 export JAMAL=../../jamal.sh
 
-echo "maven.load.include=com.javax0.jamal:jamal-test:*,com.javax0.jamal:jamal-ruby:1.12.6
+echo "maven.load.include=com.javax0.jamal:jamal-test:*,com.javax0.jamal:jamal-ruby:2.8.3-SNAPSHOT
 maven.load.exclude=.com.javax0.jamal:jamal-api:*" > ~/.jamal/settings.properties
 
 chmod 0700 $JAMAL
@@ -141,7 +141,7 @@ rm test_ruby.test
 
 export JAMAL=../../jamal.sh
 
-echo "maven.load.include=com.javax0.jamal:jamal-test:*,com.javax0.jamal:jamal-groovy:1.12.6
+echo "maven.load.include=com.javax0.jamal:jamal-test:*,com.javax0.jamal:jamal-groovy:2.8.3-SNAPSHOT
 maven.load.exclude=.com.javax0.jamal:jamal-api:*" > ~/.jamal/settings.properties
 
 chmod 0700 $JAMAL
@@ -160,10 +160,9 @@ if [ "$(diff -b test_groovy.txt test_groovy.test)" ] ;then
   exit 1
 fi
 rm test_groovy.test
-
 export JAMAL=../../jamal.sh
 
-echo "maven.load.include=com.javax0.jamal:jamal-test:*,com.javax0.jamal:jamal-scriptbasic:1.12.6
+echo "maven.load.include=com.javax0.jamal:jamal-test:*,com.javax0.jamal:jamal-scriptbasic:2.8.3-SNAPSHOT
 maven.load.exclude=.com.javax0.jamal:jamal-api:*" > ~/.jamal/settings.properties
 
 chmod 0700 $JAMAL

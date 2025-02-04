@@ -1,0 +1,7 @@
+{%@comment%}\
+{@comment nosave}\
+{%@import ../../version.jim%}
+{@define LIB=com.javax0.jamal:jamal-scriptbasic:{%VERSION%}}\
+{#maven:load {LIB}}\
+{#import maven:{LIB}::scriptbasic.jim}\
+{expr 1+1}

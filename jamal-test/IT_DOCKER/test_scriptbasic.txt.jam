@@ -1,5 +1,0 @@
-{@comment nosave}\
-{@define LIB=com.javax0.jamal:jamal-scriptbasic:1.12.6}\
-{#maven:load {LIB}}\
-{#import maven:{LIB}::scriptbasic.jim}\
-{expr 1+1}

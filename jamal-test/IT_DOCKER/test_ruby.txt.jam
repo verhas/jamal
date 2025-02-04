@@ -1,3 +1,4 @@
 {@comment nosave}\
-{@maven:load com.javax0.jamal:jamal-ruby:1.12.6}\
+
+{@maven:load com.javax0.jamal:jamal-ruby:2.8.3-SNAPSHOT}\
 {@ruby:eval 1+1}

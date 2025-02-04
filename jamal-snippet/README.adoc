@@ -2633,7 +2633,7 @@ format defined in k$format: I.i.iv
 ----
 
 
-NOTE: When the format string is defined as a user defined macro, it is better a `verbatim` macro to avoid the macro interpretation of the parts between the `{` and `}` characters.
+NOTE: When the format string is defined as a user-defined macro, it is better a `verbatim` macro to avoid the macro interpretation of the parts between the `{` and `}` characters.
 When the macro start and stop strings are not `{` and `}` it is not so crucial.
 
 The hierarchical counter can also have a title.
@@ -3816,7 +3816,7 @@ will result in the output
 .output
 [source]
 ----
-2025-01-31 16:32:57
+2025-02-04 10:37:23
 ----
 
 
@@ -4219,7 +4219,7 @@ The default list is the following:
 
 +
 As you can see, the list is quite extensive.
-It is recommended to place a `ROOT.dir` file in your root directory as a last resort and use this option if even that is not a good solution for your needs.
+It is recommended to place a `ROOT.dir` file in your root directory as a last resort.
 
 * `format` (string) specifies the format of the result.
 This format is the same as the format of the `file` and `directory` macros.

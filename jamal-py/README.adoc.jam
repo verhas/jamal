@@ -52,7 +52,7 @@ The macro package is part of the
 
 === `python`
 
-The macro `python` is used to define a built-in macro in Python.
+The macro `python` is used to define a Jamal built-in macro using Python.
 For example, the following call will define the built-in macro ``chubakka``.
 
 {%simple_sample%}
@@ -63,9 +63,9 @@ The first line of the code
 {%simple_sample%}%}
 
 defines a function.
-The function name will be used as the macro name.
-The parameter `input` will be the string, which follows the macro name, in the example above `{%Boaaaa%}`.
-The result of the macro is what the Python code prints to the standard output.
+The function name is the macro name.
+The parameter `input` is a string (``str``), which follows the macro name, in the example above `{%Boaaaa%}`.
+The result of the macro is what the Python code prints to the standard output for both the `@python` and the created new macro.
 
 [NOTE]
 ====
@@ -76,7 +76,7 @@ The regular expression to find the name of the macro is
 ====
 
 Sometimes you cannot rely on the Python code structure to let the macro figure out the macro and function name.
-You may even want to have the names different.
+You may even want to have the name different.
 In that case you can use the `id` and `function` parops.
 Using `id` or `id ` and `function` together will skip the pattern matching seeking for function head.
 
@@ -89,11 +89,14 @@ def agent(txt):
     name()
     print(",",txt,end='')
     name()
+print("done")
 }{@OO7 James}%}
 
 will result in
 
 {%output%}
+
+As you can see the macro `@python` executes the code and the result is the
 
 The reference list of the parops for this macro is the following:
 

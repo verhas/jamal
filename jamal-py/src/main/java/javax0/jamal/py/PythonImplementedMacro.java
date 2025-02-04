@@ -7,13 +7,13 @@ import javax0.jamal.api.Processor;
 
 import java.io.IOException;
 
-public class PythonMacro implements Macro {
+public class PythonImplementedMacro implements Macro {
 
     final PythonInterpreter interpreter;
     final String id;
     final String function;
 
-    public PythonMacro(PythonInterpreter interpreter, String id, String function) {
+    public PythonImplementedMacro(PythonInterpreter interpreter, String id, String function) {
         this.interpreter = interpreter;
         this.id = id;
         this.function = function;

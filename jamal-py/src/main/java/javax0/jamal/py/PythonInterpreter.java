@@ -1,26 +1,37 @@
 package javax0.jamal.py;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.TimeUnit;
 
 public class PythonInterpreter implements AutoCloseable {
-    final Process process;
+    private final Process process;
+    private final String workingDirectory;
+    private final String venv;
 
-    public PythonInterpreter() {
+    private Path venvPath;
+
+    private String closeCode = "sys.exit(0)";
+    public void setCloseCode(String closeCode) {
+        this.closeCode = closeCode;
+    }
+
+
+    public PythonInterpreter(String workingDirectory, String venv) {
+        this.workingDirectory = workingDirectory;
+        this.venv = venv;
         this.process = launch();
+
     }
 
     @Override
     public void close() throws IOException {
         final var out = new PrintStream(process.getOutputStream());
-        out.println(".\nsys.exit(0)\n.\n");
+        out.println(".\n" + closeCode + "\n.\n");
         out.flush();
         boolean exited = false;
         try {
@@ -79,14 +90,26 @@ public class PythonInterpreter implements AutoCloseable {
             Path pythonFile = Files.createTempFile("Processor", "py");
             extractControlProgram(pythonFile);
 
-            // Find a Python interpreter
-            String pythonInterpreter = new PythonFinder(false)
-                    .findPythonInterpreter()
-                    .orElseThrow(() -> new RuntimeException("Error: No Python interpreter found."));
+            // Find Python interpreter
+            String pythonInterpreter = findPythonInterpreter();
 
             // Start the Python script
             ProcessBuilder pb = new ProcessBuilder(pythonInterpreter, pythonFile.toFile().getAbsolutePath());
-            pb.directory(pythonFile.toFile().getParentFile());
+            if (venvPath != null) {
+
+                final var env = pb.environment();
+
+                // Set VIRTUAL_ENV
+                env.put("VIRTUAL_ENV", venvPath.toFile().getAbsolutePath());
+
+                // Prepend the venv's bin directory to PATH (Linux/macOS)
+                env.put("PATH", venvPath.toFile().getAbsolutePath() + "/bin:" + env.get("PATH"));
+            }
+
+            // Set a working directory if specified
+            if (workingDirectory != null && !workingDirectory.isBlank()) {
+                pb.directory(new File(workingDirectory));
+            }
 
             return pb.start();
         } catch (Exception e) {
@@ -103,4 +126,20 @@ public class PythonInterpreter implements AutoCloseable {
         }
     }
 
+    private String findPythonInterpreter() {
+        if (workingDirectory != null && !workingDirectory.isBlank() && (venvPath = Paths.get(workingDirectory, venv)).toFile().exists()) {
+            final var isWin = System.getProperty("os.name").toLowerCase().contains("win");
+            Path pythonBin = venvPath.resolve(isWin ? "Scripts/python.exe" : "bin/python"); // Linux/macOS
+
+            if (Files.exists(pythonBin)) {
+                return pythonBin.toAbsolutePath().toString();
+            } else {
+                throw new RuntimeException("Python executable not found in virtual environment: " + pythonBin);
+            }
+        }
+
+        return new PythonFinder(false)
+                .findPythonInterpreter()
+                .orElseThrow(() -> new RuntimeException("Error: No Python interpreter found."));
+    }
 }

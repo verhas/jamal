@@ -51,7 +51,7 @@ The macro package is part of the
 
 === `python`
 
-The macro `python` is used to define a built-in macro in Python.
+The macro `python` is used to define a Jamal built-in macro using Python.
 For example, the following call will define the built-in macro ``chubakka``.
 
 .Jamal source
@@ -70,9 +70,9 @@ The first line of the code
 
 
 defines a function.
-The function name will be used as the macro name.
-The parameter `input` will be the string, which follows the macro name, in the example above `Boaaaa`.
-The result of the macro is what the Python code prints to the standard output.
+The function name is the macro name.
+The parameter `input` is a string (``str``), which follows the macro name, in the example above `Boaaaa`.
+The result of the macro is what the Python code prints to the standard output for both the `@python` and the created new macro.
 
 [NOTE]
 ====
@@ -83,7 +83,7 @@ The regular expression to find the name of the macro is
 ====
 
 Sometimes you cannot rely on the Python code structure to let the macro figure out the macro and function name.
-You may even want to have the names different.
+You may even want to have the name different.
 In that case you can use the `id` and `function` parops.
 Using `id` or `id ` and `function` together will skip the pattern matching seeking for function head.
 
@@ -98,6 +98,7 @@ def agent(txt):
     name()
     print(",",txt,end='')
     name()
+print("done")
 }{@OO7 James}
 ----
 
@@ -106,9 +107,12 @@ will result in
 .output
 [source]
 ----
-Bond,  James Bond
+done
+ Bond,  James Bond
 ----
 
+
+As you can see the macro `@python` executes the code and the result is the
 
 The reference list of the parops for this macro is the following:
 
@@ -118,7 +122,18 @@ If this is not defined, the macro will try to use pattern matching, finding the 
 * `function`, alias `def`
 defines the name of the function if it is different from the name of the macro.
 It is an error using this parop without using `id` (or one of its aliases).
-
+* `execute`
+signals that the Python code is to be executed, and it does not contain any macro defining function.
+Using this parop will simply execute the code without trying to find a macro function.
+You cannot use this parop together with `id` or `function`.
+* `directory`, alias `dir`, alias `wd`
+the working directory where the execution should start.
+If there is a `venv` directory under this directory, then Python will run in a virtual environment.
+This option is ignored on later calls when the interpreter was already launched.
+* `venv`
+specifies the directory name of the virtual environment.
+The default value is `venv`.
+This option can only be used together with the option `directory`.
 
 The parops are all aliases technically.
 It means that you cannot define them as user-defined macros.

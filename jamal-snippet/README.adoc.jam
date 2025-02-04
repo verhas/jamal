@@ -1632,7 +1632,7 @@ which will result in:
 
 {%output%}
 
-NOTE: When the format string is defined as a user defined macro, it is better a `verbatim` macro to avoid the macro interpretation of the parts between the `{` and `}` characters.
+NOTE: When the format string is defined as a user-defined macro, it is better a `verbatim` macro to avoid the macro interpretation of the parts between the `{` and `}` characters.
 When the macro start and stop strings are not `{` and `}` it is not so crucial.
 
 The hierarchical counter can also have a title.

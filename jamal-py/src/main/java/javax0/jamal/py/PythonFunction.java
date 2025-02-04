@@ -15,9 +15,10 @@ public class PythonFunction implements Macro, Scanner {
 
     // snipline PYTHON_START_REGEX
     final static Pattern pattern = Pattern.compile("def\\s+(\\w[a-zA-Z0-9]*)\\s*\\(.*\\)\\s*:\\s*\n");
+    public static final String VENV = "venv";
 
-    private PythonInterpreter createInterpreter(Processor processor) {
-        final var interpreter = new PythonInterpreter();
+    private PythonInterpreter createInterpreter(Processor processor, String dir, String v) {
+        final var interpreter = new PythonInterpreter(dir,v);
         processor.deferredClose(interpreter);
         return interpreter;
     }
@@ -33,7 +34,24 @@ public class PythonFunction implements Macro, Scanner {
         // defines the name of the function if it is different from the name of the macro.
         // It is an error using this parop without using `id` (or one of its aliases).
         final var executeOnly = scanner.bool(null, "execute");
-        //
+        // signals that the Python code is to be executed, and it does not contain any macro defining function.
+        // Using this parop will simply execute the code without trying to find a macro function.
+        // You cannot use this parop together with `id` or `function`.
+        final var directory = scanner.str(null, "directory", "dir", "wd").defaultValue(null);
+        // the working directory where the execution should start.
+        // If there is a `venv`, or whatever directory name is defined in the `venv` parop under this directory,
+        // then Python will run in a virtual environment.
+        // This option is ignored on later calls when the interpreter was already launched.
+        final var venv =scanner.str(null, "venv").defaultValue(VENV);
+        // specifies the directory name of the virtual environment.
+        // The default value is `venv`.
+        // This option can only be used together with the option `directory`.
+        final var closeCode = scanner.bool(null, "close");
+        // defines a code to execute when the interpreter exists.
+        // The last line of the python code has to be `sys.exit(0)` or whatever exist code you desire, or else
+        // the interpreter process will be killed forcefully.
+        // You cannot use this parop together with `execute`, `function` or `id`.
+        // When this parop is used the return value of the method is an empty string.
         //
         //The parops are all aliases technically.
         //It means that you cannot define them as user-defined macros.
@@ -41,32 +59,49 @@ public class PythonFunction implements Macro, Scanner {
         // end snippet
         scanner.done();
         BadSyntax.when(function.isPresent() && !id.isPresent(), "You cannot use '%s' unless you also specify an 'id' ", function.name());
+        BadSyntax.when(venv.isPresent() && !directory.isPresent(),"venv cannot be used without specifying a directory.");
+        BadSyntax.when(closeCode.is() && executeOnly.is(), "You cannot use '%s' together an '%s' command.", closeCode.name(), executeOnly.name());
+        BadSyntax.when(closeCode.is() && (id.isPresent() || function.isPresent()), "You cannot use '%s' when defining a macro.", closeCode.name());
         InputHandler.skipWhiteSpaces(in);
-        final String macroName;
-        if (id.isPresent()) {
-            macroName = id.get();
+        final var dir = directory.get();
+        final var v = venv.get();
+        final var interp = processor.state(this, () -> createInterpreter(processor, dir,v));
+        final String result;
+        if(closeCode.is()){
+            interp.setCloseCode(in.toString());
+            return "";
+        }
+        if (!executeOnly.is()) {
+            final String macroName;
+            final String functionName;
+            if (id.isPresent()) {
+                macroName = id.get();
+            } else {
+                final var matcher = pattern.matcher(in);
+                final var found = matcher.find();
+                BadSyntax.when(!found, "Macro defining method is not found");
+                macroName = matcher.group(1);
+            }
+            if (function.isPresent()) {
+                functionName = function.get();
+            } else {
+                functionName = macroName;
+            }
+            final var macro = new PythonImplementedMacro(interp, macroName, functionName);
+            processor.getRegister().define(macro);
+            try {
+                result = interp.execute(in.toString());
+            } catch (IOException e) {
+                throw new BadSyntax("Error while registering python macro " + macroName, e);
+            }
         } else {
-            final var matcher = pattern.matcher(in);
-            final var found = matcher.find();
-            BadSyntax.when(!found, "Macro defining method is not found");
-            macroName = matcher.group(1);
-        }
-        final String functionName;
-        if (function.isPresent()) {
-            functionName = function.get();
-        } else {
-            functionName = macroName;
-        }
-        final var interp = processor.state(this, () -> createInterpreter(processor));
-        final var macro = new PythonMacro(interp, macroName, functionName);
-        processor.getRegister().define(macro);
+            try {
+                result = interp.execute(in.toString());
+            } catch (IOException e) {
+                throw new BadSyntax("Error while executing python code", e);
+            }
 
-        try {
-            interp.execute(in.toString());
-        } catch (IOException e) {
-            throw new BadSyntax("Error while registering python macro " + macroName, e);
         }
-
-        return "";
+        return result;
     }
 }
