@@ -11,7 +11,7 @@ import java.util.Optional;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TestMacros {
+public class TestPythonDefinedMacros {
 
     @BeforeAll
     public static void checkPythonAvailability() {
@@ -145,6 +145,6 @@ public class TestMacros {
                         "%}"
                 ).usingTheSeparators("{%", "%}")
                 .results("");
-        Assertions.assertTrue(file.exists());
+        Assertions.assertTrue(file.exists(),"File "+file.getAbsolutePath()+" does not exist");
     }
 }

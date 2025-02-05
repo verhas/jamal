@@ -6,7 +6,6 @@
     {parent :{GROUPID}:jamal-parent}
     {description io module for Jamal}
 
-    {@define openForTests={opens/io/io}}
     {build|{plugins| {@include ../plugins.jim}}}
 
     {dependencies
