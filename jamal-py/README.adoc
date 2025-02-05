@@ -128,12 +128,19 @@ Using this parop will simply execute the code without trying to find a macro fun
 You cannot use this parop together with `id` or `function`.
 * `directory`, alias `dir`, alias `wd`
 the working directory where the execution should start.
-If there is a `venv` directory under this directory, then Python will run in a virtual environment.
+If there is a `venv`, or whatever directory name is defined in the `venv` parop under this directory,
+then Python will run in a virtual environment.
 This option is ignored on later calls when the interpreter was already launched.
 * `venv`
 specifies the directory name of the virtual environment.
 The default value is `venv`.
 This option can only be used together with the option `directory`.
+* `close`
+defines a code to execute when the interpreter exists.
+The last line of the python code has to be `sys.exit(0)` or whatever exist code you desire, or else
+the interpreter process will be killed forcefully.
+You cannot use this parop together with `execute`, `function` or `id`.
+When this parop is used the return value of the method is an empty string.
 
 The parops are all aliases technically.
 It means that you cannot define them as user-defined macros.

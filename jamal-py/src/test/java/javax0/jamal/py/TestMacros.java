@@ -1,5 +1,6 @@
 package javax0.jamal.py;
 
+import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.*;
@@ -112,6 +113,7 @@ public class TestMacros {
     @Test
     @DisplayName("Test it is a venv")
     void tesVenv() throws BadSyntax, Exception {
+        Assumptions.assumeTrue(new File(DocumentConverter.getRoot()+"/jamal-py/venv").exists());
         TestThat.theInput("{%#python (execute directory=\"{%@dev:root%}/jamal-py\")\n" +
                         "import sys\n" +
                         "\n" +
