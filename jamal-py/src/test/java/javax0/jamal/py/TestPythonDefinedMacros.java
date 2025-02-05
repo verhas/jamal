@@ -133,7 +133,7 @@ public class TestPythonDefinedMacros {
     @DisplayName("Test self closer")
     void tesCloserDefined() throws BadSyntax, Exception {
         final var file = Paths.get("test.txt").toFile();
-        final var fileName = file.getAbsolutePath();
+        final var fileName = file.getAbsolutePath().replace("\\", "/");;
         if (file.exists()) {
             //noinspection ResultOfMethodCallIgnored
             file.delete();

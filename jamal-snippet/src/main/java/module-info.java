@@ -30,7 +30,6 @@ module jamal.snippet {
             SkipLines,
             Snippet,
             ReplaceLines,
-            Update,
             XmlFormat,
             ThinXmlMacro,
             XmlInsert,

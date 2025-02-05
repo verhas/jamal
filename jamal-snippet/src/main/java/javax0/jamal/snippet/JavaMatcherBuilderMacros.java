@@ -164,8 +164,8 @@ public class JavaMatcherBuilderMacros {
     /*
      * This is generated code. DO NOT edit manually.
      */
-    @Macro.Name("j:string")
-    public static class StringMacro implements Macro, Scanner {
+
+    public static class StringMacro implements Macro,Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -175,14 +175,14 @@ public class JavaMatcherBuilderMacros {
                 if (options.pattern.isPresent()) {
                     macro = new MatcherObjectHolder(string(group(options.groupName.get()), options.pattern.get()));
                 } else {
-                    if (!s.isEmpty()) {
+                    if (s.length() > 0) {
                         macro = new MatcherObjectHolder(string(group(options.groupName.get()), s));
                     } else {
                         macro = new MatcherObjectHolder(string(group(options.groupName.get())));
                     }
                 }
             } else {
-                if (!s.isEmpty()) {
+                if (s.length() > 0) {
                     macro = new MatcherObjectHolder(string(s));
                 } else {
                     macro = new MatcherObjectHolder(string());
@@ -193,11 +193,17 @@ public class JavaMatcherBuilderMacros {
 
             return paddedId(macro);
         }
+
+        private static final String[] IDS = new String[]{"j:string"};
+
+        @Override
+        public String[] getIds() {
+            return IDS;
+        }
     }
 
 
-    @Macro.Name("j:identifier")
-    public static class Identifier implements Macro, Scanner {
+    public static class Identifier implements Macro,Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -207,14 +213,14 @@ public class JavaMatcherBuilderMacros {
                 if (options.pattern.isPresent()) {
                     macro = new MatcherObjectHolder(identifier(group(options.groupName.get()), options.pattern.get()));
                 } else {
-                    if (!s.isEmpty()) {
+                    if (s.length() > 0) {
                         macro = new MatcherObjectHolder(identifier(group(options.groupName.get()), s));
                     } else {
                         macro = new MatcherObjectHolder(identifier(group(options.groupName.get())));
                     }
                 }
             } else {
-                if (!s.isEmpty()) {
+                if (s.length() > 0) {
                     macro = new MatcherObjectHolder(identifier(s));
                 } else {
                     macro = new MatcherObjectHolder(identifier());
@@ -225,11 +231,17 @@ public class JavaMatcherBuilderMacros {
 
             return paddedId(macro);
         }
+
+        private static final String[] IDS = new String[]{"j:identifier"};
+
+        @Override
+        public String[] getIds() {
+            return IDS;
+        }
     }
 
 
-    @Macro.Name({"j:character", "j:char"})
-    public static class CharacterMacro implements Macro, Scanner {
+    public static class CharacterMacro implements Macro,Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -239,14 +251,14 @@ public class JavaMatcherBuilderMacros {
                 if (options.pattern.isPresent()) {
                     macro = new MatcherObjectHolder(character(group(options.groupName.get()), options.pattern.get()));
                 } else {
-                    if (!s.isEmpty()) {
+                    if (s.length() > 0) {
                         macro = new MatcherObjectHolder(character(group(options.groupName.get()), s));
                     } else {
                         macro = new MatcherObjectHolder(character(group(options.groupName.get())));
                     }
                 }
             } else {
-                if (!s.isEmpty()) {
+                if (s.length() > 0) {
                     macro = new MatcherObjectHolder(character(s));
                 } else {
                     macro = new MatcherObjectHolder(character());
@@ -257,11 +269,17 @@ public class JavaMatcherBuilderMacros {
 
             return paddedId(macro);
         }
+
+        private static final String[] IDS = new String[]{"j:character","j:char"};
+
+        @Override
+        public String[] getIds() {
+            return IDS;
+        }
     }
 
 
-    @Macro.Name("j:comment")
-    public static class Comment implements Macro, Scanner {
+    public static class Comment implements Macro,Scanner {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var options = new Options(this, in, processor);
@@ -271,14 +289,14 @@ public class JavaMatcherBuilderMacros {
                 if (options.pattern.isPresent()) {
                     macro = new MatcherObjectHolder(comment(group(options.groupName.get()), options.pattern.get()));
                 } else {
-                    if (!s.isEmpty()) {
+                    if (s.length() > 0) {
                         macro = new MatcherObjectHolder(comment(group(options.groupName.get()), s));
                     } else {
                         macro = new MatcherObjectHolder(comment(group(options.groupName.get())));
                     }
                 }
             } else {
-                if (!s.isEmpty()) {
+                if (s.length() > 0) {
                     macro = new MatcherObjectHolder(comment(s));
                 } else {
                     macro = new MatcherObjectHolder(comment());
@@ -289,7 +307,15 @@ public class JavaMatcherBuilderMacros {
 
             return paddedId(macro);
         }
+
+        private static final String[] IDS = new String[]{"j:comment"};
+
+        @Override
+        public String[] getIds() {
+            return IDS;
+        }
     }
+
 
 
     //</editor-fold>
