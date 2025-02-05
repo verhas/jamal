@@ -17,7 +17,7 @@ public class TestPythonDefinedMacros {
     public static void checkPythonAvailability() {
         Optional<String> pythonInterpreter = new PythonFinder(true).findPythonInterpreter();
         Assumptions.assumeTrue(pythonInterpreter != null, "Skipping tests: Python is not installed");
-        System.out.println("Python interpreter: " + pythonInterpreter);
+        System.out.println("Python interpreter: " + pythonInterpreter.orElseThrow());
     }
 
     @Test
