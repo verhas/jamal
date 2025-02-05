@@ -6,8 +6,8 @@ import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
-import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -15,7 +15,9 @@ public class TestMacros {
 
     @BeforeAll
     public static void checkPythonAvailability() {
-        Assumptions.assumeTrue( new PythonFinder(true).findPythonInterpreter() != null,"Skipping tests: Python is not installed");
+        Optional<String> pythonInterpreter = new PythonFinder(true).findPythonInterpreter();
+        Assumptions.assumeTrue(pythonInterpreter != null, "Skipping tests: Python is not installed");
+        System.out.println("Python interpreter: " + pythonInterpreter);
     }
 
     @Test
@@ -86,6 +88,7 @@ public class TestMacros {
                         "{%@myMacro al\"ma%}").usingTheSeparators("{%", "%}")
                 .results(">> al\"ma<<");
     }
+
     @Test
     @DisplayName("Error while executing the macro")
     void errorWhileMacro() throws BadSyntax, Exception {
@@ -110,10 +113,11 @@ public class TestMacros {
                 ).usingTheSeparators("{%", "%}")
                 .results("Not running in a virtual environment.");
     }
+
     @Test
     @DisplayName("Test it is a venv")
     void tesVenv() throws BadSyntax, Exception {
-        Assumptions.assumeTrue(new File(DocumentConverter.getRoot()+"/jamal-py/venv").exists());
+        Assumptions.assumeTrue(new File(DocumentConverter.getRoot() + "/jamal-py/venv").exists());
         TestThat.theInput("{%#python (execute directory=\"{%@dev:root%}/jamal-py\")\n" +
                         "import sys\n" +
                         "\n" +
@@ -130,13 +134,13 @@ public class TestMacros {
     void tesCloserDefined() throws BadSyntax, Exception {
         final var file = Paths.get("test.txt").toFile();
         final var fileName = file.getAbsolutePath();
-        if( file.exists() ){
+        if (file.exists()) {
             //noinspection ResultOfMethodCallIgnored
             file.delete();
         }
         file.deleteOnExit();
         TestThat.theInput("{%#python (close)\n" +
-                        "with open(\""+fileName+"\",\"w\") as file:\n" +
+                        "with open(\"" + fileName + "\",\"w\") as file:\n" +
                         "    file.write(\"hello\")\n" +
                         "%}"
                 ).usingTheSeparators("{%", "%}")
