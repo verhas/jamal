@@ -2150,7 +2150,6 @@ will result
 - Untab.java: 2,285 bytes
 - DateMacro.java: 613 bytes
 - Format.java: 930 bytes
-- Update.java: 3,754 bytes
 - SnipTransform.java: 16,201 bytes
 - FilesMacro.java: 5,196 bytes
 - Collect.java: 17,685 bytes
@@ -3257,11 +3256,13 @@ will result in
 
 [[snip_update]]
 === {%chapter%}`snip:update`
-{%#snip:check file={%JAVA_DIR%}Update.java hash=ace4019d%}
+
+This macro was deleted as of {%RELEASE:ITTOQQORTOORMIIT%}
+
 This macro was used to automatically copy the content of the snippets into the `snip` macros.
 It meant to update the edited source document.
-It was a temporary woraround till the time when the WYSIWYG editor was not available in IntelliJ.
-Since the introduction of the WYSIWYG editing in IntelliJ, this feature is outdated.
+It was a temporary workaround till the time when the WYSIWYG editor was not available in IntelliJ.
+Since the introduction of the WYSIWYG editing in IntelliJ, this feature has been deleted.
 
 To keep backward compatibility the `.jim` resource file contains the line:
 
@@ -3269,7 +3270,7 @@ To keep backward compatibility the `.jim` resource file contains the line:
 
 {%@snip:update this is comment%}
 
-This renders the current, no operation functionality of the macro.
+This renders the current, no-operation functionality of the macro.
 
 {%CH /variation/variation%}
 

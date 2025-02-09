@@ -1,5 +1,6 @@
-{@sep 〔〕}\
+{%@comment making the { and } characters usable in shell scripting%}\
 #!/bin/sh
+{%@import ../../version.jim%}
 
 
 if [ -f /.dockerenv ] || [ ! -z "${container}" ]; then
@@ -10,13 +11,32 @@ else
     exit 1
 fi
 
-echo Integration test starts
-mkdir -p .m2
-mkdir -p .m2/repository
+cd || exit
+
+if [ "$(pwd)" != "/home/jamal" ] || [ ! -d "/home/jamal" ]; then
+    echo "Error: Current directory is not /home/jamal or it does not exist."
+    exit 1
+fi
+
+echo "Integration Test for Jamal executing in a Container"
+
+{%@define :stp=1%}
+{%@define STEP($x)=echo "Step {%stp%}: $x"
+   {%@do
+   stp=stp+1
+  %}%}
+
+{%STEP creating the local repo directory%}
+mkdir -p /home/jamal/.m2
+mkdir -p /home/jamal/.m2/repository
+
+{%STEP cloning the latest version from Github%}
 git clone https://github.com/verhas/jamal.git
-cd jamal
+
+{%STEP building Jamal%}
+cd /home/jamal/jamal || exit
 mvn clean install
-echo <<EOT
+cat <<EOT
 
 +-----------------------------------------------------------------------------------------------------------------------
 BUILD HAS FINISHED
@@ -25,13 +45,81 @@ INTEGRATION TESTS START...
 +-----------------------------------------------------------------------------------------------------------------------
 EOT
 
-mkdir -p ~/.jamal
-chmod 0700 ~/jamal/jamal.sh
-〔@comment〕
-cd jamal-maven-load
-〔@include [lines=3..inf] ../../jamal-maven-load/it.sh.jam〕
-cd ../jamal-test/IT_DOCKER
+CLASSPATH=$(find /home/jamal/.m2/repository -name "*.jar" | tr '\n' ':')
 
-〔@include [lines=2..inf] test_ruby.sh.jam〕
-〔@include [lines=2..inf] test_groovy.sh.jam〕
-〔@include [lines=2..inf] test_scriptbasic.sh.jam〕
+JAMAL=java -cp "$CLASSPATH" javax0.jamal.cmd.JamalMain
+
+{%STEP Creating the configuration directory%}
+mkdir -p /home/jamal/.jamal
+
+{%STEP Making jamal.sh executable%}
+chmod 0700 /home/jamal/jamal/jamal.sh
+
+{%STEP Testing that Maven Load works and only in secure environment%}
+cd /home/jamal/jamal/jamal-maven-load || exit
+
+cat <<END > /home/jamal/.jamal/settings.properties
+testproperty=Peter Verhas' macbook
+graphviz=/usr/local/bin/dot
+maven.load.repo=https://repo1.maven.org/maven2/
+maven.load.local=.m2/repository
+maven.load.include=com.javax0.jamal:jamal-test:*
+maven.load.exclude=.com.javax0.jamal:jamal-api:*" >/home/jamal/.jamal/settings.properties
+END
+
+chmod 0500 /home/jamal/.jamal
+{%@define Configure($CHMOD,$NOT)={%STEP chmod $CHMOD settings.properties%}
+chmod $CHMOD /home/jamal/.jamal/settings.properties
+mvn test -Dtest=javax0.jamal.maven.load.Integration_Configuration$NOTSecure
+if [ "$?" -ne "0" ]; then
+echo "TEST Integration_Configuration$NOTSecure FAILED with chmod $CHMOD /home/jamal/.jamal/settings.properties"
+exit 1
+fi
+%}\
+{%Configure/0777/Not%}
+{%Configure/0707/Not%}
+{%Configure/0770/Not%}
+{%Configure/0700/Not%}
+{%Configure/0600/%}
+{%Configure/0400/%}
+
+chmod 0400 /home/jamal/.jamal/settings.properties
+
+{%@define Configure($CHMOD,$NOT)={%STEP chmod $CHMOD /home/jamal/.jamal%}
+chmod $CHMOD /home/jamal/.jamal
+mvn test -Dtest=javax0.jamal.maven.load.Integration_Configuration$NOTSecure
+if [ "$?" -ne "0" ]; then
+echo "TEST Integration_Configuration$NOTSecure FAILED with chmod $CHMOD /home/jamal/.jamal"
+exit 1
+fi%}\
+{%Configure/0777/Not%}
+{%Configure/0707/Not%}
+{%Configure/0770/Not%}
+{%Configure/0700/%}
+{%Configure/0500/%}
+{%Configure/0500/%}
+
+{%@define TEST($X,$Y,$Z)=
+echo "$Y" > test_$X.txt.jam
+echo "$Z" > test_$X.txt
+$JAMAL test_$X.txt.jam test_$X.test
+if [ "$(diff -b test_$X.txt test_$X.test)" ] ;then
+    echo "Jamal via SHELL created different output"
+    diff -b test_$X.txt test_$X.test
+    exit 1
+fi
+rm test_$X.test
+rm test_$X.txt
+rm test_$X.txt.jam
+%}
+
+{%TEST|ruby|{@ruby:eval 1+1}|2%}
+{%TEST|groovy|{@groovy:eval 1+1}|2%}
+{%TEST|scriptbasic|{expr 1+1}|2%}
+{%TEST|py|{@python def Hello(me):
+  print(f"hello {me}", end='')
+}\
+{@hello You}
+|Hello, You!%}
+
+echo "INTEGRATION TEST SUCCESSFUL"

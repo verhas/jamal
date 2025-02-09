@@ -1,78 +1,74 @@
 #!/bin/sh
 # DO NOT EDIT 
+#
+# This shell script prepares the docker container and other scrips needed to execute the intergration tests.
+# At the end, it starts the docker container, which will start the script integrationtest.
+#
 set -e
 
-cat > ../../jamal.local.dev.sh <<"END"
-#!/bin/sh
-
-set -e  # Exit immediately if a command exits with a non-zero status
-LIB_DIR="/Users/verhasp/github/jamal/.lib"
-
+#
+# The directory where we will extract the Jamal JAR files so that we can execute jamal on the
+# script files needed to execute the integration test.
+#
+LIB_DIR=".lib"
 rm -rf "$LIB_DIR"
 mkdir "$LIB_DIR"
 unzip -q "/Users/verhasp/github/jamal/jamal-cmd/target/jamal-cmd-2.8.3-SNAPSHOT-distribution.zip" -d "$LIB_DIR"
+
+#
+# Calxculate the classpath
+#
 CLASSPATH=$(find "$LIB_DIR" -name "*.jar" | tr '\n' ':')
-java -cp "$CLASSPATH" javax0.jamal.cmd.JamalMain "$@"
-rm -rf "$LIB_DIR"
+
+#
+# create the jamal.sh script to execute jamal
+#
+cat > jamal.sh <<END
+#!/bin/sh
+java -cp "$CLASSPATH" javax0.jamal.cmd.JamalMain "\$@"
 END
 
-if [ ! -f "../../jamal.local.dev.sh" ]; then
-echo "Error: ../../jamal.local.dev.sh not found!"
-exit 1
-fi
+chmod u+rx ./jamal.sh
 
-chmod 0700 ../../jamal.local.dev.sh
-../../jamal.local.dev.sh ../../jamal-maven-load/it.sh.jam ../../jamal-maven-load/it.sh
-../../jamal.local.dev.sh integrationtest.jam integrationtest
-../../jamal.local.dev.sh README.adoc.jam README.adoc
+./jamal.sh -T7 integrationtest.jam integrationtest
 
+#
+# Cleaning up the local jamal.sh and the classpath that was used to compule the integration test
+#
+rm -rf "$LIB_DIR"
+rm jamal.sh
 
-if [ ! -f "test_groovy.sh.jam.jam" ]; then
-    echo "Error: test_groovy.sh.jam.jam does not exist."
-    exit 1
-fi
-../../jamal.local.dev.sh -T7 test_groovy.sh.jam.jam test_groovy.sh.jam 
-if [ ! -f "test_ruby.sh.jam.jam" ]; then
-    echo "Error: test_ruby.sh.jam.jam does not exist."
-    exit 1
-fi
-../../jamal.local.dev.sh -T7 test_ruby.sh.jam.jam test_ruby.sh.jam 
-if [ ! -f "test_py.sh.jam.jam" ]; then
-    echo "Error: test_py.sh.jam.jam does not exist."
-    exit 1
-fi
-../../jamal.local.dev.sh -T7 test_py.sh.jam.jam test_py.sh.jam 
-if [ ! -f "test_scriptbasic.sh.jam.jam" ]; then
-    echo "Error: test_scriptbasic.sh.jam.jam does not exist."
-    exit 1
-fi
-../../jamal.local.dev.sh -T7 test_scriptbasic.sh.jam.jam test_scriptbasic.sh.jam 
+#
+# Create the dockerfile
+#
+cat > Dockerfile <<END
+FROM alpine
+RUN apk update
+RUN apk add --no-cache openjdk17 maven git python3 py3-pip
+RUN addgroup TESTGROUP
+RUN adduser -G TESTGROUP -D -s /bin/bash jamal
 
-if [ ! -f "test_groovy.txt.jam.jam" ]; then
-    echo "Error: test_groovy.txt.jam.jam does not exist."
-    exit 1
-fi
-../../jamal.local.dev.sh -T7 test_groovy.txt.jam.jam test_groovy.txt.jam 
-if [ ! -f "test_ruby.txt.jam.jam" ]; then
-    echo "Error: test_ruby.txt.jam.jam does not exist."
-    exit 1
-fi
-../../jamal.local.dev.sh -T7 test_ruby.txt.jam.jam test_ruby.txt.jam 
-if [ ! -f "test_py.txt.jam.jam" ]; then
-    echo "Error: test_py.txt.jam.jam does not exist."
-    exit 1
-fi
-../../jamal.local.dev.sh -T7 test_py.txt.jam.jam test_py.txt.jam 
-if [ ! -f "test_scriptbasic.txt.jam.jam" ]; then
-    echo "Error: test_scriptbasic.txt.jam.jam does not exist."
-    exit 1
-fi
-../../jamal.local.dev.sh -T7 test_scriptbasic.txt.jam.jam test_scriptbasic.txt.jam 
+WORKDIR /home/jamal
+COPY integrationtest .
+RUN chown jamal:TESTGROUP integrationtest
+RUN chmod u+xr integrationtest
+USER jamal
+RUN mkdir -p /home/jamal/.m2/repository
+RUN chmod u+xr /home/jamal/.m2/repository
+CMD ./integrationtest
+END
 
-
+#
+# Build the docker image
+#
 docker build -t jamal-test .
+rm Dockerfile
 if [ $? -ne 0 ]; then
   echo "Docker build failed. Exiting."
   exit 1
 fi
+
+#
+# Run the integration test
+#
 docker run -it jamal-test

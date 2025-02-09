@@ -1,3 +1,0 @@
-{@comment nosave}\
-{#maven:load com.javax0.jamal:jamal-groovy:2.8.3-SNAPSHOT}\
-{@groovy:eval 1+1}

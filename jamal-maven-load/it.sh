@@ -15,41 +15,46 @@ chmod 0500 ~/.jamal
 chmod 0777 ~/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0777 ~/.jamal/settings.properties"
-exit 1
+    echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0777 ~/.jamal/settings.properties"
+    exit 1
 fi
+
 echo "chmod 0707 settings.properties"
 chmod 0500 ~/.jamal
 chmod 0707 ~/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0707 ~/.jamal/settings.properties"
-exit 1
+    echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0707 ~/.jamal/settings.properties"
+    exit 1
 fi
+
 echo "chmod 0770 settings.properties"
 chmod 0500 ~/.jamal
 chmod 0770 ~/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0770 ~/.jamal/settings.properties"
-exit 1
+    echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0770 ~/.jamal/settings.properties"
+    exit 1
 fi
+
 echo "chmod 0700 settings.properties"
 chmod 0500 ~/.jamal
 chmod 0700 ~/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0700 ~/.jamal/settings.properties"
-exit 1
+    echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0700 ~/.jamal/settings.properties"
+    exit 1
 fi
+
 echo "chmod 0600 settings.properties"
 chmod 0500 ~/.jamal
 chmod 0600 ~/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationSecure FAILED with chmod 0600 ~/.jamal/settings.properties"
-exit 1
+    echo "TEST Integration_ConfigurationSecure FAILED with chmod 0600 ~/.jamal/settings.properties"
+    exit 1
 fi
+
 echo "chmod 0777 ~/.jamal"
 chmod 0777 ~/.jamal
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure

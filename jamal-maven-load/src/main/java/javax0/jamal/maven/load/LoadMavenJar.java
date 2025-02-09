@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+@Macro.Name("maven:load")
 public class LoadMavenJar implements Macro, Scanner {
 
     /**
@@ -389,8 +390,4 @@ public class LoadMavenJar implements Macro, Scanner {
         }
     }
 
-    @Override
-    public String getId() {
-        return "maven:load";
-    }
 }
