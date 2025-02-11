@@ -27,6 +27,7 @@ echo "Integration Test for Jamal executing in a Container"
   %}%}
 
 {%STEP creating the local repo directory%}
+rm -rf /home/jamal/.m2
 mkdir -p /home/jamal/.m2
 mkdir -p /home/jamal/.m2/repository
 
@@ -36,6 +37,10 @@ git clone https://github.com/verhas/jamal.git
 {%STEP building Jamal%}
 cd /home/jamal/jamal || exit
 mvn clean install
+if [ ! $? -eq 0 ]; then
+  echo "Maven compilation failed"
+  exit 1
+fi
 cat <<EOT
 
 +-----------------------------------------------------------------------------------------------------------------------
@@ -45,15 +50,8 @@ INTEGRATION TESTS START...
 +-----------------------------------------------------------------------------------------------------------------------
 EOT
 
-CLASSPATH=$(find /home/jamal/.m2/repository -name "*.jar" | tr '\n' ':')
-
-JAMAL=java -cp "$CLASSPATH" javax0.jamal.cmd.JamalMain
-
 {%STEP Creating the configuration directory%}
 mkdir -p /home/jamal/.jamal
-
-{%STEP Making jamal.sh executable%}
-chmod 0700 /home/jamal/jamal/jamal.sh
 
 {%STEP Testing that Maven Load works and only in secure environment%}
 cd /home/jamal/jamal/jamal-maven-load || exit
@@ -85,13 +83,20 @@ fi
 
 chmod 0400 /home/jamal/.jamal/settings.properties
 
+{%STEP Testing that Maven Load works and only in secure environment%}
+cd /home/jamal/jamal || exit
+
 {%@define Configure($CHMOD,$NOT)={%STEP chmod $CHMOD /home/jamal/.jamal%}
 chmod $CHMOD /home/jamal/.jamal
+echo "mvn test" -Dtest=javax0.jamal.maven.load.Integration_Configuration$NOTSecure
 mvn test -Dtest=javax0.jamal.maven.load.Integration_Configuration$NOTSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_Configuration$NOTSecure FAILED with chmod $CHMOD /home/jamal/.jamal"
-exit 1
+    echo "TEST Integration_Configuration$NOTSecure FAILED with chmod $CHMOD /home/jamal/.jamal"
+    exit 1
 fi%}\
+
+cd /home/jamal/jamal/jamal-maven-load || exit 1
+
 {%Configure/0777/Not%}
 {%Configure/0707/Not%}
 {%Configure/0770/Not%}
@@ -99,14 +104,67 @@ fi%}\
 {%Configure/0500/%}
 {%Configure/0500/%}
 
+{%STEP Deleting JARs downloaded by the tests%}
+# Define the base path of the Maven repository
+BASE_PATH="/home/jamal/.m2/repository/com/javax0/jamal"
+
+# Find all directories matching the pattern
+for dir in "$BASE_PATH"/*/*; do
+    if [[ -d "$dir" ]]; then
+        version=$(basename "$dir")
+        if [[ "$version" != "{%VERSION%}" ]]; then
+            echo "Deleting: $dir"
+            rm -rf "$dir"
+        else
+            echo "Keeping latest version: $dir"
+        fi
+    fi
+done
+find "$BASE_PATH" -type f \( -name "*-javadoc.jar" -o -name "*-sources.jar" \) -exec rm -f {} +
+rm -rf /home/jamal/.m2/repository/org/codehaus/groovy/groovy/3.0.12
+rm -rf /home/jamal/.m2/repository/org/codehaus/groovy/groovy-jsr223/3.0.12/
+
+{%STEP Calculating the CLASSPATH%}
+CLASSPATH=$(find /home/jamal/.m2/repository -name "*.jar" | tr '\n' ':')
+
+JAMAL="java -cp \"$CLASSPATH\" javax0.jamal.cmd.JamalMain"
+{%STEP Jamal command is $JAMAL%}
+
+
+{%STEP Running Groovy, Ruby, ScriptBasic and Python integration tests%}
+cd /home/jamal/jamal/ || exit
+
 {%@define TEST($X,$Y,$Z)=
 echo "$Y" > test_$X.txt.jam
+if [ ! -e test_$X.txt.jam ]; then
+    echo "test_$X.txt.jam was not created"
+    exit 1
+fi
 echo "$Z" > test_$X.txt
+if [ ! -e test_$X.txt ]; then
+    echo "test_$X.txt was not created"
+    exit 1
+fi
 $JAMAL test_$X.txt.jam test_$X.test
+
+echo test_$X.test
+cat test_$X.test
+recho test_$X.txt
+cat test_$X.txt
+echo test_$X.txt.jam
+cat test_$X.txt.jam
+
+if [ ! -e test_$X.test ]; then
+    echo "test_$X.test was not created"
+    exit 1
+fi
+
 if [ "$(diff -b test_$X.txt test_$X.test)" ] ;then
     echo "Jamal via SHELL created different output"
     diff -b test_$X.txt test_$X.test
     exit 1
+else
+   echo "$X test successful"
 fi
 rm test_$X.test
 rm test_$X.txt
@@ -115,9 +173,9 @@ rm test_$X.txt.jam
 
 {%TEST|ruby|{@ruby:eval 1+1}|2%}
 {%TEST|groovy|{@groovy:eval 1+1}|2%}
-{%TEST|scriptbasic|{expr 1+1}|2%}
+{%TEST|scriptbasic|{@import res:scriptbasic.jim}{expr 1+1}|2%}
 {%TEST|py|{@python def Hello(me):
-  print(f"hello {me}", end='')
+  print(f\"hello {me}\", end='')
 }\
 {@hello You}
 |Hello, You!%}

@@ -24,6 +24,7 @@ echo "Integration Test for Jamal executing in a Container"
 
 echo "Step 1: creating the local repo directory"
    
+rm -rf /home/jamal/.m2
 mkdir -p /home/jamal/.m2
 mkdir -p /home/jamal/.m2/repository
 
@@ -35,6 +36,10 @@ echo "Step 3: building Jamal"
    
 cd /home/jamal/jamal || exit
 mvn clean install
+if [ ! $? -eq 0 ]; then
+  echo "Maven compilation failed"
+  exit 1
+fi
 cat <<EOT
 
 +-----------------------------------------------------------------------------------------------------------------------
@@ -44,19 +49,11 @@ INTEGRATION TESTS START...
 +-----------------------------------------------------------------------------------------------------------------------
 EOT
 
-CLASSPATH=$(find /home/jamal/.m2/repository -name "*.jar" | tr '\n' ':')
-
-JAMAL=java -cp "$CLASSPATH" javax0.jamal.cmd.JamalMain
-
 echo "Step 4: Creating the configuration directory"
    
 mkdir -p /home/jamal/.jamal
 
-echo "Step 5: Making jamal.sh executable"
-   
-chmod 0700 /home/jamal/jamal/jamal.sh
-
-echo "Step 6: Testing that Maven Load works and only in secure environment"
+echo "Step 5: Testing that Maven Load works and only in secure environment"
    
 cd /home/jamal/jamal/jamal-maven-load || exit
 
@@ -70,7 +67,7 @@ maven.load.exclude=.com.javax0.jamal:jamal-api:*" >/home/jamal/.jamal/settings.p
 END
 
 chmod 0500 /home/jamal/.jamal
-echo "Step 7: chmod 0777 settings.properties"
+echo "Step 6: chmod 0777 settings.properties"
    
 chmod 0777 /home/jamal/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
@@ -79,7 +76,7 @@ echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0777 /home/jamal
 exit 1
 fi
 
-echo "Step 8: chmod 0707 settings.properties"
+echo "Step 7: chmod 0707 settings.properties"
    
 chmod 0707 /home/jamal/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
@@ -88,7 +85,7 @@ echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0707 /home/jamal
 exit 1
 fi
 
-echo "Step 9: chmod 0770 settings.properties"
+echo "Step 8: chmod 0770 settings.properties"
    
 chmod 0770 /home/jamal/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
@@ -97,7 +94,7 @@ echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0770 /home/jamal
 exit 1
 fi
 
-echo "Step 10: chmod 0700 settings.properties"
+echo "Step 9: chmod 0700 settings.properties"
    
 chmod 0700 /home/jamal/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
@@ -106,7 +103,7 @@ echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0700 /home/jamal
 exit 1
 fi
 
-echo "Step 11: chmod 0600 settings.properties"
+echo "Step 10: chmod 0600 settings.properties"
    
 chmod 0600 /home/jamal/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationSecure
@@ -115,7 +112,7 @@ echo "TEST Integration_ConfigurationSecure FAILED with chmod 0600 /home/jamal/.j
 exit 1
 fi
 
-echo "Step 12: chmod 0400 settings.properties"
+echo "Step 11: chmod 0400 settings.properties"
    
 chmod 0400 /home/jamal/.jamal/settings.properties
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationSecure
@@ -127,65 +124,135 @@ fi
 
 chmod 0400 /home/jamal/.jamal/settings.properties
 
+echo "Step 12: Testing that Maven Load works and only in secure environment"
+   
+cd /home/jamal/jamal || exit
+
+
+cd /home/jamal/jamal/jamal-maven-load || exit 1
+
 echo "Step 13: chmod 0777 /home/jamal/.jamal"
    
 chmod 0777 /home/jamal/.jamal
+echo "mvn test" -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0777 /home/jamal/.jamal"
-exit 1
+    echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0777 /home/jamal/.jamal"
+    exit 1
 fi
 echo "Step 14: chmod 0707 /home/jamal/.jamal"
    
 chmod 0707 /home/jamal/.jamal
+echo "mvn test" -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0707 /home/jamal/.jamal"
-exit 1
+    echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0707 /home/jamal/.jamal"
+    exit 1
 fi
 echo "Step 15: chmod 0770 /home/jamal/.jamal"
    
 chmod 0770 /home/jamal/.jamal
+echo "mvn test" -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationNotSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0770 /home/jamal/.jamal"
-exit 1
+    echo "TEST Integration_ConfigurationNotSecure FAILED with chmod 0770 /home/jamal/.jamal"
+    exit 1
 fi
 echo "Step 16: chmod 0700 /home/jamal/.jamal"
    
 chmod 0700 /home/jamal/.jamal
+echo "mvn test" -Dtest=javax0.jamal.maven.load.Integration_ConfigurationSecure
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationSecure FAILED with chmod 0700 /home/jamal/.jamal"
-exit 1
+    echo "TEST Integration_ConfigurationSecure FAILED with chmod 0700 /home/jamal/.jamal"
+    exit 1
 fi
 echo "Step 17: chmod 0500 /home/jamal/.jamal"
    
 chmod 0500 /home/jamal/.jamal
+echo "mvn test" -Dtest=javax0.jamal.maven.load.Integration_ConfigurationSecure
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationSecure FAILED with chmod 0500 /home/jamal/.jamal"
-exit 1
+    echo "TEST Integration_ConfigurationSecure FAILED with chmod 0500 /home/jamal/.jamal"
+    exit 1
 fi
 echo "Step 18: chmod 0500 /home/jamal/.jamal"
    
 chmod 0500 /home/jamal/.jamal
+echo "mvn test" -Dtest=javax0.jamal.maven.load.Integration_ConfigurationSecure
 mvn test -Dtest=javax0.jamal.maven.load.Integration_ConfigurationSecure
 if [ "$?" -ne "0" ]; then
-echo "TEST Integration_ConfigurationSecure FAILED with chmod 0500 /home/jamal/.jamal"
-exit 1
+    echo "TEST Integration_ConfigurationSecure FAILED with chmod 0500 /home/jamal/.jamal"
+    exit 1
 fi
+
+echo "Step 19: Deleting JARs downloaded by the tests"
+   
+# Define the base path of the Maven repository
+BASE_PATH="/home/jamal/.m2/repository/com/javax0/jamal"
+
+# Find all directories matching the pattern
+for dir in "$BASE_PATH"/*/*; do
+    if [[ -d "$dir" ]]; then
+        version=$(basename "$dir")
+        if [[ "$version" != "2.8.3-SNAPSHOT" ]]; then
+            echo "Deleting: $dir"
+            rm -rf "$dir"
+        else
+            echo "Keeping latest version: $dir"
+        fi
+    fi
+done
+find "$BASE_PATH" -type f \( -name "*-javadoc.jar" -o -name "*-sources.jar" \) -exec rm -f {} +
+rm -rf /home/jamal/.m2/repository/org/codehaus/groovy/groovy/3.0.12
+rm -rf /home/jamal/.m2/repository/org/codehaus/groovy/groovy-jsr223/3.0.12/
+
+echo "Step 20: Calculating the CLASSPATH"
+   
+CLASSPATH=$(find /home/jamal/.m2/repository -name "*.jar" | tr '\n' ':')
+
+JAMAL="java -cp \"$CLASSPATH\" javax0.jamal.cmd.JamalMain"
+echo "Step 21: Jamal command is $JAMAL"
+   
+
+
+echo "Step 22: Running Groovy, Ruby, ScriptBasic and Python integration tests"
+   
+cd /home/jamal/jamal/ || exit
 
 
 
 
 echo "{@ruby:eval 1+1}" > test_ruby.txt.jam
+if [ ! -e test_ruby.txt.jam ]; then
+    echo "test_ruby.txt.jam was not created"
+    exit 1
+fi
 echo "2" > test_ruby.txt
+if [ ! -e test_ruby.txt ]; then
+    echo "test_ruby.txt was not created"
+    exit 1
+fi
 $JAMAL test_ruby.txt.jam test_ruby.test
+
+echo test_ruby.test
+cat test_ruby.test
+recho test_ruby.txt
+cat test_ruby.txt
+echo test_ruby.txt.jam
+cat test_ruby.txt.jam
+
+if [ ! -e test_ruby.test ]; then
+    echo "test_ruby.test was not created"
+    exit 1
+fi
+
 if [ "$(diff -b test_ruby.txt test_ruby.test)" ] ;then
     echo "Jamal via SHELL created different output"
     diff -b test_ruby.txt test_ruby.test
     exit 1
+else
+   echo "ruby test successful"
 fi
 rm test_ruby.test
 rm test_ruby.txt
@@ -193,25 +260,71 @@ rm test_ruby.txt.jam
 
 
 echo "{@groovy:eval 1+1}" > test_groovy.txt.jam
+if [ ! -e test_groovy.txt.jam ]; then
+    echo "test_groovy.txt.jam was not created"
+    exit 1
+fi
 echo "2" > test_groovy.txt
+if [ ! -e test_groovy.txt ]; then
+    echo "test_groovy.txt was not created"
+    exit 1
+fi
 $JAMAL test_groovy.txt.jam test_groovy.test
+
+echo test_groovy.test
+cat test_groovy.test
+recho test_groovy.txt
+cat test_groovy.txt
+echo test_groovy.txt.jam
+cat test_groovy.txt.jam
+
+if [ ! -e test_groovy.test ]; then
+    echo "test_groovy.test was not created"
+    exit 1
+fi
+
 if [ "$(diff -b test_groovy.txt test_groovy.test)" ] ;then
     echo "Jamal via SHELL created different output"
     diff -b test_groovy.txt test_groovy.test
     exit 1
+else
+   echo "groovy test successful"
 fi
 rm test_groovy.test
 rm test_groovy.txt
 rm test_groovy.txt.jam
 
 
-echo "{expr 1+1}" > test_scriptbasic.txt.jam
+echo "{@import res:scriptbasic.jim}{expr 1+1}" > test_scriptbasic.txt.jam
+if [ ! -e test_scriptbasic.txt.jam ]; then
+    echo "test_scriptbasic.txt.jam was not created"
+    exit 1
+fi
 echo "2" > test_scriptbasic.txt
+if [ ! -e test_scriptbasic.txt ]; then
+    echo "test_scriptbasic.txt was not created"
+    exit 1
+fi
 $JAMAL test_scriptbasic.txt.jam test_scriptbasic.test
+
+echo test_scriptbasic.test
+cat test_scriptbasic.test
+recho test_scriptbasic.txt
+cat test_scriptbasic.txt
+echo test_scriptbasic.txt.jam
+cat test_scriptbasic.txt.jam
+
+if [ ! -e test_scriptbasic.test ]; then
+    echo "test_scriptbasic.test was not created"
+    exit 1
+fi
+
 if [ "$(diff -b test_scriptbasic.txt test_scriptbasic.test)" ] ;then
     echo "Jamal via SHELL created different output"
     diff -b test_scriptbasic.txt test_scriptbasic.test
     exit 1
+else
+   echo "scriptbasic test successful"
 fi
 rm test_scriptbasic.test
 rm test_scriptbasic.txt
@@ -219,16 +332,39 @@ rm test_scriptbasic.txt.jam
 
 
 echo "{@python def Hello(me):
-  print(f"hello {me}", end='')
+  print(f\"hello {me}\", end='')
 }\
 {@hello You}
 " > test_py.txt.jam
+if [ ! -e test_py.txt.jam ]; then
+    echo "test_py.txt.jam was not created"
+    exit 1
+fi
 echo "Hello, You!" > test_py.txt
+if [ ! -e test_py.txt ]; then
+    echo "test_py.txt was not created"
+    exit 1
+fi
 $JAMAL test_py.txt.jam test_py.test
+
+echo test_py.test
+cat test_py.test
+recho test_py.txt
+cat test_py.txt
+echo test_py.txt.jam
+cat test_py.txt.jam
+
+if [ ! -e test_py.test ]; then
+    echo "test_py.test was not created"
+    exit 1
+fi
+
 if [ "$(diff -b test_py.txt test_py.test)" ] ;then
     echo "Jamal via SHELL created different output"
     diff -b test_py.txt test_py.test
     exit 1
+else
+   echo "py test successful"
 fi
 rm test_py.test
 rm test_py.txt

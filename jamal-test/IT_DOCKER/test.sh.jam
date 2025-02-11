@@ -53,8 +53,6 @@ COPY integrationtest .
 RUN chown jamal:TESTGROUP integrationtest
 RUN chmod u+xr integrationtest
 USER jamal
-RUN mkdir -p /home/jamal/.m2/repository
-RUN chmod u+xr /home/jamal/.m2/repository
 CMD ./integrationtest
 END
 
@@ -71,4 +69,31 @@ fi
 #
 # Run the integration test
 #
-docker run -it jamal-test
+START_TIME=$(date +%s)
+mv integration_test.log integration_test.log.BAK || echo "no previous log"
+docker run -it jamal-test | sed -r "s/\x1B\[[0-9;]*[mK]//g" | tee -a integration_test.log
+
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+sleep 1
+
+#
+# Delete the progress lines from the log (approx 27k lines to 4k)
+#
+sed -i -E '/Progress/d; /Receiving objects:/d; /remote: Counting objects:/d; /remote: Compressing objects:/d; /Resolving deltas:/d' integration_test.log
+
+if tail -n1 integration_test.log | grep -q "INTEGRATION TEST SUCCESSFUL"; then
+    RESULT=0
+else
+    RESULT=1
+fi
+
+if [ $RESULT -eq 0 ]; then
+    echo "OK $(date '+%Y-%m-%d %H:%M:%S')" > integration_test.run
+    echo "INTEGRATION TEST OK $DURATION sec"
+    exit 0
+else
+    echo "FAIL $(date '+%Y-%m-%d %H:%M:%S')" > integration_test.run
+    echo "FAIL $DURATION sec"
+    exit 1
+fi
