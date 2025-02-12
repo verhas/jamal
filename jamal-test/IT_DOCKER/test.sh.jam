@@ -7,38 +7,6 @@
 set -e
 
 #
-# The directory where we will extract the Jamal JAR files so that we can execute jamal on the
-# script files needed to execute the integration test.
-#
-LIB_DIR=".lib"
-rm -rf "$LIB_DIR"
-mkdir "$LIB_DIR"
-unzip -q "{%@dev:root%}/jamal-cmd/target/jamal-cmd-2.8.3-SNAPSHOT-distribution.zip" -d "$LIB_DIR"
-
-#
-# Calxculate the classpath
-#
-CLASSPATH=$(find "$LIB_DIR" -name "*.jar" | tr '\n' ':')
-
-#
-# create the jamal.sh script to execute jamal
-#
-cat > jamal.sh <<END
-#!/bin/sh
-java -cp "$CLASSPATH" javax0.jamal.cmd.JamalMain "\$@"
-END
-
-chmod u+rx ./jamal.sh
-
-./jamal.sh -T7 integrationtest.jam integrationtest
-
-#
-# Cleaning up the local jamal.sh and the classpath that was used to compule the integration test
-#
-rm -rf "$LIB_DIR"
-rm jamal.sh
-
-#
 # Create the dockerfile
 #
 cat > Dockerfile <<END
