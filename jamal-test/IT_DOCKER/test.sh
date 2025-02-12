@@ -33,7 +33,7 @@ END
 #
 # Build the docker image
 #
-if docker build -t jamal-test .
+if ! docker build -t jamal-test .
 then
   echo "Docker build failed. Exiting."
   exit 1
