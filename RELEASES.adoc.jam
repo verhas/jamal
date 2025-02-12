@@ -9,6 +9,20 @@
 NOTE: The known bugs sections in the releases are updated after the release.
 Please consult the latest SNAPSHOT version available online at https://github.com/verhas/jamal/blob/master/RELEASES.adoc[GitHub Jamal RELEASES.adoc]
 
+{%RELEASE ITTOQQORTOORMIIT%}
+=== Known Bugs
+
+__currently there are no known bugs in this release__
+
+=== New Features
+
+* Debugger was updated, including now filtering for macros.
+
+* You can define built-in macros in a very simple way using Python.
+Needs Python installed.
+
+* Integration tests running in Docker are now a must
+
 {%RELEASE HARKIV%}
 
 === Known Bugs

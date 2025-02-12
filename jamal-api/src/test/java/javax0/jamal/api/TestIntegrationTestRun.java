@@ -13,6 +13,24 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * This class contains a JUnit test to verify that the integration test run is recent and not stale.
+ * <p>
+ * The test checks for the presence and validity of a timestamp file that indicates the last successful
+ * execution of the integration tests. If the timestamp is older than 24 hours, the test fails.
+ * </p>
+ * <p>
+ * The test is configured to run only on a specific development environment (identified by the
+ * presence of "verhasp" in the absolute path). It is also skipped if executed in a SNAPSHOT version.
+ * </p>
+ *
+ * <h2>Test Behavior</h2>
+ * <ul>
+ *     <li>Verifies that the integration test timestamp file exists.</li>
+ *     <li>Ensures the file content is not null and starts with "OK".</li>
+ *     <li>Parses the timestamp from the file and checks that it is within the last 24 hours.</li>
+ * </ul>
+ */
 public class TestIntegrationTestRun {
 
     private static final Path FILE_PATH = Path.of("../jamal-test/IT_DOCKER/integration_test.run");

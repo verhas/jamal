@@ -1,0 +1,21 @@
+name: Build and Test with Docker
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set execute permissions for the script
+        run: chmod +x ./jamal-test/IT_DOCKER/test.sh
+
+      - name: Run the shell script
+        run: ./jamal-test/IT_DOCKER/test.sh
