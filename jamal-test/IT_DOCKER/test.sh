@@ -1,10 +1,16 @@
-#!/bin/sh
-# DO NOT EDIT 
+#!/bin/bash
 #
-# This shell script prepares the docker container and other scrips needed to execute the intergration tests.
-# At the end, it starts the docker container, which will start the script integrationtest.
+# This shell script prepares the docker container and other scrips needed to execute the 'intergration' test script.
 #
 set -e
+
+#
+# The code in Github runs from the root directory
+#
+if [[ -e ".mvn" ]]; then
+  echo
+  cd jamal-test/IT_DOCKER
+fi
 
 #
 # Create the dockerfile
@@ -27,22 +33,25 @@ END
 #
 # Build the docker image
 #
-docker build -t jamal-test .
-rm Dockerfile
-if [ $? -ne 0 ]; then
+if docker build -t jamal-test .
+then
   echo "Docker build failed. Exiting."
   exit 1
 fi
+# clean up
+rm Dockerfile || exit 1
 
 #
 # Run the integration test
 #
 START_TIME=$(date +%s)
 mv integration_test.log integration_test.log.BAK || echo "no previous log"
+echo "building docker image"
 docker run -it jamal-test | sed -r "s/\x1B\[[0-9;]*[mK]//g" | tee -a integration_test.log
 
 END_TIME=$(date +%s)
 DURATION=$((END_TIME - START_TIME))
+echo "sleep a second to ensure log files are closed and flushed"
 sleep 1
 
 #
@@ -56,7 +65,7 @@ else
     RESULT=1
 fi
 
-if [ $RESULT -eq 0 ]; then
+if [[ $RESULT -eq 0 ]]; then
     echo "OK $(date '+%Y-%m-%d %H:%M:%S')" > integration_test.run
     echo "INTEGRATION TEST OK $DURATION sec"
     exit 0
