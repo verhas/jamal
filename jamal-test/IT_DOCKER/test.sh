@@ -65,9 +65,11 @@ sleep 1
 #
 sed -i -E '/Progress/d; /Receiving objects:/d; /remote: Counting objects:/d; /remote: Compressing objects:/d; /Resolving deltas:/d' integration_test.log || echo "filtering failed"
 
-if [[ $GITHUB -eq 1 ]]; then
+#if [[ $GITHUB -eq 1 ]]; then
+echo "cat integration test log:"
   cat integration_test.log
-fi
+echo "log end"
+#fi
 
 if tail -n1 integration_test.log | grep -q "INTEGRATION TEST SUCCESSFUL"; then
     RESULT=0
