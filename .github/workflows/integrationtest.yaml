@@ -1,4 +1,4 @@
-name: Build and Test with Docker
+name: DOCKER based INTEGRATION TEST
 
 on:
   push:

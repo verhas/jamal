@@ -21,7 +21,7 @@ fi
 cat > Dockerfile <<END
 FROM alpine
 RUN apk update
-RUN apk add --no-cache openjdk17 maven git python3 py3-pip
+RUN apk add --no-cache bash openjdk17 maven git python3 py3-pip
 RUN addgroup TESTGROUP
 RUN adduser -G TESTGROUP -D -s /bin/bash jamal
 
@@ -36,6 +36,7 @@ END
 #
 # Build the docker image
 #
+echo "building docker image"
 if ! docker build -t jamal-test .
 then
   echo "Docker build failed. Exiting."
@@ -52,7 +53,7 @@ START_TIME=$(date +%s)
 if [[ -f integration_test.log ]]; then
   mv integration_test.log integration_test.log.BAK
 fi
-echo "building docker image"
+echo "running docker image"
 
 docker run jamal-test | sed -E "s/\x1B\[[0-9;]*[mK]//g; /Progress/d; /Receiving objects:/d; /remote: Counting objects:/d; /remote: Compressing objects:/d; /Resolving deltas:/d" | tee -a integration_test.log
 

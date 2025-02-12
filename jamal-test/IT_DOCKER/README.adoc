@@ -17,19 +17,6 @@ It is to be executed inside a container.
 If you run it from here, it will mess up the directory cloning the Jamal repository, creating a local repo `.m2/repository` and other nasty things.
 To avoid that, it checks if it is inside a container and stops when it feels it is not.
 
-The shell script `integrationtest` is created from the source `integrationtest.jam`.
-The Jamal source is the skeleton of the integration test script.
-It includes other scripts so that after the processing, there will be one giant monolithic shell script.
-It eases the maintenance of the docker image.
-
-The included script file names are `test_ ... .sh.jam`.
-The files named `test_ ... .txt.jam` are processed during the test.
-Their result is compared to the expected result.
-These files are `test_ ... .txt`.
-
-Some integration tests are included from other subprojects.
-Those files are developed testing their functionality locally on the development machine.
-When they work they are included into the top level `integrationtest.jam` file.
 
 
 ## Executing the integration tests
@@ -43,7 +30,7 @@ Prerequisites:
 
 * Podman must be installed and the virtual machine running on Apple architecture
 
-* The script must be executed from the directory containing the `integrationtest` and the `Dockerfile`.
+* The script must be executed from the directory containing the `integrationtest`.
 
 * The docker/podman instance running should have internet connection
 
