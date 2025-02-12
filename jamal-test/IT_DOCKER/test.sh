@@ -53,7 +53,7 @@ if [[ -f integration_test.log ]]; then
   mv integration_test.log integration_test.log.BAK
 fi
 echo "building docker image"
-docker run -it jamal-test | sed -r "s/\x1B\[[0-9;]*[mK]//g" | tee -a integration_test.log
+docker run jamal-test | sed -r "s/\x1B\[[0-9;]*[mK]//g" | tee -a integration_test.log
 
 END_TIME=$(date +%s)
 DURATION=$((END_TIME - START_TIME))
@@ -65,11 +65,9 @@ sleep 1
 #
 sed -i -E '/Progress/d; /Receiving objects:/d; /remote: Counting objects:/d; /remote: Compressing objects:/d; /Resolving deltas:/d' integration_test.log || echo "filtering failed"
 
-#if [[ $GITHUB -eq 1 ]]; then
-echo "cat integration test log:"
+if [[ $GITHUB -eq 1 ]]; then
   cat integration_test.log
-echo "log end"
-#fi
+fi
 
 if tail -n1 integration_test.log | grep -q "INTEGRATION TEST SUCCESSFUL"; then
     RESULT=0
