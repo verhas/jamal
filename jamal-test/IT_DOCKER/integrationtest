@@ -237,7 +237,7 @@ $JAMAL test_ruby.txt.jam test_ruby.test
 
 echo test_ruby.test
 cat test_ruby.test
-recho test_ruby.txt
+echo test_ruby.txt
 cat test_ruby.txt
 echo test_ruby.txt.jam
 cat test_ruby.txt.jam
@@ -273,7 +273,7 @@ $JAMAL test_groovy.txt.jam test_groovy.test
 
 echo test_groovy.test
 cat test_groovy.test
-recho test_groovy.txt
+echo test_groovy.txt
 cat test_groovy.txt
 echo test_groovy.txt.jam
 cat test_groovy.txt.jam
@@ -309,7 +309,7 @@ $JAMAL test_scriptbasic.txt.jam test_scriptbasic.test
 
 echo test_scriptbasic.test
 cat test_scriptbasic.test
-recho test_scriptbasic.txt
+echo test_scriptbasic.txt
 cat test_scriptbasic.txt
 echo test_scriptbasic.txt.jam
 cat test_scriptbasic.txt.jam
@@ -349,7 +349,7 @@ $JAMAL test_py.txt.jam test_py.test
 
 echo test_py.test
 cat test_py.test
-recho test_py.txt
+echo test_py.txt
 cat test_py.txt
 echo test_py.txt.jam
 cat test_py.txt.jam

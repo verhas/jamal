@@ -149,7 +149,7 @@ $JAMAL test_$X.txt.jam test_$X.test
 
 echo test_$X.test
 cat test_$X.test
-recho test_$X.txt
+echo test_$X.txt
 cat test_$X.txt
 echo test_$X.txt.jam
 cat test_$X.txt.jam
