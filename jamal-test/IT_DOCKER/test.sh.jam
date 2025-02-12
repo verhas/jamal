@@ -7,6 +7,13 @@
 set -e
 
 #
+# The code in Github runs from the root directory
+#
+if [ -d .mvn ]; then
+  cd jamal-test/IT_DOCKER
+fi
+
+#
 # Create the dockerfile
 #
 cat > Dockerfile <<END
