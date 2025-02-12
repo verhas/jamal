@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This shell script prepares the docker container and other scrips needed to execute the 'intergration' test script.
+# This shell script prepares the docker container and other scrips needed to execute the 'integration' test script.
 #
 set -e
 
@@ -53,21 +53,13 @@ if [[ -f integration_test.log ]]; then
   mv integration_test.log integration_test.log.BAK
 fi
 echo "building docker image"
-docker run jamal-test | sed -r "s/\x1B\[[0-9;]*[mK]//g" | tee -a integration_test.log
+
+docker run jamal-test | sed -E "s/\x1B\[[0-9;]*[mK]//g; /Progress/d; /Receiving objects:/d; /remote: Counting objects:/d; /remote: Compressing objects:/d; /Resolving deltas:/d" | tee -a integration_test.log
 
 END_TIME=$(date +%s)
 DURATION=$((END_TIME - START_TIME))
 echo "sleep a second to ensure log files are closed and flushed"
 sleep 1
-
-#
-# Delete the progress lines from the log (approx 27k lines to 4k)
-#
-sed -i -E '/Progress/d; /Receiving objects:/d; /remote: Counting objects:/d; /remote: Compressing objects:/d; /Resolving deltas:/d' integration_test.log || echo "filtering failed"
-
-if [[ $GITHUB -eq 1 ]]; then
-  cat integration_test.log
-fi
 
 if tail -n1 integration_test.log | grep -q "INTEGRATION TEST SUCCESSFUL"; then
     RESULT=0
