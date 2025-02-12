@@ -8,7 +8,7 @@ set -e
 # The code in Github runs from the root directory
 #
 if [[ -e ".mvn" ]]; then
-  echo
+  echo "We are running in GitHub action"
   cd jamal-test/IT_DOCKER
   GITHUB=1
 else
