@@ -1,5 +1,6 @@
 package javax0.jamal.py;
 
+import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
@@ -7,7 +8,9 @@ import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.regex.Pattern;
 
 @Macro.Name("python")
@@ -18,7 +21,7 @@ public class PythonFunction implements Macro, Scanner {
     public static final String VENV = "venv";
 
     private PythonInterpreter createInterpreter(Processor processor, String dir, String v) {
-        final var interpreter = new PythonInterpreter(dir,v);
+        final var interpreter = new PythonInterpreter(dir, v);
         processor.deferredClose(interpreter);
         return interpreter;
     }
@@ -42,7 +45,7 @@ public class PythonFunction implements Macro, Scanner {
         // If there is a `venv`, or whatever directory name is defined in the `venv` parop under this directory,
         // then Python will run in a virtual environment.
         // This option is ignored on later calls when the interpreter was already launched.
-        final var venv =scanner.str(null, "venv").defaultValue(VENV);
+        final var venv = scanner.str(null, "venv").defaultValue(VENV);
         // specifies the directory name of the virtual environment.
         // The default value is `venv`.
         // This option can only be used together with the option `directory`.
@@ -51,7 +54,7 @@ public class PythonFunction implements Macro, Scanner {
         // The last line of the python code has to be `sys.exit(0)` or whatever exist code you desire, or else
         // the interpreter process will be killed forcefully.
         // You cannot use this parop together with `execute`, `function` or `id`.
-        // When this parop is used the return value of the method is an empty string.
+        // When this parop is used, the return value of the method is an empty string.
         //
         //The parops are all aliases technically.
         //It means that you cannot define them as user-defined macros.
@@ -59,15 +62,20 @@ public class PythonFunction implements Macro, Scanner {
         // end snippet
         scanner.done();
         BadSyntax.when(function.isPresent() && !id.isPresent(), "You cannot use '%s' unless you also specify an 'id' ", function.name());
-        BadSyntax.when(venv.isPresent() && !directory.isPresent(),"venv cannot be used without specifying a directory.");
+        BadSyntax.when(venv.isPresent() && !directory.isPresent(), "venv cannot be used without specifying a directory.");
         BadSyntax.when(closeCode.is() && executeOnly.is(), "You cannot use '%s' together an '%s' command.", closeCode.name(), executeOnly.name());
         BadSyntax.when(closeCode.is() && (id.isPresent() || function.isPresent()), "You cannot use '%s' when defining a macro.", closeCode.name());
         InputHandler.skipWhiteSpaces(in);
         final var dir = directory.get();
         final var v = venv.get();
-        final var interp = processor.state(this, () -> createInterpreter(processor, dir,v));
+        try {
+            new SecureApprovalFile(getInputFileLocation(in), getRootDir(in));
+        } catch (Exception e) {
+            throw new BadSyntax(e.getMessage(), e);
+        }
+        final var interp = processor.state(this, () -> createInterpreter(processor, dir, v));
         final String result;
-        if(closeCode.is()){
+        if (closeCode.is()) {
             interp.setCloseCode(in.toString());
             return "";
         }
@@ -103,5 +111,27 @@ public class PythonFunction implements Macro, Scanner {
 
         }
         return result;
+    }
+
+    static File getRootDir(Input in) throws IOException {
+        var dir = getInputFileLocation(in).getCanonicalFile();
+        while (dir != null && dir.exists()) {
+            final var dn = dir.getAbsolutePath();
+            final var found = Arrays.stream(DocumentConverter.PLACEHOLDERS)
+                    .filter(fn -> new File(dn, fn).exists())
+                    .findFirst();
+            if (found.isPresent()) {
+                return dir;
+            }
+            dir = dir.getParentFile();
+        }
+        throw new RuntimeException("Cannot find the root directory of the project file.");
+    }
+
+    static File getInputFileLocation(Input in) {
+        if (in != null && in.getPosition() != null && in.getPosition().top() != null && in.getPosition().top().file != null) {
+            return new File(in.getPosition().top().file).getParentFile();
+        }
+        return new File(".");
     }
 }
