@@ -1,6 +1,5 @@
 = Jamal Python Macros
 
-
 Python integration module for
 
 This macro package can be used to create built-in macros defined in Python.
@@ -140,7 +139,7 @@ defines a code to execute when the interpreter exists.
 The last line of the python code has to be `sys.exit(0)` or whatever exist code you desire, or else
 the interpreter process will be killed forcefully.
 You cannot use this parop together with `execute`, `function` or `id`.
-When this parop is used the return value of the method is an empty string.
+When this parop is used, the return value of the method is an empty string.
 
 The parops are all aliases technically.
 It means that you cannot define them as user-defined macros.
@@ -200,9 +199,47 @@ These locations are the following:
 
 === Common
 
-If the above operating system specific locations fail, then the code will try
+If the above operating system-specific locations fail, then the code will try
 
 === Configuration
 
 If the environment variable ``JAMAL_PYTHON_INTERPRETER`` is defined then the value of it will be used and the whole search for Python interpreter is skipped.
 It is recommended to configure the interpreter this way because the search can use significant processing power starting the different interpreters as separate processes querying their version.
+
+=== Security
+
+Executing arbitrary Python programs when opening a document without restrictions can be risky.
+You might download an untrusted document:
+
+* from a website,
+* from a Git repository,
+* or from an extracted archive.
+
+You wouldn't want such documents to automatically execute Python code.
+To prevent this, Python code will only run if a special approval file is present:
+
+* in the directory containing the Jamal file with the `{@python ...}` macro, or
+* in the project's root directory.
+
+The name of this approval file is ``.python.sentinel``.
+It also has to have the security settings so that only the user can read the file.
+In other words, the POSIX permission of the file has to be `0400`.
+If the required file is missing or the permission is not as required the `{@python ...}` macro will result in an error message.
+
+This message will include the necessary commands to create the file on your system.
+For example:
+
+.Sample error message when editing this document (path edited)
+[source,text]
+----
+Approval file does not exist: Approval file required at: touch /Users/.../jamal/jamal-py/.python.sentinel; chmod 400 /Users/.../jamal/jamal-py/.python.sentinel
+       or
+touch /Users/.../jamal/.python.sentinel; chmod 400 /Users/.../jamal/.python.sentinel
+----
+
+The error message specifies the required file name and instructs you to set the correct file permissions.
+The approval file must have POSIX permissions set to `+0400+`, ensuring that only the file owner can read it.
+If the permission differs, the `{@python ...}` macro will not function.
+
+Enforcing this permission safeguards users when deploying a downloaded project in the same directory, preventing unauthorized execution.
+Actions like checking out a Git repository or extracting an archive typically do not set permissions to `0400`, adding an extra layer of security.

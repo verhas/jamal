@@ -1,12 +1,12 @@
 package javax0.jamal.py;
 
-import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.Sentinel;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,11 +68,9 @@ public class PythonFunction implements Macro, Scanner {
         InputHandler.skipWhiteSpaces(in);
         final var dir = directory.get();
         final var v = venv.get();
-        try {
-            new SecureApprovalFile(getInputFileLocation(in), getRootDir(in));
-        } catch (Exception e) {
-            throw new BadSyntax(e.getMessage(), e);
-        }
+        final var sentinel = Sentinel.forThe(in).withType("python");
+        BadSyntax.when(!sentinel.check(), sentinel.getErrorMessage());
+
         final var interp = processor.state(this, () -> createInterpreter(processor, dir, v));
         final String result;
         if (closeCode.is()) {
@@ -113,11 +111,11 @@ public class PythonFunction implements Macro, Scanner {
         return result;
     }
 
-    static File getRootDir(Input in) throws IOException {
+    private static File getRootDir(Input in) throws IOException {
         var dir = getInputFileLocation(in).getCanonicalFile();
         while (dir != null && dir.exists()) {
             final var dn = dir.getAbsolutePath();
-            final var found = Arrays.stream(DocumentConverter.PLACEHOLDERS)
+            final var found = Arrays.stream(InputHandler.PLACEHOLDERS)
                     .filter(fn -> new File(dn, fn).exists())
                     .findFirst();
             if (found.isPresent()) {
@@ -125,7 +123,7 @@ public class PythonFunction implements Macro, Scanner {
             }
             dir = dir.getParentFile();
         }
-        throw new RuntimeException("Cannot find the root directory of the project file.");
+        return null;
     }
 
     static File getInputFileLocation(Input in) {

@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}DevRoot.java hash=6d04913a
+{%#snip:check file={%JAVA_DIR%}DevRoot.java hash=d26f457a
 %}
 This macro finds the root directory of a development project.
 
@@ -18,7 +18,7 @@ The option is multivalued, and each value can contain multiple file names comma 
 +
 The default list is the following:
 +
-{%@snip:collect onceAs="DOCUCONV" from="../../../jamal-engine/src/main/java/javax0/jamal/DocumentConverter.java"%}\
+{%@snip:collect onceAs="DOCUCONV" from="../../../jamal-tools/src/main/java/javax0/jamal/tools/InputHandler.java"%}\
 {%#replaceLines replace="/\",/`/" replace="/\"/** `/"
 {%@snip PLACEHOLDERS%}%}
 +

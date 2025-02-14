@@ -2,6 +2,7 @@ package javax0.jamal.snippet;
 
 import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.*;
+import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 import javax0.jamal.tools.param.ListParameter;
 
@@ -48,7 +49,7 @@ public class DevRoot implements Macro, OptionsControlled, Scanner.WholeInput {
             }
             return fileNames;
         } else {
-            return Set.of(DocumentConverter.PLACEHOLDERS);
+            return Set.of(InputHandler.PLACEHOLDERS);
         }
     }
 }

@@ -4,20 +4,50 @@ import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.DosFileAttributeView;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Optional;
+import java.util.Set;
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class TestPythonDefinedMacros {
+
+    @TempDir
+    File tempDir;
 
     @BeforeAll
     public static void checkPythonAvailability() {
         Optional<String> pythonInterpreter = new PythonFinder(true).findPythonInterpreter();
         Assumptions.assumeTrue(pythonInterpreter != null, "Skipping tests: Python is not installed");
         System.out.println("Python interpreter: " + pythonInterpreter.orElseThrow());
+    }
+
+    private Path approvalFile;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        approvalFile = Path.of(tempDir.getAbsolutePath(), ".python.sentinel");
+        Files.createFile(approvalFile);
+        if (Files.getFileAttributeView(approvalFile, PosixFileAttributeView.class) != null) {
+            // POSIX (Linux/macOS)
+            Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ));
+        } else {
+            // Windows
+            Files.getFileAttributeView(approvalFile, DosFileAttributeView.class).setReadOnly(true);
+        }
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        Files.deleteIfExists(approvalFile);
     }
 
     @Test
@@ -27,6 +57,7 @@ public class TestPythonDefinedMacros {
                         "    print(f\">>{text}<<\",end='')\n" +
                         "%}" +
                         "{%@myMacro al\"ma%}").usingTheSeparators("{%", "%}")
+                .atPosition(new File(tempDir, "test.txt.jam").getAbsolutePath(), 1, 1)
                 .results(">> al\"ma<<");
     }
 
@@ -37,6 +68,8 @@ public class TestPythonDefinedMacros {
                         "    print(f\">>{text}<<\",end='')\n" +
                         "%}" +
                         "{%@myMacro al\"ma%}").usingTheSeparators("{%", "%}")
+                .atPosition(new File(tempDir, "test.txt.jam").getAbsolutePath(), 1, 1)
+
                 .throwsBadSyntax("There is no built.in macro.*");
     }
 
@@ -47,6 +80,7 @@ public class TestPythonDefinedMacros {
         TestThat.theInput("{%@python def myMacro(text):\n" +
                         "    a = a +\n" +
                         "%}").usingTheSeparators("{%", "%}")
+                .atPosition(new File(tempDir, "test.txt.jam").getAbsolutePath(), 1, 1)
                 .results(s -> s.startsWith("invalid syntax"));
     }
 
@@ -63,6 +97,7 @@ public class TestPythonDefinedMacros {
                         "    print(\"Chibakka says: \"+input,end='')\n" +
                         "%}" +
                         "{%@chubakka briaaaf%}").usingTheSeparators("{%", "%}")
+                .atPosition(new File(tempDir, "test.txt.jam").getAbsolutePath(), 1, 1)
                 .results("Chubakka says:  broaaaf\nChibakka says:  briaaaf");
     }
 
@@ -75,6 +110,7 @@ public class TestPythonDefinedMacros {
                         "myMacro = meMacro\n" +
                         "%}" +
                         "{%@myMacro al\"ma%}").usingTheSeparators("{%", "%}")
+                .atPosition(new File(tempDir, "test.txt.jam").getAbsolutePath(), 1, 1)
                 .results(">> al\"ma<<");
     }
 
@@ -86,6 +122,7 @@ public class TestPythonDefinedMacros {
                         "    print(f\">>{text}<<\",end='')\n" +
                         "%}" +
                         "{%@myMacro al\"ma%}").usingTheSeparators("{%", "%}")
+                .atPosition(new File(tempDir, "test.txt.jam").getAbsolutePath(), 1, 1)
                 .results(">> al\"ma<<");
     }
 
@@ -97,6 +134,7 @@ public class TestPythonDefinedMacros {
                         "    print(f\">>{text/0}<<\",end='')\n" +
                         "%}" +
                         "{%@meMacro 3%}").usingTheSeparators("{%", "%}")
+                .atPosition(new File(tempDir, "test.txt.jam").getAbsolutePath(), 1, 1)
                 .results("unsupported operand type(s) for /: 'str' and 'int'");
     }
 
@@ -111,10 +149,11 @@ public class TestPythonDefinedMacros {
                         "else:\n" +
                         "    print(\"Not running in a virtual environment.\", end='')%}"
                 ).usingTheSeparators("{%", "%}")
+                .atPosition(new File(tempDir, "test.txt.jam").getAbsolutePath(), 1, 1)
                 .results("Not running in a virtual environment.");
     }
 
-    @Test
+    // @Test it will go into integration test executing in docker
     @DisplayName("Test it is a venv")
     void tesVenv() throws BadSyntax, Exception {
         Assumptions.assumeTrue(new File(DocumentConverter.getRoot() + "/jamal-py/venv").exists());
@@ -133,7 +172,8 @@ public class TestPythonDefinedMacros {
     @DisplayName("Test self closer")
     void tesCloserDefined() throws BadSyntax, Exception {
         final var file = Paths.get("test.txt").toFile();
-        final var fileName = file.getAbsolutePath().replace("\\", "/");;
+        final var fileName = file.getAbsolutePath().replace("\\", "/");
+        ;
         if (file.exists()) {
             //noinspection ResultOfMethodCallIgnored
             file.delete();
@@ -144,7 +184,8 @@ public class TestPythonDefinedMacros {
                         "    file.write(\"hello\")\n" +
                         "%}"
                 ).usingTheSeparators("{%", "%}")
+                .atPosition(new File(tempDir, "test.txt.jam").getAbsolutePath(), 1, 1)
                 .results("");
-        Assertions.assertTrue(file.exists(),"File "+file.getAbsolutePath()+" does not exist");
+        Assertions.assertTrue(file.exists(), "File " + file.getAbsolutePath() + " does not exist");
     }
 }

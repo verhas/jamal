@@ -90,11 +90,14 @@ test_security_permissions() {
 
 delete_old_jars() {
     print_step "Deleting JARs downloaded by the tests"
-    BASE_PATH="$JAMAL_HOME/.m2/repository/com/javax0/jamal"
+    REPO="$JAMAL_HOME/.m2/repository/"
+    BASE_PATH="$REPO/com/javax0/jamal"
     for dir in "$BASE_PATH"/*/*; do
         [[ -d "$dir" && "$(basename "$dir")" != "$VERSION" ]] && rm -rf "$dir"
     done
     find "$BASE_PATH" -type f \( -name "*-javadoc.jar" -o -name "*-sources.jar" \) -exec rm -f {} +
+    rm -rf $REPO/org/codehaus/groovy/groovy/3.0.12
+    rm -rf $REPO/org/codehaus/groovy/groovy-jsr223/3.0.12/
 }
 
 calculate_classpath() {
@@ -103,6 +106,48 @@ calculate_classpath() {
     JAMAL="java -cp \"$CLASSPATH\" javax0.jamal.cmd.JamalMain"
     echo "Jamal command is $JAMAL"
 }
+
+run_script_test() {
+    local X="$1"
+    local Y="$2"
+    local Z="$3"
+
+    echo "$Y" > test_$X.txt.jam
+    if [ ! -e test_$X.txt.jam ]; then
+        echo "test_$X.txt.jam was not created"
+        exit 1
+    fi
+    echo "$Z" > test_$X.txt
+    if [ ! -e test_$X.txt ]; then
+        echo "test_$X.txt was not created"
+        exit 1
+    fi
+    "$JAMAL" test_$X.txt.jam test_$X.test
+
+    echo test_$X.test
+    cat test_$X.test
+    echo test_$X.txt
+    cat test_$X.txt
+    echo test_$X.txt.jam
+    cat test_$X.txt.jam
+
+    if [ ! -e test_$X.test ]; then
+        echo "test_$X.test was not created"
+        exit 1
+    fi
+
+    if [ "$(diff -b test_$X.txt test_$X.test)" ] ;then
+        echo "Jamal via SHELL created different output"
+        diff -b test_$X.txt test_$X.test
+        exit 1
+    else
+       echo "$X test successful"
+    fi
+    rm test_$X.test
+    rm test_$X.txt
+    rm test_$X.txt.jam
+}
+
 
 main() {
     check_docker_env
@@ -113,6 +158,14 @@ main() {
     test_security_permissions
     delete_old_jars
     calculate_classpath
+    run_script_test ruby '{@ruby:eval 1+1}' 2
+    run_script_test groovy '{@groovy:eval 1+1}' 2
+    run_script_test scriptbasic '{@import res:scriptbasic.jim}{expr 1+1}' 2
+    run_script_test py "{@python def Hello(me):
+    print(f\"hello {me}\", end='')
+}{@hello You}" 'Hello, You!'
+END
+
     print_step "INTEGRATION TEST SUCCESSFUL"
 }
 

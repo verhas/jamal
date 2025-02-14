@@ -1,25 +1,35 @@
-package javax0.jamal.py;
+package javax0.jamal.tools;
 
-import org.junit.jupiter.api.*;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Position;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
-import java.nio.file.attribute.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.DosFileAttributeView;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class SecureApprovalFileTest {
+public class TestSentinel {
+    public static final String SENTINEL_TYPE = "testType";
     @TempDir
     File tempDir;
 
+    private Input input;
     private Path approvalFile;
 
     @BeforeEach
-    void setUp() throws Exception {
-        approvalFile = SecureApprovalFile.getApprovalFilePath(tempDir);
+    void setUp() {
+        approvalFile = Path.of(tempDir.getAbsolutePath(), ".testType.sentinel");
+        this.input = new javax0.jamal.tools.Input(new Position(tempDir.getAbsolutePath() + "/t.jam"));
     }
 
     @Test
@@ -28,7 +38,7 @@ class SecureApprovalFileTest {
         Files.createFile(approvalFile);
         setReadOnlyPermissions(approvalFile);
 
-        assertDoesNotThrow(() -> new SecureApprovalFile(tempDir));
+        Assertions.assertTrue(Sentinel.forThe(input).withType(SENTINEL_TYPE).check());
     }
 
     @Test
@@ -36,8 +46,9 @@ class SecureApprovalFileTest {
         // Ensure the approval file does not exist
         assertFalse(Files.exists(approvalFile));
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> new SecureApprovalFile(tempDir));
-        assertTrue(exception.getMessage().contains("Approval file missing"));
+        final var sentinel = Sentinel.forThe(input).withType(SENTINEL_TYPE);
+        assertFalse(sentinel.check());
+        assertTrue(sentinel.getErrorMessage().contains("Approval file does not exist"));
     }
 
     @Test
@@ -46,8 +57,9 @@ class SecureApprovalFileTest {
         Files.createFile(approvalFile);
         Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> new SecureApprovalFile(tempDir));
-        assertTrue(exception.getMessage().contains("Approval file permissions are incorrect"));
+        final var sentinel = Sentinel.forThe(input).withType(SENTINEL_TYPE);
+        assertFalse(sentinel.check());
+        assertTrue(sentinel.getErrorMessage().contains("Approval file permissions are incorrect"));
     }
 
     @Test
@@ -56,14 +68,14 @@ class SecureApprovalFileTest {
         Files.createFile(approvalFile);
         Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
 
-        // Ensure it fails first
-        assertThrows(RuntimeException.class, () -> new SecureApprovalFile(tempDir));
+        final var sentinel = Sentinel.forThe(input).withType(SENTINEL_TYPE);
 
         // Fix permissions
         setReadOnlyPermissions(approvalFile);
 
-        // Ensure it passes now
-        assertDoesNotThrow(() -> new SecureApprovalFile(tempDir));
+        assertFalse(sentinel.check());
+        final var sentinel2 = Sentinel.forThe(input).withType(SENTINEL_TYPE);
+        assertTrue(sentinel2.check());
     }
 
     // Utility method to set correct read-only permissions
@@ -76,4 +88,5 @@ class SecureApprovalFileTest {
             Files.getFileAttributeView(file, DosFileAttributeView.class).setReadOnly(true);
         }
     }
+
 }

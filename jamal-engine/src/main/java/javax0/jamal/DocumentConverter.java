@@ -4,6 +4,7 @@ import javax0.jamal.api.Position;
 import javax0.jamal.engine.Processor;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Input;
+import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.OutputFile;
 
 import java.io.File;
@@ -34,25 +35,6 @@ import static java.nio.file.StandardOpenOption.*;
  * you alter the name of a class, method or field and you forget to follow the change in the documentation.
  */
 public class DocumentConverter {
-    public static final String[] PLACEHOLDERS = {
-            // snippet PLACEHOLDERS
-            "ROOT.dir",
-            ".git",
-            ".mvn",
-            "package.json",
-            "requirements.txt",
-            "Pipfile",
-            "Gemfile",
-            "Cargo.toml",
-            "CMakeLists.txt",
-            ".sln",
-            "go.mod",
-            ".travis.yml",
-            ".gitlab-ci.yml",
-            "azure-pipelines.yml",
-            // end snippet
-    };
-
     /**
      * Convert a document preprocessing and save the result into a file.
      * The source file is supposed to have the {@code .jam} extension.
@@ -237,7 +219,7 @@ public class DocumentConverter {
      * @throws IOException when there is some error traversing the directories
      */
     public static String getRoot() throws IOException {
-        return getRoot(PLACEHOLDERS
+        return getRoot(InputHandler.PLACEHOLDERS
         );
     }
 

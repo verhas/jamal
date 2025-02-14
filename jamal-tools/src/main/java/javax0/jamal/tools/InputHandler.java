@@ -3,6 +3,8 @@ package javax0.jamal.tools;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -18,7 +20,24 @@ import static javax0.jamal.api.Macro.validIdChar;
 public class InputHandler {
     final static private int DOES_NOT_CONTAIN = -1;
     private static final String[] EMPTY_STRING_ARRAY = new String[0];
-
+    public static final String[] PLACEHOLDERS = {
+            // snippet PLACEHOLDERS
+            "ROOT.dir",
+            ".git",
+            ".mvn",
+            "package.json",
+            "requirements.txt",
+            "Pipfile",
+            "Gemfile",
+            "Cargo.toml",
+            "CMakeLists.txt",
+            ".sln",
+            "go.mod",
+            ".travis.yml",
+            ".gitlab-ci.yml",
+            "azure-pipelines.yml",
+            // end snippet
+    };
 
     private InputHandler() {
     }
@@ -605,6 +624,29 @@ public class InputHandler {
             skip(input, 1);
         }
         return sb.toString();
+    }
+
+
+    public static File getRootDir(javax0.jamal.api.Input in) throws IOException {
+        var dir = getInputFileLocation(in).getCanonicalFile();
+        while (dir != null && dir.exists()) {
+            final var dn = dir.getAbsolutePath();
+            final var found = Arrays.stream(PLACEHOLDERS)
+                    .filter(fn -> new File(dn, fn).exists())
+                    .findFirst();
+            if (found.isPresent()) {
+                return dir;
+            }
+            dir = dir.getParentFile();
+        }
+        return null;
+    }
+
+    static File getInputFileLocation(javax0.jamal.api.Input in) {
+        if (in != null && in.getPosition() != null && in.getPosition().top() != null && in.getPosition().top().file != null) {
+            return new File(in.getPosition().top().file).getParentFile();
+        }
+        return new File(".");
     }
 
 }
