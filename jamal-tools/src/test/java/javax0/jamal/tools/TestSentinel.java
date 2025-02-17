@@ -16,7 +16,8 @@ import java.nio.file.attribute.PosixFileAttributeView;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestSentinel {
     public static final String SENTINEL_TYPE = "testType";
@@ -53,9 +54,16 @@ public class TestSentinel {
 
     @Test
     void testApprovalFileWithWrongPermissions() throws Exception {
-        // Create the file but do not set proper permissions
         Files.createFile(approvalFile);
-        Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+
+        if (isWindows()) {
+            // On Windows, setting POSIX permissions is not possible.
+            // Instead, clear the read-only attribute.
+            Files.getFileAttributeView(approvalFile, DosFileAttributeView.class).setReadOnly(false);
+        } else {
+            // On Linux/macOS, set POSIX permissions
+            Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+        }
 
         final var sentinel = Sentinel.forThe(input).withType(SENTINEL_TYPE);
         assertFalse(sentinel.check());
@@ -64,9 +72,13 @@ public class TestSentinel {
 
     @Test
     void testFixingPermissionsMakesApprovalValid() throws Exception {
-        // Create the approval file with wrong permissions
         Files.createFile(approvalFile);
-        Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+
+        if (isWindows()) {
+            Files.getFileAttributeView(approvalFile, DosFileAttributeView.class).setReadOnly(false);
+        } else {
+            Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+        }
 
         final var sentinel = Sentinel.forThe(input).withType(SENTINEL_TYPE);
 
@@ -76,6 +88,11 @@ public class TestSentinel {
         assertFalse(sentinel.check());
         final var sentinel2 = Sentinel.forThe(input).withType(SENTINEL_TYPE);
         assertTrue(sentinel2.check());
+    }
+
+    // Utility method to detect Windows OS
+    private boolean isWindows() {
+        return System.getProperty("os.name").toLowerCase().contains("win");
     }
 
     // Utility method to set correct read-only permissions
