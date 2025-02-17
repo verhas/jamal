@@ -122,7 +122,8 @@ run_script_test() {
         echo "test_$X.txt was not created"
         exit 1
     fi
-    "$JAMAL" test_$X.txt.jam test_$X.test
+    # shellcheck disable=SC2090
+    $JAMAL test_$X.txt.jam test_$X.test
 
     echo test_$X.test
     cat test_$X.test
@@ -143,12 +144,53 @@ run_script_test() {
     else
        echo "$X test successful"
     fi
-    rm test_$X.test
-    rm test_$X.txt
-    rm test_$X.txt.jam
 }
 
+# shellcheck disable=SC2090
+run_python_tests() {
+      cat << 'END' > test_py.txt.jam
+{@python
+def Hello(me):
+    print(f"hello {me}", end='')
+}{@hello You}
+END
+      echo -n 'Hello, You!' > test_py.txt
+      $JAMAL test_py.txt.jam test_py.test
+      if [[ -e test_py.test ]]; then
+          echo "test_py.test was created w/o sentinel file"
+          exit 1
+      else
+          echo "Python does not run without sentinel file. Great."
+      fi
+      touch .python.sentinel
+      $JAMAL test_py.txt.jam test_py.test
+      if [[ -e test_py.test ]]; then
+          echo "test_py.test was created insecure"
+          exit 1
+      else
+          echo "Python does not run with insecure sentinel file. Great."
+      fi
 
+      chmod 0400 .python.sentinel
+      $JAMAL test_py.txt.jam test_py.test
+      if [[ ! -e test_py.test ]]; then
+          echo "test_py.test was not created"
+          exit 1
+      else
+          echo "Python runs with sentinel file. Great."
+      fi
+
+      if [ "$(diff -b test_py.txt test_py.test)" ] ;then
+          echo "Python created different output"
+          diff -b test_py.txt test_py.test
+          exit 1
+      else
+         echo "py test successful"
+      fi
+
+}
+
+# shellcheck disable=SC2090
 main() {
     check_docker_env
     validate_working_directory
@@ -161,10 +203,7 @@ main() {
     run_script_test ruby '{@ruby:eval 1+1}' 2
     run_script_test groovy '{@groovy:eval 1+1}' 2
     run_script_test scriptbasic '{@import res:scriptbasic.jim}{expr 1+1}' 2
-    run_script_test py "{@python def Hello(me):
-    print(f\"hello {me}\", end='')
-}{@hello You}" 'Hello, You!'
-END
+    run_python_tests
 
     print_step "INTEGRATION TEST SUCCESSFUL"
 }
