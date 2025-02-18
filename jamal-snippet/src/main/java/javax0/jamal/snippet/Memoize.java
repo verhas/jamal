@@ -74,6 +74,7 @@ public class Memoize implements Macro, Scanner {
      * @return {@code true} if the hash code does not match the file content. {@code false} otherwise.
      */
     private static boolean hashCodesDiffer(String file, String hash) {
+        Debug.log("Comparing hash codes for '%' to '%s'",file,hash);
         if (file == null) {
             return false;
         }
@@ -89,13 +90,14 @@ public class Memoize implements Macro, Scanner {
             if (hashFromFile.length() > hash.length()) {
                 Debug.log("Hash from file is truncated.");
                 final var truncated = hashFromFile.substring(0, hash.length());
-                Debug.log("\"%s\".equals(\"%s\") is %s", hash, truncated, "" + hash.equals(truncated));
-                return !hash.equals(truncated);
+                final var b = hash.equals(truncated);
+                Debug.log("\"%s\".equals(\"%s\") is %s", hash, truncated, "" + b);
+                return !b;
             } else {
                 Debug.log("Hash from file is full.");
-                final var b= hash.equals(hashFromFile);
+                final var b = hash.equals(hashFromFile);
                 Debug.log("\"%s\".equals(\"%s\") is %s", hash, hashFromFile, "" + b);
-                return ! b;
+                return !b;
             }
         } catch (IOException e) {
             Debug.log("Cannot read the hash file '%s'", path.toAbsolutePath().toFile().getAbsolutePath(), e);
