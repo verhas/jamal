@@ -83,7 +83,7 @@ public class Memoize implements Macro, Scanner {
         }
         final String hashFromFile;
         try {
-            hashFromFile = Files.readString(path);
+            hashFromFile = Files.readString(path).trim();
             Debug.log("Memoize --hash-- (file, document):\n--%s--\n--%s--\n", hashFromFile, hash);
             Debug.log("hash length is %s, hash from file length is %s", "" + hash.length(), "" + hashFromFile.length());
             if (hashFromFile.length() > hash.length()) {
