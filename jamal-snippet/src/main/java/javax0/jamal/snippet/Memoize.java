@@ -29,6 +29,7 @@ public class Memoize implements Macro, Scanner {
         final boolean fileMissing = fileMissing(in.getReference(), files);
         boolean hashesDiffer = hashCodesDiffer(fn, hash);
         if (fileMissing || hashesDiffer) {
+            Debug.log("File is missing: %s, Hashes differ: %s", ""+fileMissing, ""+hashesDiffer);
             Debug.log("Memoize:\nInput: ----\n%s\n----\n", in.toString());
             writeHashFileNewValue(fn, hash);
             return processor.process(in);
@@ -82,6 +83,7 @@ public class Memoize implements Macro, Scanner {
         final String hashFromFile;
         try {
             hashFromFile = Files.readString(path);
+            Debug.log("Memoize --hash-- (file, document):\n--%s--\n--%s--\n", hashFromFile,hash);
             if (hashFromFile.length() > hash.length()) {
                 return !hash.equals(hashFromFile.substring(0, hash.length()));
             } else {
@@ -141,7 +143,7 @@ public class Memoize implements Macro, Scanner {
 This macro allows for the evaluation of input just once and subsequent reevaluation only if there has been a change.
 It proves beneficial in executing macros that produce external resources based on the document's text, preventing unnecessary repetition of resource generation if the text remains unchanged.
 It is particularly useful, for instance, in memoizing PlantUML or other image generation processes.
-By utilizing this macro, images are generated solely when the text that impacts the generation process is modified.
+By using this macro, images are generated solely when the text that impacts the generation process is modified.
 
 The macro has three parameters:
 
