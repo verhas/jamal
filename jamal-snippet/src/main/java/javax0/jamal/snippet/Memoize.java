@@ -76,10 +76,12 @@ public class Memoize implements Macro, Scanner {
     private static boolean hashCodesDiffer(String file, String hash) {
         Debug.log("Comparing hash codes for '%' to '%s'",file,hash);
         if (file == null) {
+            Debug.log("File is null");
             return false;
         }
         final var path = Path.of(file);
         if (!Files.exists(path)) {
+            Debug.log("File does not exist: %s", path);
             return true;
         }
         final String hashFromFile;
