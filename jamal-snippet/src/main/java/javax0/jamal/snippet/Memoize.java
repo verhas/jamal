@@ -4,10 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
-import javax0.jamal.tools.FileTools;
-import javax0.jamal.tools.HexDumper;
-import javax0.jamal.tools.SHA256;
-import javax0.jamal.tools.Scanner;
+import javax0.jamal.tools.*;
 import javax0.jamal.tools.param.ListParameter;
 import javax0.jamal.tools.param.StringParameter;
 
@@ -15,9 +12,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 public class Memoize implements Macro, Scanner {
     @Override
@@ -30,7 +26,10 @@ public class Memoize implements Macro, Scanner {
 
         final String hash = getHashValue(in, hashFile, hashCode);
         final String fn = hashFile.isPresent() ? FileTools.absolute(in.getReference(), hashFile.get()) : null;
-        if (fileMissing(in.getReference(), files) || hashCodeDoesNotMatch(fn, hash)) {
+        final boolean fileMissing = fileMissing(in.getReference(), files);
+        boolean hashesDiffer = hashCodesDiffer(fn, hash);
+        if (fileMissing || hashesDiffer) {
+            Debug.log("Memoize:\nInput: ----\n%s\n----\n", in.toString());
             writeHashFileNewValue(fn, hash);
             return processor.process(in);
         } else {
@@ -57,31 +56,41 @@ public class Memoize implements Macro, Scanner {
 
     /**
      * Check that the hash code matches the one reference the file.
+     * <p>
+     * The hash is a string, typically hexadecimal digits (say N digits).
+     * The file content matches the hash if the first N characters of the file are equal to those in the hash.
+     * <p>
+     * The rest of the file is ignored.
+     * <p>
+     * Note that the whole file is read as a string, so it may be a performance issue if the file is large.tor
      *
      * @param file the name of the hash file where the hash is stored as text. It has to be the absolute path.
+     *             This parameter can be {@code null}, which means that there is no need for check.
+     *             In this case the return value is {@code false}, meaning it does not differ.
+     *             No file required, there is nothing to differ from.
      * @param hash the hash value to compare the file content to
      * @return {@code true} if the hash code does not match the file content. {@code false} otherwise.
      */
-    private static boolean hashCodeDoesNotMatch(String file, String hash) {
+    private static boolean hashCodesDiffer(String file, String hash) {
         if (file == null) {
             return false;
         }
-        final var f = Optional.of(file)
-                .map(File::new)
-                .filter(File::exists);
-        if (f.isEmpty()) { // when there is no file to read, it means the hash code does not match
+        final var path = Path.of(file);
+        if (!Files.exists(path)) {
             return true;
         }
-        final byte[] bytes;
+        final String hashFromFile;
         try {
-            bytes = Files.readAllBytes(f.get().toPath());
+            hashFromFile = Files.readString(path);
+            if (hashFromFile.length() > hash.length()) {
+                return !hash.equals(hashFromFile.substring(0, hash.length()));
+            } else {
+                return !hash.equals(hashFromFile);
+            }
         } catch (IOException e) {
-            // if you cannot read the file, it does not match
+            // if you cannot read the file, it differs
             return true;
         }
-        return Stream.of(bytes)
-                .map(b -> new String(b, StandardCharsets.UTF_8))
-                .noneMatch(s -> s.equals(hash));
     }
 
     /**

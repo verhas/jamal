@@ -3501,7 +3501,7 @@ will result
 - JavaSourceInsert.java: 8,813 bytes
 - ThinXml.java: 8,777 bytes
 - Decorator.java: 9,094 bytes
-- Memoize.java: 8,760 bytes
+- Memoize.java: 9,357 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 3,494 bytes
 - SnipLine.java: 691 bytes
@@ -3814,7 +3814,7 @@ will result in the output
 .output
 [source]
 ----
-2025-02-14 13:46:07
+2025-02-18 14:20:25
 ----
 
 
