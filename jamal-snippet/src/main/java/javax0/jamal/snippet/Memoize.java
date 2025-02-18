@@ -84,12 +84,15 @@ public class Memoize implements Macro, Scanner {
         try {
             hashFromFile = Files.readString(path);
             Debug.log("Memoize --hash-- (file, document):\n--%s--\n--%s--\n", hashFromFile,hash);
+            Debug.log("hash length is %s, hash from file length is %s",""+hash.length(), ""+hashFromFile.length());
             if (hashFromFile.length() > hash.length()) {
                 Debug.log("Hash from file is truncated.");
                 String truncated = hashFromFile.substring(0, hash.length());
                 Debug.log("\"%s\".equals(\"%s\") is %s",hash, truncated,""+ hash.equals(truncated));
                 return !hash.equals(truncated);
             } else {
+                Debug.log("Hash from file is full.");
+                Debug.log("\"%s\".equals(\"%s\") is %s",hash, hashFromFile,""+ hash.equals(hashFromFile));
                 return !hash.equals(hashFromFile);
             }
         } catch (IOException e) {
