@@ -29,12 +29,9 @@ public class Memoize implements Macro, Scanner {
         final var fileMissing = fileMissing(in.getReference(), files);
         final var hashesDiffer = hashCodesDiffer(fn, hash);
         if (fileMissing || hashesDiffer) {
-            Debug.log("File is missing: %s, Hashes differ: %s", "" + fileMissing, "" + hashesDiffer);
-            Debug.log("Memoize:\nInput: ----\n%s\n----\n", in.toString());
             writeHashFileNewValue(fn, hash);
             return processor.process(in);
         } else {
-            Debug.log("Using memoized result.");
             return "";
         }
     }
@@ -74,35 +71,25 @@ public class Memoize implements Macro, Scanner {
      * @return {@code true} if the hash code does not match the file content. {@code false} otherwise.
      */
     private static boolean hashCodesDiffer(String file, String hash) {
-        Debug.log("Comparing hash codes for '%s' to '%s'",file,hash);
         if (file == null) {
-            Debug.log("File is null");
             return false;
         }
         final var path = Path.of(file);
         if (!Files.exists(path)) {
-            Debug.log("File does not exist: %s", path);
             return true;
         }
         final String hashFromFile;
         try {
             hashFromFile = Files.readString(path).trim();
-            Debug.log("Memoize --hash-- (file, document):\n--%s--\n--%s--\n", hashFromFile, hash);
-            Debug.log("hash length is %s, hash from file length is %s", "" + hash.length(), "" + hashFromFile.length());
             if (hashFromFile.length() > hash.length()) {
-                Debug.log("Hash from file is truncated.");
                 final var truncated = hashFromFile.substring(0, hash.length());
                 final var b = hash.equals(truncated);
-                Debug.log("\"%s\".equals(\"%s\") is %s", hash, truncated, "" + b);
                 return !b;
             } else {
-                Debug.log("Hash from file is full.");
                 final var b = hash.equals(hashFromFile);
-                Debug.log("\"%s\".equals(\"%s\") is %s", hash, hashFromFile, "" + b);
                 return !b;
             }
         } catch (IOException e) {
-            Debug.log("Cannot read the hash file '%s'", path.toAbsolutePath().toFile().getAbsolutePath(), e);
             // if you cannot read the file, it differs
             return true;
         }

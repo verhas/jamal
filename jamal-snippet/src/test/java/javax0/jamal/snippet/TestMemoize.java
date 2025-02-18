@@ -26,10 +26,8 @@ public class TestMemoize {
         if (file.exists()) {
             Assumptions.assumeTrue(file.delete());
         }
-        TestThat.theInput("" +
-                "{@memoize (hashFile=hash.code)this is the returned value}" +
-                "{@memoize (hashFile=hash.code)this is the returned value}" +
-                ""
+        TestThat.theInput("{@memoize (hashFile=hash.code)this is the returned value}" +
+                "{@memoize (hashFile=hash.code)this is the returned value}"
         ).results("this is the returned value");
     }
 
