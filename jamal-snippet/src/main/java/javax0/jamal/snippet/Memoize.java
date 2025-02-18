@@ -74,7 +74,7 @@ public class Memoize implements Macro, Scanner {
      * @return {@code true} if the hash code does not match the file content. {@code false} otherwise.
      */
     private static boolean hashCodesDiffer(String file, String hash) {
-        Debug.log("Comparing hash codes for '%' to '%s'",file,hash);
+        Debug.log("Comparing hash codes for '%s' to '%s'",file,hash);
         if (file == null) {
             Debug.log("File is null");
             return false;
