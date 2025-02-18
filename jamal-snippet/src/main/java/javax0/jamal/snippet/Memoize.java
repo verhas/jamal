@@ -26,14 +26,15 @@ public class Memoize implements Macro, Scanner {
 
         final String hash = getHashValue(in, hashFile, hashCode);
         final String fn = hashFile.isPresent() ? FileTools.absolute(in.getReference(), hashFile.get()) : null;
-        final boolean fileMissing = fileMissing(in.getReference(), files);
-        boolean hashesDiffer = hashCodesDiffer(fn, hash);
+        final var fileMissing = fileMissing(in.getReference(), files);
+        final var hashesDiffer = hashCodesDiffer(fn, hash);
         if (fileMissing || hashesDiffer) {
-            Debug.log("File is missing: %s, Hashes differ: %s", ""+fileMissing, ""+hashesDiffer);
+            Debug.log("File is missing: %s, Hashes differ: %s", "" + fileMissing, "" + hashesDiffer);
             Debug.log("Memoize:\nInput: ----\n%s\n----\n", in.toString());
             writeHashFileNewValue(fn, hash);
             return processor.process(in);
         } else {
+            Debug.log("Using memoized result.");
             return "";
         }
     }
@@ -83,19 +84,21 @@ public class Memoize implements Macro, Scanner {
         final String hashFromFile;
         try {
             hashFromFile = Files.readString(path);
-            Debug.log("Memoize --hash-- (file, document):\n--%s--\n--%s--\n", hashFromFile,hash);
-            Debug.log("hash length is %s, hash from file length is %s",""+hash.length(), ""+hashFromFile.length());
+            Debug.log("Memoize --hash-- (file, document):\n--%s--\n--%s--\n", hashFromFile, hash);
+            Debug.log("hash length is %s, hash from file length is %s", "" + hash.length(), "" + hashFromFile.length());
             if (hashFromFile.length() > hash.length()) {
                 Debug.log("Hash from file is truncated.");
-                String truncated = hashFromFile.substring(0, hash.length());
-                Debug.log("\"%s\".equals(\"%s\") is %s",hash, truncated,""+ hash.equals(truncated));
+                final var truncated = hashFromFile.substring(0, hash.length());
+                Debug.log("\"%s\".equals(\"%s\") is %s", hash, truncated, "" + hash.equals(truncated));
                 return !hash.equals(truncated);
             } else {
                 Debug.log("Hash from file is full.");
-                Debug.log("\"%s\".equals(\"%s\") is %s",hash, hashFromFile,""+ hash.equals(hashFromFile));
-                return !hash.equals(hashFromFile);
+                final var b= hash.equals(hashFromFile);
+                Debug.log("\"%s\".equals(\"%s\") is %s", hash, hashFromFile, "" + b);
+                return ! b;
             }
         } catch (IOException e) {
+            Debug.log("Cannot read the hash file '%s'", path.toAbsolutePath().toFile().getAbsolutePath(), e);
             // if you cannot read the file, it differs
             return true;
         }
