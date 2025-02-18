@@ -3501,7 +3501,7 @@ will result
 - JavaSourceInsert.java: 8,813 bytes
 - ThinXml.java: 8,777 bytes
 - Decorator.java: 9,094 bytes
-- Memoize.java: 9,357 bytes
+- Memoize.java: 10,385 bytes
 - LineCount.java: 552 bytes
 - Replace.java: 3,494 bytes
 - SnipLine.java: 691 bytes
@@ -3814,7 +3814,7 @@ will result in the output
 .output
 [source]
 ----
-2025-02-18 14:20:25
+2025-02-18 16:47:14
 ----
 
 
@@ -5300,7 +5300,7 @@ will result in
 This macro allows for the evaluation of input just once and subsequent reevaluation only if there has been a change.
 It proves beneficial in executing macros that produce external resources based on the document's text, preventing unnecessary repetition of resource generation if the text remains unchanged.
 It is particularly useful, for instance, in memoizing PlantUML or other image generation processes.
-By utilizing this macro, images are generated solely when the text that impacts the generation process is modified.
+By using this macro, images are generated solely when the text that impacts the generation process is modified.
 
 The macro has three parameters:
 

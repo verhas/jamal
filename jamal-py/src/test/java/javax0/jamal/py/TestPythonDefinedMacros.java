@@ -37,16 +37,19 @@ public class TestPythonDefinedMacros {
         approvalFile = Path.of(tempDir.getAbsolutePath(), ".python.sentinel");
         Files.createFile(approvalFile);
         if (Files.getFileAttributeView(approvalFile, PosixFileAttributeView.class) != null) {
-            // POSIX (Linux/macOS)
             Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ));
         } else {
-            // Windows
             Files.getFileAttributeView(approvalFile, DosFileAttributeView.class).setReadOnly(true);
         }
     }
 
     @AfterEach
     void tearDown() throws Exception {
+        if (Files.getFileAttributeView(approvalFile, PosixFileAttributeView.class) != null) {
+            Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
+        } else {
+            Files.getFileAttributeView(approvalFile, DosFileAttributeView.class).setReadOnly(false);
+        }
         Files.deleteIfExists(approvalFile);
     }
 
