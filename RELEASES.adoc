@@ -6,8 +6,14 @@
 
 
 
-NOTE: The known bugs sections in the releases are updated after the release.
+[NOTE]
+====
+The known bugs sections in the releases are updated after the release.
 Please consult the latest SNAPSHOT version available online at https://github.com/verhas/jamal/blob/master/RELEASES.adoc[GitHub Jamal RELEASES.adoc]
+
+The first release in this document may be a planned release.
+Check the releases on GitHub to see, which is the actual latest release.
+====
 
 == https://github.com/verhas/jamal/tree/2.8.3[2.8.3]
 === Known Bugs
@@ -21,7 +27,10 @@ __currently there are no known bugs in this release__
 * You can define built-in macros in a very simple way using Python.
 Needs Python installed.
 
-* Integration tests running in Docker are now a must
+* Integration tests running in Docker are now a must to create a release.
+Integration tests also run in GitHub.
+
+* The macro `references` define macros "soft" when loaded from a reference file, so you can `{@define !...}` them.
 
 == https://github.com/verhas/jamal/tree/2.8.2[2.8.2]
 
