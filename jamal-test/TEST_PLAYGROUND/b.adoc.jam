@@ -1,0 +1,5 @@
+{%@references file=ab.jrf%}
+{%@ref zz%}
+{%@define ! zz=13%}
+{%@define zz=13%}
+{%zz%}

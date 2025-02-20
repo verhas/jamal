@@ -2,6 +2,7 @@ package javax0.jamal.all;
 
 import javax0.jamal.api.Macro;
 import javax0.jamal.engine.Processor;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.opentest4j.AssertionFailedError;
 
@@ -21,6 +22,7 @@ public class TestMacroAnnotations {
      *                   if any macro(s) have both a 'getId/getIds' method(s) and a {@link javax0.jamal.api.Macro.Name} annotation.
      */
     @Test
+    @DisplayName("Ensure no macro defines its name with getId(), getIds() and @Name annotation")
     void testMacroAnnotations() {
         final StringBuilder error;
         final java.util.Optional<javax0.jamal.api.Debugger.Stub> stub;
@@ -39,6 +41,9 @@ public class TestMacroAnnotations {
                 if ((getidMethod != null || getidsMethod != null) && ann != null) {
                     error.append("Macro ").append(klass.getCanonicalName()).append(" implements getId(s) and is annotated with @Name.").append("\n");
                 }
+                if (getidMethod != null && getidsMethod != null) {
+                    error.append("Macro ").append(klass.getCanonicalName()).append(" implements both getId and getIds").append("\n");
+                }
                 if (macro.getIds() == null || macro.getIds().length == 0) {
                     error.append("Macro ").append(macro.getClass().getCanonicalName()).append(" has no id(s)\n");
                 }
@@ -49,6 +54,13 @@ public class TestMacroAnnotations {
         }
     }
 
+    /**
+     * Get the declared method for the given name and no parameters; or return null if there is no such method declared.
+     *
+     * @param macro the class that we check for the method
+     * @param name  the name of the method
+     * @return the Method object or null if there is no such method declared
+     */
     private static Method getMethodOrNull(Class<? extends Macro> macro, String name) {
         try {
             return macro.getDeclaredMethod(name);

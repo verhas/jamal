@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
+@Macro.Name("memoize")
 public class Memoize implements Macro, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -148,10 +149,9 @@ By using this macro, images are generated solely when the text that impacts the 
 The macro has three parameters:
 
 * The `file` parameter represents the name of the file that is generated.
-This parameter can be specified multiple times, allowing for multiple files.
-The macro neither reads nor writes this file.
-Instead, it checks for the file's existence.
-If the file does not exist, the macro will then evaluate its input, which is expected to generate the file in some manner.
+This parameter can be specified multiple times if more than one file is generated during the macro processing.
+The macro neither reads nor writes this file, it only checks for the file's existence.
+If the file does not exist, the macro will evaluate its input, which is expected to generate the file in some manner.
 However, the actual generation of the file is beyond the scope of this macro.
 
 +
@@ -163,22 +163,23 @@ Under such circumstances, checking for a file is deemed unnecessary.
 If not explicitly defined, this value is automatically calculated based on the macro's input.
 The hashCode macro can be utilized within the document for this calculation.
 Generally, manually inserting a hash value into the document is unnecessary.
-Instead, it's more typical to calculate it based on text that differs from the macro's direct input.
+Instead, it's more typical to calculate it based on the text that differs from the macro's direct input.
 
 +
 For instance, consider a scenario where you're generating a PlantUML diagram that also incorporates additional files during its creation process.
 The text from these included files won't be a part of the macro's direct input.
 Nevertheless, you'd want the diagram generation to occur even if only the included text files undergo modifications.
 In such situations, you can utilize the `hashCode` macro to compute the hash code of the verbatim text from the included files.
-Subsequently, this computed hash code can be employed as the `hashCode` parameter in the `memoize` macro, ensuring the diagram is regenerated when the included files change, even if the main input to the macro remains the same.
+Subsequently, this computed hash code can be used as the `hashCode` parameter in the `memoize` macro, ensuring the diagram is regenerated when the included files change, even if the main input to the macro remains the same.
 
 * The hashFile parameter denotes the name of the file that stores the hash value.
 Before the macro processes its input, it compares the current hash value with the one stored in the hashFile.
 If they match, indicating no changes, the macro does not reevaluate the input.
 Conversely, if the hash values differ, or in situations where the hashFile does not exist, the macro proceeds to create the file and reevaluates the input.
 
-The macro's return value is the result of the evaluated input when reevaluation occurs, and it returns an empty string if no evaluation is performed.
+The macro's return value is the result of the evaluated input when evaluation occurs, and it returns an empty string if no evaluation is performed.
 This feature is particularly beneficial during interactive editing, as it provides a clear indication of whether the macro was executed.
 If you don't require this functionality, you can opt to use macros that don't produce any output.
+For example, you can enclose the macro in a `block` macro using the `#` character in front of the macro name.
 
 end snippet*/

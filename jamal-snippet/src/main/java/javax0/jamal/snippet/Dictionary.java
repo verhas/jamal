@@ -8,6 +8,7 @@ import javax0.jamal.tools.Scanner;
 
 import java.util.HashMap;
 
+@Macro.Name("dictionary")
 public class Dictionary implements Macro, Scanner.FirstLine {
     // snipline DEFAULT_DICTIONARY_NAME filter="(.*)"
     static final String DEFAULT_DICTIONARY_NAME = "decor$dictionary";
@@ -22,7 +23,7 @@ public class Dictionary implements Macro, Scanner.FirstLine {
         final var dictionary = new HashMap<String, Integer>();
         for (var line : lines) {
             line = line.trim();
-            if (line.length() == 0) {
+            if (line.isEmpty()) {
                 continue;
             }
             int pos = getPos(line);
@@ -37,6 +38,12 @@ public class Dictionary implements Macro, Scanner.FirstLine {
         return "";
     }
 
+    /**
+     * Finds the position of the first non-letter character in the given string.
+     *
+     * @param line the input string to be checked
+     * @return the index of the first non-letter character, or -1 if all characters are letters
+     */
     private static int getPos(String line) {
         for( int i = 0 ; i < line.length(); i++ ){
             if( !Character.isLetter(line.charAt(i)) ){
@@ -44,10 +51,5 @@ public class Dictionary implements Macro, Scanner.FirstLine {
             }
         }
         return -1;
-    }
-
-    @Override
-    public String getId() {
-        return "dictionary";
     }
 }

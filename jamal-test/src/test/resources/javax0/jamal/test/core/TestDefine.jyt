@@ -1,4 +1,4 @@
-# When the user defined macro name itself is defined as the result of a macro evaluation it is forbidden to get the
+# When the user-defined macro name itself is defined as the result of a macro evaluation, it is forbidden to get the
 # separator character as the result of the evaluation. In this case `z` is evaluated to `a|` and that would make
 # `|` to the separator character for the arguments (we have here only one).
 

@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Test;
 
 public class TestDefineClass {
 
+    /**
+     * This is a class that is a user-defined macro. It is used here to test that the 'define' macro can really define
+     * a user-defined macro, which is given by a class name.
+     */
     public static class TestUserDefinedMacro implements Identified, Evaluable, Configurable {
         private String id;
 
@@ -23,20 +27,20 @@ public class TestDefineClass {
         }
 
         @Override
-        public void configure(String key, Object value) {
+        public void configure(Keys key, Object value) {
             switch (key) {
-                case "id":
+                case ID:
                     id = (String) value;
                     break;
-                case "verbatim":
+                case VERBATIM:
                     break;
-                case "tail":
+                case TAIL:
                     break;
-                case "params":
+                case PARAMS:
                     break;
-                case "processor":
+                case PROCESSOR:
                     break;
-                case "input":
+                case INPUT:
                     break;
                 default:
                     throw new RuntimeException("Unknown key: " + key);

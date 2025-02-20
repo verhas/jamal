@@ -38,11 +38,8 @@ import java.util.IllegalFormatException;
  * <p>
  * are the default values.
  */
+@Macro.Name("numberLines")
 public class NumberLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
-    @Override
-    public String getId() {
-        return "numberLines";
-    }
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {

@@ -33,9 +33,9 @@ public class Sort implements Macro, Scanner.FirstLine {
         // The default value is the `\n` string (not pattern); that means the records will be individual lines in the output.
         final var locale = scanner.str(null, "locale", "collatingOrder", "collator").optional();
         // can define the locale for the sorting.
-        // The default locale `en-US.UTF-8`.
+        // The default locale is `en-US.UTF-8`.
         // Any locale string can be used installed in the Java environment and passed to the method `Locale.forLanguageTag()`.
-        // When this option is used with the alias `collator `, the value of the option has to be the fully qualified name of a class extending the `java.text.Collator` abstract class.
+        // When this option is used with the alias `collator`, the value of the option has to be the fully qualified name of a class extending the `java.text.Collator` abstract class.
         // The class will be instantiated and used to sort the records.
         // Using this option this way makes it possible to use special purpose collator, like the readily available `javax0.jamal.snippet.SemVerCollator`.
         // This collator will sort the records treating the keys as software version numbers that follow the semantic versioning standard.

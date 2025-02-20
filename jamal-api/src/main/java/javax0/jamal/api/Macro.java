@@ -130,14 +130,21 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
     String evaluate(Input in, Processor processor) throws BadSyntax;
 
     /**
-     * When a built-in macro is registered, then the name used in the source file will be the string returned by this
-     * method. When a macro is registered using the built-in macro {@code use} (see {@code javax0.jamal.builtins.Use})
-     * the caller can provide an alias. Even when the proposed use is to be declared through the {@code use} macro
-     * it is recommended to provide a reasonable id.
+     * Returns the identifier (name) of the macro.
      * <p>
-     * The default implementation returns the simple name of the class in lower case.
+     * When a built-in macro is registered, the name used in the source file is determined by this method. If a macro is
+     * registered using the built-in macro {@code use} (see {@code javax0.jamal.builtins.Use}), the caller can provide an
+     * alias. Even when using the {@code use} macro for registration, it is recommended to define a meaningful identifier.
+     * <p>
+     * The default implementation retrieves the name from the {@link Name} annotation if present. If the annotation is
+     * missing or empty, it falls back to returning the simple name of the class in lowercase.
+     * <p>
+     * <b>DISCOURAGED:</b> Implementing this method in classes is discouraged. Instead, it is recommended to specify
+     * the name using the {@link Name} annotation. A legitimate use case is when the macro registration name is
+     * dynamically calculated.
      *
-     * @return the id/name of the macro
+     * @return the identifier (name) of the macro
+     * @deprecated Use the {@link Name} annotation instead of overriding this method.
      */
     // snippet getId
     default String getId() {

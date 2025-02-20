@@ -1,0 +1,5 @@
+{%@references file=ab.jrf%}
+{%@references file=ac.jrf holder=biberba%}
+{%@ref zz%}
+{%@ref zz > biberba%}
+{%zz%}

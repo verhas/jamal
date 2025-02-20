@@ -11,6 +11,7 @@ import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static javax0.jamal.api.SpecialCharacters.*;
 import static javax0.jamal.tools.InputHandler.*;
@@ -32,8 +33,8 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         final var IdOnly = scanner.bool("RestrictedDefineParameters");
         scanner.done();
 
-        ScannerTools.badSyntax(this).whenBooleans(noRedefineParam,optionalParam).multipleAreTrue();
-        ScannerTools.badSyntax(this).whenBooleans(globalParam,exportParam).multipleAreTrue();
+        ScannerTools.badSyntax(this).whenBooleans(noRedefineParam, optionalParam).multipleAreTrue();
+        ScannerTools.badSyntax(this).whenBooleans(globalParam, exportParam).multipleAreTrue();
         skipWhiteSpaces(input);
         boolean verbatim = verbatimParam.is();
         boolean tailParams = tailParamsParam.is();
@@ -61,11 +62,13 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         }
         var id = fetchId(input);
         final var existing = processor.getRegister().getUserDefined(id);
-        if (existing.isPresent() && !(existing.get() instanceof Identified.Undefined)) {
+        if (existing
+                .filter(m -> !(m instanceof Identified.Undefined))
+                .isPresent()) {
             if (optional) {
                 return "";
             }
-            BadSyntax.when(noRedefine, "The macro '%s' was already defined.", id);
+            BadSyntax.when(!softDefined(existing.get()) && noRedefine, "The macro '%s' was already defined.", id);
         }
         skipWhiteSpaces(input);
         BadSyntax.when(id.endsWith(":") && !firstCharIs(input, '('), "The () in define is not optional when the macro name ends with ':'.");
@@ -106,18 +109,35 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         if (macro instanceof Configurable) {
             final var configurable = (Configurable) macro;
             if (pure || pureParam.is()) {
-                configurable.configure("pure", true);
+                configurable.configure(Configurable.Keys.PURE, true);
             }
             if (defaults.is()) {
                 try {
-                    configurable.configure("xtended", true);
-                    configurable.configure("defaults", paramDefaults);
+                    configurable.configure(Configurable.Keys.XTENDED, true);
+                    configurable.configure(Configurable.Keys.DEFAULTS, paramDefaults);
                 } catch (Exception e) {
                     throw new BadSyntax("The defaults parameter is invalid.", e);
                 }
             }
         }
         return "";
+    }
+
+    /**
+     * Return true if the user-defined macro is soft-defined (it is loaded from a reference file, in which case you can
+     * still '{'@define ! xxx '}' later.
+     *
+     * @param userDefinedMacro the user-defined macro we want to examine
+     * @return {@code true} if the macro was soft-defined
+     */
+    private boolean softDefined(Identified userDefinedMacro) {
+        return Optional.of(userDefinedMacro)
+                .filter(m -> m instanceof Configurable).map(Configurable.class::cast)
+                .map(c -> c.get(Configurable.Keys.SOFT))
+                .filter(Optional::isPresent).map(Optional::get)
+                .filter(t -> t instanceof Boolean).map(Boolean.class::cast)
+                .filter(Boolean::booleanValue)
+                .isPresent();
     }
 
     private Identified createFromClass(Processor processor, String className, String id, Input in, boolean verbatim, boolean tailParams, String... params) throws BadSyntax {
@@ -127,12 +147,12 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
                 .map(Class::getConstructor, "Class '%s' has no default constructor.", className)
                 .map(Constructor::newInstance, "Class '%s' cannot be instantiated.", className)
                 .when(Configurable.class, c -> {
-                    c.configure("id", id);
-                    c.configure("verbatim", verbatim);
-                    c.configure("tail", tailParams);
-                    c.configure("params", params);
-                    c.configure("processor", processor);
-                    c.configure("input", in);
+                    c.configure(Configurable.Keys.ID, id);
+                    c.configure(Configurable.Keys.VERBATIM, verbatim);
+                    c.configure(Configurable.Keys.TAIL, tailParams);
+                    c.configure(Configurable.Keys.PARAMS, params);
+                    c.configure(Configurable.Keys.PROCESSOR, processor);
+                    c.configure(Configurable.Keys.INPUT, in);
                 })
                 .hurl("Class '%s' cannot be cast to Identified.", className)
                 .cast(Identified.class)

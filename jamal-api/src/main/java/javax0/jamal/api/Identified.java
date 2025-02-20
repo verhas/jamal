@@ -1,5 +1,7 @@
 package javax0.jamal.api;
 
+import java.util.Optional;
+
 /**
  * Something that is usually defined by the user and as such has an identifier.
  * <p>
@@ -30,6 +32,22 @@ public interface Identified {
     String DEFAULT_MACRO = "default";
     String MACRO_NAME_ARG1 = "$macro";
     String MACRO_NAME_ARG2 = "$_";
+
+    /**
+     * Identified objects are stored in the macro registry. This is a utility method to find the object of the given
+     * type with the given name/id from a register.
+     *
+     * @param register the macro registry that holds the object
+     * @param klass    the type of the object we want to fetch
+     * @param id       the name/id of the object
+     * @param <T>      the type we want to retrieve
+     * @return the object from the registry (if found, optional)
+     */
+    static <T extends Identified> Optional<T> find(MacroRegister register, Class<T> klass, String id) {
+        return register.getUserDefined(id)
+                .filter(m -> klass.isAssignableFrom(m.getClass()))
+                .map(klass::cast);
+    }
 
     /**
      * A special placeholder for Identified enties that get undefined.

@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 /**
  * Locate a file and return the file name (relative) where the file was found.
  */
+@Macro.Name("file:locate")
 public class Locate implements Macro, OptionsControlled, Scanner.WholeInput {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -117,10 +118,5 @@ public class Locate implements Macro, OptionsControlled, Scanner.WholeInput {
                 return pattern.matcher(path.getFileName().toString()).find();
             }
         }
-    }
-
-    @Override
-    public String getId() {
-        return "file:locate";
     }
 }

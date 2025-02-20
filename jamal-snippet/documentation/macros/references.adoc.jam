@@ -1,19 +1,20 @@
-{%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}References.java hash=e054db63%}
-From time to time, there may be a need to have a reference to a part of the text that is defined later.
-Macros, by their nature, cannot be used before they are defined.
-You cannot reference a section or chapter number before the section or chapter is defined.
+{%@import macrodoc.jim%}\
+{%#snip:check file={%JAVA_DIR%}References.java hash=ff2a7026%}
 
-Although the macros could provide ways to overcome this limitation, these may be a subpar solution.
-For example, you could define the chapter titles and numbering at the start of the document and then reference these macros at the place where the chapters start.
-The problem with this approach is that it separates the content from the document part that it belongs to.
+Occasionally, you may need to reference a part of the text that is defined later in the document.
+However, macros cannot be used before they are defined.
+This means you cannot reference a section or chapter number before the section or chapter itself exists.
 
-The `ref` and `references` macros give a different solution to this problem.
-They help save the values of selected macros to an external file.
-Rendering the document the second time the file is read back and the macros are defined.
+While there are ways to work around this limitation using macros, these solutions are often suboptimal.
+For example, you could define the chapter titles and numbering at the beginning of the document and reference these macros where the chapters start.
+The drawback of this approach is that it separates the content from its corresponding document section.
 
-Typically, you use the macro `references` at the start of the file to define the reference file.
-After that you can use the `ref` (or `reference` full name, but singular) to add specific macros to the set to be saved.
+The `ref` and `references` macros provide a better solution to this problem.
+They allow selected macro values to be saved to an external file.
+When the document is rendered a second time, this file is read back, ensuring the macros are correctly defined.
+
+Typically, you use the `references` macro at the beginning of the file to specify the reference file.
+After that, you can use the `ref` macro (or its full name, `reference`, in singular form) to add specific macros to the set that will be saved.
 
 {%sample/
 {@references file=sample.jrf}
@@ -26,36 +27,60 @@ will result in
 
 {%output%}
 
-The macro `references` can have three parameters:
+The `references` macro accepts three parameters:
 
-* `file` can specify the file name to be used to save the references.
+* `file` specifies the file name used to save the references.
 The default file name is `{%@snip REF_JRF%}`.
-* `holder` is the name of the macro that will hold the list of macros to be saved.
+
+* `holder` defines the name of the macro that stores the list of macros to be saved.
 The default name is `{%@snip XREFS%}`.
-+
-The holder is a special user defined macro that keeps track of the macros to be saved.
-At the end of the processing, the holder macro is used to know which macros are to be saved.
-The actual value of this holder macro is not interesting.
-The only important thing is that it is a user defined macro and as such, you should not use it for anything else.
-+
-You can use this macro as an ordinary user defined macro if you are curious.
-It will return the names of the macros that are saved comma separated in alphabetic order.
+ +
+The holder is a special user-defined macro that keeps track of the macros to be saved.
+At the end of processing, this holder macro determines which macros should be saved.
+The actual value of the holder macro is not important.
+What matters is that it is a user-defined macro, and as such, it should not be used for any other purpose.
+ +
+However, if you are curious, you can use this macro as an ordinary user-defined macro.
+It will return a comma-separated list of the saved macro names, sorted in alphabetical order.
 
-* `comment` or `comments` instructs the macro to save some comments into the reference file.
+* `comment` or `comments` instructs the macro to include comments in the reference file.
+This is a boolean parameter (`true` if present and `false` when not used).
 These comments are ignored when the macros are loaded.
-To see these comments, use this parop and open the generated file in a text editor close to your heart.
+To view these comments, enable this parameter and open the generated file in your preferred text editor.
 
-You can separate the references of different documents even in the same directory.
-The other way around, you can also save multiple sets of references from a single document.
++
+The content of the file `simple.jrf` generated below is:
 
-When using the macro `ref` you can specify the name of the holder macro.
-Following it by a `>` sign, you can specify the name of the holder macro, where you want the reference saved.
++
+[source]
+----
+{%@include [verbatim] simple.jrf%}
+----
+
++
+The comment is about the generation mode and time, and it also includes some description of the format.
+The format is simple, but not a guaranteed formatting for backward compatibility.
+
+The mix of reference files and documents is free.
+You can use shared reference files for multiple documents, and a document can use multiple reference files.
+
+You need to use the `holder` option for the `references` macro, and you also need to specify the holder in the `ref` macro.
+When using the `ref` macro, you can specify the name of the holder by following the name with the `>` sign and the holder.
+
+In the following example we use two different reference files to save the value into and two holders respectively.
 
 {%sample/
-{@references file=sample.jrf holder="otherRefs"}
-{@ref a > otherRefs}
-This is defined later, but can be used here: {a}
+{@references file=sample.jrf holder="eitherRefs"}
+{@references file=simple.jrf holder="otherRefs" comment}
+{@ref a > eitherRefs}
+{@ref b > otherRefs}
+{@ref c > otherRefs}
+'a' is defined later, but can be used here: {a}
+'b' is defined later, but can be used here: {b}
+'c' is defined later, but can be used here: {c c}
 {@define a=The value of a}
+{@define b=The value of b}
+{@define ! c($x)=This is $x}
 %}
 
 will result in
@@ -63,6 +88,8 @@ will result in
 {%output%}
 
 If you do not specify the holder macro, the default holder macro, `{%@snip XREFS%}` is used.
+Do not mix the files and the holder macros.
+Treat the holder macros as "identifiers" for the reference file.
 
 When using these macros, the rendering has to run twice.
 The macros loaded by `reference` will always have the value that they had at the end of the previous execution.
@@ -74,5 +101,31 @@ To avoid errors the `?` can be used in front of the macro names defined later.
 This will result in an empty string when the macro is used.
 
 Another possibility is to use the `ref` macro before the first use of the referenced macro.
-This macro will define the macro with the literal text `UNDEFINED` if the macro is not defined.
+This macro will define the macro with the literal text `UNDEFINED` if the macro is not defined in the reference file.
 
+When you read macro `references` macro reads the reference file and defines the macros defined there it is not really a "definition" of the macro.
+It defines the macro, but Jamal also remembers that this definition came from a reference file.
+That way you can use `{@define ! x=...}` or `{@define [noRedefine]x=...}` to define the macro.
+Further redefinition of the macro with the `!` character or with the `noRedefine` option will eventually result in an error.
+
+NOTE: The "soft" definition reading from a reference file keeps the declarative safety provided by `!` and `noRedefine`.
+
+The reference file will keep all the macros.
+The old version of a macro will remain in the reference file even if you delete or rename a macro from the Jamal file.
+(The new value of the same name will, of course, overwrite the old value.)
+It is a good practice to delete the reference file and have it recreated from scratch after significant modification of the Jamal source.
+The non-purging nature of the reference file was designed to allow sharing the reference file between documents.
+
+.1. Sharing referencees
+NOTE: When a reference file is shared among multiple documents, it is important to process them one after the other.
+Concurrent processing of documents sharing reference files may result in loss of reference definitins.
+
+.2 Recommended practices
+[NOTE]
+====
+Do not rely on the format of the reference file.
+There is no guarantee keeping it backward compatible.
+
+Keep the reference files as ephemeral as possible.
+Save them to your source repository only if they are needed to support CI/CD document processing, and it is not possible to process the files twice.
+====

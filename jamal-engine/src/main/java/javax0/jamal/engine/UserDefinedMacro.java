@@ -28,7 +28,7 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     final private String openStr, closeStr;
     private Segment root = null;
     private boolean pure = false;
-
+    private boolean definedSoft = false;
     private boolean xtended = false;
     private final Map<String, String> defaults = new HashMap<>();
     private static final String ESCAPE = "@escape ";
@@ -39,18 +39,38 @@ public class UserDefinedMacro implements javax0.jamal.api.UserDefinedMacro, Conf
     }
 
     @Override
-    public void configure(String key, Object object) {
+    public Optional<Object> get(Keys key) {
         switch (key) {
-            case "xtended":
+            case SOFT:
+                return Optional.of(definedSoft);
+            case XTENDED:
+                return Optional.of(xtended);
+            case DEFAULTS:
+                return Optional.of(defaults);
+            case PURE:
+                return Optional.of(pure);
+            default:
+                return Optional.empty();
+        }
+
+    }
+
+    @Override
+    public void configure(Configurable.Keys key, Object object) {
+        switch (key) {
+            case SOFT:
+                definedSoft = true;
+                break;
+            case XTENDED:
                 xtended = true;
                 break;
-            case "defaults":
+            case DEFAULTS:
                 if (!(object instanceof Map)) {
                     throw new IllegalArgumentException("The value of the 'defaults' configuration key must be a map.");
                 }
                 defaults.putAll((Map) object);
                 break;
-            case "pure":
+            case PURE:
                 pure = true;
                 break;
             default:

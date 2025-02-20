@@ -125,7 +125,7 @@ and it will also result in
 There are other tools that can be used to modify the evaluation order of the macros.
 These include:
 
-- {%$ ident%} macro, which s
+- {%$ ident%} macro, which just returns its content unaltered, however, whe it is used with the `@` character in front of it, the content will not be evaluated.
 - {%$ eval%} macro that evaluates the input
 - Using `!` in front of the macro identifier or in front of the `@` or `#` character.
 It is a shorthand for the {%$ eval%} macro, and it is described there.

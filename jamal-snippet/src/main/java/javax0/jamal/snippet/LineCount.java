@@ -5,6 +5,7 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 
+@Macro.Name("lineCount")
 public class LineCount implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) {
@@ -13,10 +14,5 @@ public class LineCount implements Macro, InnerScopeDependent {
             if (ch == '\n') count++;
         }
         return "" + count;
-    }
-
-    @Override
-    public String getId() {
-        return "lineCount";
     }
 }

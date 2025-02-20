@@ -1021,7 +1021,7 @@ This is a known bug resulting in the line number larger than the actual.
 
 [[sort]]
 === {%chapter%}`sort`
-{%#snip:check file={%JAVA_DIR%}Sort.java hash=7588aafa%}
+{%#snip:check file={%JAVA_DIR%}Sort.java hash=ada14c41%}
 This macro returns the input sorted.
 The default behaviour is to sort the lines of the input alphabetically.
 For example
@@ -1073,6 +1073,7 @@ This sample uses a pattern to select the key, a non-default joining string, and 
 
 The next example specifies the sorting when the collating order is specified.
 Here the collating order is Hungarian.
+
 {%sample/
 {@sort locale=HU
 Cukor
@@ -1083,7 +1084,7 @@ Abrak
 }
 %}
 
-It will result the following order:
+It will result in the following order:
 
 {%output%}
 
@@ -1115,7 +1116,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 
 [[numberLines]]
 === {%chapter%}`numberLines`
-{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=366ba1a6%}
+{%#snip:check file={%JAVA_DIR%}NumberLines.java hash=5de1a305%}
 This macro can put numbers in front of the lines, sequentially numbering them.
 {%parameterized%}
 
@@ -2009,7 +2010,7 @@ The meaning and the interpretation of the parameters is the same as for the unde
 
 [[lineCount]]
 === {%chapter%}`lineCount`
-{%#snip:check file={%JAVA_DIR%}LineCount.java hash=6fe78fb5%}
+{%#snip:check file={%JAVA_DIR%}LineCount.java hash=fbd9bc4d%}
 This macro counts the lines in the content and returns the number of lines in decimal format.
 
 {%sample/
@@ -2025,7 +2026,7 @@ results
 
 [[listDir]]
 === {%chapter%}`listDir`
-{%#snip:check file={%JAVA_DIR%}ListDir.java hash=812ed076%}
+{%#snip:check file={%JAVA_DIR%}ListDir.java hash=ecd31236%}
 This macro lists the files in a directory and then returns the list of the formatted files.
 The format of the macro is:
 

@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
+@Macro.Name("listDir")
 public class ListDir implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -124,10 +125,5 @@ public class ListDir implements Macro, InnerScopeDependent, Scanner {
             throw new RuntimeException(e);
         }
 
-    }
-
-    @Override
-    public String getId() {
-        return "listDir";
     }
 }

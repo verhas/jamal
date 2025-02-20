@@ -1877,9 +1877,9 @@ The options are:
          The default value is the `\n` string (not pattern); that means the records will be individual lines in the output.
 * `locale`, alias `collatingOrder`, alias `collator`
          can define the locale for the sorting.
-         The default locale `en-US.UTF-8`.
+         The default locale is `en-US.UTF-8`.
          Any locale string can be used installed in the Java environment and passed to the method `Locale.forLanguageTag()`.
-         When this option is used with the alias `collator `, the value of the option has to be the fully qualified name of a class extending the `java.text.Collator` abstract class.
+         When this option is used with the alias `collator`, the value of the option has to be the fully qualified name of a class extending the `java.text.Collator` abstract class.
          The class will be instantiated and used to sort the records.
          Using this option this way makes it possible to use special purpose collator, like the readily available `javax0.jamal.snippet.SemVerCollator`.
          This collator will sort the records treating the keys as software version numbers that follow the semantic versioning standard.
@@ -1944,6 +1944,7 @@ This sample uses a pattern to select the key, a non-default joining string, and 
 
 The next example specifies the sorting when the collating order is specified.
 Here the collating order is Hungarian.
+
 .Jamal source
 [source]
 ----
@@ -1956,7 +1957,7 @@ Abrak
 }
 ----
 
-It will result the following order:
+It will result in the following order:
 
 .output
 [source]
@@ -2688,20 +2689,20 @@ If you need a forward reference to a counter, you should define a user defined m
 
 
 
-From time to time, there may be a need to have a reference to a part of the text that is defined later.
-Macros, by their nature, cannot be used before they are defined.
-You cannot reference a section or chapter number before the section or chapter is defined.
+Occasionally, you may need to reference a part of the text that is defined later in the document.
+However, macros cannot be used before they are defined.
+This means you cannot reference a section or chapter number before the section or chapter itself exists.
 
-Although the macros could provide ways to overcome this limitation, these may be a subpar solution.
-For example, you could define the chapter titles and numbering at the start of the document and then reference these macros at the place where the chapters start.
-The problem with this approach is that it separates the content from the document part that it belongs to.
+While there are ways to work around this limitation using macros, these solutions are often suboptimal.
+For example, you could define the chapter titles and numbering at the beginning of the document and reference these macros where the chapters start.
+The drawback of this approach is that it separates the content from its corresponding document section.
 
-The `ref` and `references` macros give a different solution to this problem.
-They help save the values of selected macros to an external file.
-Rendering the document the second time the file is read back and the macros are defined.
+The `ref` and `references` macros provide a better solution to this problem.
+They allow selected macro values to be saved to an external file.
+When the document is rendered a second time, this file is read back, ensuring the macros are correctly defined.
 
-Typically, you use the macro `references` at the start of the file to define the reference file.
-After that you can use the `ref` (or `reference` full name, but singular) to add specific macros to the set to be saved.
+Typically, you use the `references` macro at the beginning of the file to specify the reference file.
+After that, you can use the `ref` macro (or its full name, `reference`, in singular form) to add specific macros to the set that will be saved.
 
 .Jamal source
 [source]
@@ -2721,38 +2722,69 @@ This is defined later, but can be used here: The value of a
 ----
 
 
-The macro `references` can have three parameters:
+The `references` macro accepts three parameters:
 
-* `file` can specify the file name to be used to save the references.
+* `file` specifies the file name used to save the references.
 The default file name is `ref.jrf`.
-* `holder` is the name of the macro that will hold the list of macros to be saved.
+
+* `holder` defines the name of the macro that stores the list of macros to be saved.
 The default name is `xrefs`.
-+
-The holder is a special user defined macro that keeps track of the macros to be saved.
-At the end of the processing, the holder macro is used to know which macros are to be saved.
-The actual value of this holder macro is not interesting.
-The only important thing is that it is a user defined macro and as such, you should not use it for anything else.
-+
-You can use this macro as an ordinary user defined macro if you are curious.
-It will return the names of the macros that are saved comma separated in alphabetic order.
+ +
+The holder is a special user-defined macro that keeps track of the macros to be saved.
+At the end of processing, this holder macro determines which macros should be saved.
+The actual value of the holder macro is not important.
+What matters is that it is a user-defined macro, and as such, it should not be used for any other purpose.
+ +
+However, if you are curious, you can use this macro as an ordinary user-defined macro.
+It will return a comma-separated list of the saved macro names, sorted in alphabetical order.
 
-* `comment` or `comments` instructs the macro to save some comments into the reference file.
+* `comment` or `comments` instructs the macro to include comments in the reference file.
+This is a boolean parameter (`true` if present and `false` when not used).
 These comments are ignored when the macros are loaded.
-To see these comments, use this parop and open the generated file in a text editor close to your heart.
+To view these comments, enable this parameter and open the generated file in your preferred text editor.
 
-You can separate the references of different documents even in the same directory.
-The other way around, you can also save multiple sets of references from a single document.
++
+The content of the file `simple.jrf` generated below is:
 
-When using the macro `ref` you can specify the name of the holder macro.
-Following it by a `>` sign, you can specify the name of the holder macro, where you want the reference saved.
++
+[source]
+----
+# This is a Jamal reference file containing serialized base64 encoded macros
+# Created: 2025-02-20 15:10:34 +0100
+# id|openStr|closeStr|verbatim|tailParameter|pure|content|parameters
+# b
+Yg==|ew==|fQ==|0|0|0|VGhlIHZhbHVlIG9mIGI=|
+# c
+Yw==|ew==|fQ==|0|0|0|VGhpcyBpcyAkeA==|JHg=|
+
+----
+
++
+The comment is about the generation mode and time, and it also includes some description of the format.
+The format is simple, but not a guaranteed formatting for backward compatibility.
+
+The mix of reference files and documents is free.
+You can use shared reference files for multiple documents, and a document can use multiple reference files.
+
+You need to use the `holder` option for the `references` macro, and you also need to specify the holder in the `ref` macro.
+When using the `ref` macro, you can specify the name of the holder by following the name with the `>` sign and the holder.
+
+In the following example we use two different reference files to save the value into and two holders respectively.
 
 .Jamal source
 [source]
 ----
-{@references file=sample.jrf holder="otherRefs"}
-{@ref a > otherRefs}
-This is defined later, but can be used here: {a}
+{@references file=sample.jrf holder="eitherRefs"}
+{@references file=simple.jrf holder="otherRefs" comment}
+{@ref a > eitherRefs}
+{@ref b > otherRefs}
+{@ref c > otherRefs}
+'a' is defined later, but can be used here: {a}
+'b' is defined later, but can be used here: {b}
+'c' is defined later, but can be used here: {c c}
 {@define a=The value of a}
+{@define b=The value of b}
+{@define ! c($x)=This is $x}
 ----
 
 will result in
@@ -2760,11 +2792,15 @@ will result in
 .output
 [source]
 ----
-This is defined later, but can be used here: The value of a
+'a' is defined later, but can be used here: The value of a
+'b' is defined later, but can be used here: The value of b
+'c' is defined later, but can be used here: This is c
 ----
 
 
 If you do not specify the holder macro, the default holder macro, `xrefs` is used.
+Do not mix the files and the holder macros.
+Treat the holder macros as "identifiers" for the reference file.
 
 When using these macros, the rendering has to run twice.
 The macros loaded by `reference` will always have the value that they had at the end of the previous execution.
@@ -2776,9 +2812,34 @@ To avoid errors the `?` can be used in front of the macro names defined later.
 This will result in an empty string when the macro is used.
 
 Another possibility is to use the `ref` macro before the first use of the referenced macro.
-This macro will define the macro with the literal text `UNDEFINED` if the macro is not defined.
+This macro will define the macro with the literal text `UNDEFINED` if the macro is not defined in the reference file.
 
+When you read macro `references` macro reads the reference file and defines the macros defined there it is not really a "definition" of the macro.
+It defines the macro, but Jamal also remembers that this definition came from a reference file.
+That way you can use `{@define ! x=...}` or `{@define [noRedefine]x=...}` to define the macro.
+Further redefinition of the macro with the `!` character or with the `noRedefine` option will eventually result in an error.
 
+NOTE: The "soft" definition reading from a reference file keeps the declarative safety provided by `!` and `noRedefine`.
+
+The reference file will keep all the macros.
+The old version of a macro will remain in the reference file even if you delete or rename a macro from the Jamal file.
+(The new value of the same name will, of course, overwrite the old value.)
+It is a good practice to delete the reference file and have it recreated from scratch after significant modification of the Jamal source.
+The non-purging nature of the reference file was designed to allow sharing the reference file between documents.
+
+.1. Sharing referencees
+NOTE: When a reference file is shared among multiple documents, it is important to process them one after the other.
+Concurrent processing of documents sharing reference files may result in loss of reference definitins.
+
+.2 Recommended practices
+[NOTE]
+====
+Do not rely on the format of the reference file.
+There is no guarantee keeping it backward compatible.
+
+Keep the reference files as ephemeral as possible.
+Save them to your source repository only if they are needed to support CI/CD document processing, and it is not possible to process the files twice.
+====
 
 [[reflow]]
 === XXX. `reflow`
@@ -3473,10 +3534,10 @@ will result
 - ReplaceUtil.java: 1,033 bytes
 - SnipSave.java: 4,691 bytes
 - DevRoot.java: 2,315 bytes
-- Sort.java: 8,606 bytes
+- Sort.java: 8,608 bytes
 - Decorate.java: 12,215 bytes
 - Case.java: 2,439 bytes
-- NumberLines.java: 2,730 bytes
+- NumberLines.java: 2,679 bytes
 - RangeMacro.java: 1,069 bytes
 - Untab.java: 2,216 bytes
 - Plural.java: 2,136 bytes
@@ -3501,8 +3562,8 @@ will result
 - JavaSourceInsert.java: 8,813 bytes
 - ThinXml.java: 8,777 bytes
 - Decorator.java: 9,094 bytes
-- Memoize.java: 10,385 bytes
-- LineCount.java: 552 bytes
+- Memoize.java: 9,538 bytes
+- LineCount.java: 500 bytes
 - Replace.java: 3,494 bytes
 - SnipLine.java: 691 bytes
 - SnipCheckFailed.java: 775 bytes
@@ -3512,7 +3573,7 @@ will result
 - ThinXmlMacro.java: 453 bytes
 - BlockConverter.java: 1,912 bytes
 - UrlEncode.java: 855 bytes
-- Reference.java: 1,373 bytes
+- Reference.java: 3,259 bytes
 - Numbers.java: 1,785 bytes
 - Unicode.java: 2,114 bytes
 - Counter.java: 2,166 bytes
@@ -3520,14 +3581,14 @@ will result
 - StringMacros.java: 15,470 bytes
 - JavaSourceTemplate.java: 7,443 bytes
 - AbstractXmlDefine.java: 1,032 bytes
-- Dictionary.java: 1,632 bytes
+- Dictionary.java: 1,826 bytes
 - Clear.java: 471 bytes
 - KillLines.java: 1,589 bytes
 - SnipLoad.java: 3,298 bytes
 - Rot13.java: 928 bytes
 - SnippetStore.java: 11,145 bytes
 - Download.java: 2,265 bytes
-- ListDir.java: 5,236 bytes
+- ListDir.java: 5,184 bytes
 - XmlFormat.java: 3,693 bytes
 - SnippetXmlReader.java: 6,515 bytes
 - XmlInsert.java: 5,902 bytes
@@ -3537,9 +3598,9 @@ will result
 - Variation.java: 6,370 bytes
 - SnipList.java: 1,078 bytes
 - ShellVar.java: 5,301 bytes
-- Locate.java: 5,824 bytes
+- Locate.java: 5,772 bytes
 - XmlDocument.java: 6,273 bytes
-- References.java: 9,142 bytes
+- References.java: 9,306 bytes
 - Java.java: 11,364 bytes
 - ReplaceLines.java: 3,320 bytes
 - SkipLines.java: 2,675 bytes
@@ -3814,7 +3875,7 @@ will result in the output
 .output
 [source]
 ----
-2025-02-18 16:47:14
+2025-02-20 15:11:27
 ----
 
 
@@ -5305,10 +5366,9 @@ By using this macro, images are generated solely when the text that impacts the 
 The macro has three parameters:
 
 * The `file` parameter represents the name of the file that is generated.
-This parameter can be specified multiple times, allowing for multiple files.
-The macro neither reads nor writes this file.
-Instead, it checks for the file's existence.
-If the file does not exist, the macro will then evaluate its input, which is expected to generate the file in some manner.
+This parameter can be specified multiple times if more than one file is generated during the macro processing.
+The macro neither reads nor writes this file, it only checks for the file's existence.
+If the file does not exist, the macro will evaluate its input, which is expected to generate the file in some manner.
 However, the actual generation of the file is beyond the scope of this macro.
 
 +
@@ -5320,23 +5380,24 @@ Under such circumstances, checking for a file is deemed unnecessary.
 If not explicitly defined, this value is automatically calculated based on the macro's input.
 The hashCode macro can be utilized within the document for this calculation.
 Generally, manually inserting a hash value into the document is unnecessary.
-Instead, it's more typical to calculate it based on text that differs from the macro's direct input.
+Instead, it's more typical to calculate it based on the text that differs from the macro's direct input.
 
 +
 For instance, consider a scenario where you're generating a PlantUML diagram that also incorporates additional files during its creation process.
 The text from these included files won't be a part of the macro's direct input.
 Nevertheless, you'd want the diagram generation to occur even if only the included text files undergo modifications.
 In such situations, you can utilize the `hashCode` macro to compute the hash code of the verbatim text from the included files.
-Subsequently, this computed hash code can be employed as the `hashCode` parameter in the `memoize` macro, ensuring the diagram is regenerated when the included files change, even if the main input to the macro remains the same.
+Subsequently, this computed hash code can be used as the `hashCode` parameter in the `memoize` macro, ensuring the diagram is regenerated when the included files change, even if the main input to the macro remains the same.
 
 * The hashFile parameter denotes the name of the file that stores the hash value.
 Before the macro processes its input, it compares the current hash value with the one stored in the hashFile.
 If they match, indicating no changes, the macro does not reevaluate the input.
 Conversely, if the hash values differ, or in situations where the hashFile does not exist, the macro proceeds to create the file and reevaluates the input.
 
-The macro's return value is the result of the evaluated input when reevaluation occurs, and it returns an empty string if no evaluation is performed.
+The macro's return value is the result of the evaluated input when evaluation occurs, and it returns an empty string if no evaluation is performed.
 This feature is particularly beneficial during interactive editing, as it provides a clear indication of whether the macro was executed.
 If you don't require this functionality, you can opt to use macros that don't produce any output.
+For example, you can enclose the macro in a `block` macro using the `#` character in front of the macro name.
 
 
 

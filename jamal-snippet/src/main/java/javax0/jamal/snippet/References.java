@@ -47,6 +47,9 @@ public class References implements Macro, Scanner.WholeInput {
             for (var macroSerialized : macrosSerialized) {
                 if (notComment(macroSerialized)) {// empty and comment lines are ignored
                     final var macro = deserializer.deserialize(macroSerialized);
+                    if( macro instanceof Configurable){
+                        ((Configurable)macro).configure(Configurable.Keys.SOFT,true);
+                    }
                     processor.defineGlobal(macro);
                 }
             }
