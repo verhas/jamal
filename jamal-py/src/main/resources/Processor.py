@@ -29,7 +29,7 @@ def calculate_delimiter(code):
 # The main loop of the processor, reading the standard input, processing the Python code received on the input
 # executing the code. The result of the execution is the standard output.
 #
-# If there is any exception during the execution then the exception is printed to the standard output.
+# If there is any exception during the execution, then the exception is printed to the standard output.
 #
 # The input is
 #           delimiter line

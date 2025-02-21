@@ -187,7 +187,36 @@ END
       else
          echo "py test successful"
       fi
+}
 
+# shellcheck disable=SC2090
+test_python_venv(){
+      cd || exit 1
+      mkdir python_venv_test || exit 1
+      cd python_venv_test || exit 1
+      python -m venv .
+      pip install rich
+
+      cat << 'END' > test_ven.txt.jam
+{@python (execute directory=".")
+     import sys
+
+      try:
+          import rich
+          print("VENV OK")  # Confirms that the script runs inside the virtual environment
+      except ImportError:
+          print("VENV NOT OK")  # This will appear if the virtual environment is not active
+
+      print("Python executable:", sys.executable)  # Prints which Python is used
+}
+END
+      cat << 'END' > test_venv.txt
+VENV OK
+Python executable:/home/jamal/venv/bin/python3
+END
+      touch .python.sentinel
+      chmod 0400 .python.sentinel
+      $JAMAL test_ven.txt.jam test_ven.test
 }
 
 # shellcheck disable=SC2090
@@ -204,6 +233,7 @@ main() {
     run_script_test groovy '{@groovy:eval 1+1}' 2
     run_script_test scriptbasic '{@import res:scriptbasic.jim}{expr 1+1}' 2
     run_python_tests
+    test_python_venv
 
     print_step "INTEGRATION TEST SUCCESSFUL"
 }

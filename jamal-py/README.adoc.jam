@@ -45,6 +45,7 @@ The macro package is part of the
 </dependency>
 ----
 
+macro package, but it is also part of the standard builds, so you can just use it in IntelliJ, AsciidocFX or on the command line etc.
 
 == Macros Implemented
 
@@ -96,7 +97,7 @@ will result in
 
 {%output%}
 
-As you can see the macro `@python` executes the code and the result is the
+As you can see the macro `@python` executes the code and the result is the output of the code.
 
 The reference list of the parops for this macro is the following:
 
@@ -132,7 +133,13 @@ These locations are the following:
 
 === Common
 
-If the above operating system-specific locations fail, then the code will try
+If the above operating-system specific locations fail, then the code will try
+
+* `python3`,
+* `python`,
+* `py`
+
+from the PATH.
 
 === Configuration
 

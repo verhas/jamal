@@ -50,8 +50,8 @@ public class PythonFunction implements Macro, Scanner {
         // The default value is `venv`.
         // This option can only be used together with the option `directory`.
         final var closeCode = scanner.bool(null, "close");
-        // defines a code to execute when the interpreter exists.
-        // The last line of the python code has to be `sys.exit(0)` or whatever exist code you desire, or else
+        // defines that the code is to be executed when the interpreter exists.
+        // The last line of the python code has to be `sys.exit(0)` or whatever exit code you desire, or else
         // the interpreter process will be killed forcefully.
         // You cannot use this parop together with `execute`, `function` or `id`.
         // When this parop is used, the return value of the method is an empty string.

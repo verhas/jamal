@@ -15,6 +15,20 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The {@code PythonFinder} class is responsible for locating a Python interpreter
+ * on the system. It checks environment variables, common installation paths, and
+ * the system's PATH variable to find the most recent Python version available.
+ * <p>
+ * The class caches the detected interpreter at the JVM level to avoid redundant lookups.
+ * It first checks the {@code JAMAL_PYTHON_INTERPRETER} environment variable, then searches
+ * in standard installation directories depending on the operating system, and finally
+ * falls back to scanning the system's PATH.
+ * <p>
+ * If {@code checkConfigured} is set to {@code true}, the found interpreter is verified
+ * to ensure it is functional before returning it.
+ */
+
 public class PythonFinder {
 
     // cache the result on the JVM level, assuming that there is no need to find the Python interpreter

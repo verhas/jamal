@@ -43,6 +43,7 @@ The macro package is part of the
 </dependency>
 ----
 
+macro package, but it is also part of the standard builds, so you can just use it in IntelliJ, AsciidocFX or on the command line etc.
 
 == Macros Implemented
 
@@ -111,7 +112,7 @@ done
 ----
 
 
-As you can see the macro `@python` executes the code and the result is the
+As you can see the macro `@python` executes the code and the result is the output of the code.
 
 The reference list of the parops for this macro is the following:
 
@@ -135,8 +136,8 @@ specifies the directory name of the virtual environment.
 The default value is `venv`.
 This option can only be used together with the option `directory`.
 * `close`
-defines a code to execute when the interpreter exists.
-The last line of the python code has to be `sys.exit(0)` or whatever exist code you desire, or else
+defines that the code is to be executed when the interpreter exists.
+The last line of the python code has to be `sys.exit(0)` or whatever exit code you desire, or else
 the interpreter process will be killed forcefully.
 You cannot use this parop together with `execute`, `function` or `id`.
 When this parop is used, the return value of the method is an empty string.
@@ -199,7 +200,13 @@ These locations are the following:
 
 === Common
 
-If the above operating system-specific locations fail, then the code will try
+If the above operating-system specific locations fail, then the code will try
+
+* `python3`,
+* `python`,
+* `py`
+
+from the PATH.
 
 === Configuration
 
