@@ -2750,7 +2750,7 @@ The content of the file `simple.jrf` generated below is:
 [source]
 ----
 # This is a Jamal reference file containing serialized base64 encoded macros
-# Created: 2025-02-20 15:13:36 +0100
+# Created: 2025-02-21 22:25:03 +0100
 # id|openStr|closeStr|verbatim|tailParameter|pure|content|parameters
 # b
 Yg==|ew==|fQ==|0|0|0|VGhlIHZhbHVlIG9mIGI=|
@@ -3555,7 +3555,7 @@ will result
 - FilesMacro.java: 11,400 bytes
 - Collect.java: 24,771 bytes
 - SnipFile.java: 680 bytes
-- CounterFormatter.java: 4,599 bytes
+- CounterFormatter.java: 4,600 bytes
 - Repeat.java: 1,120 bytes
 - HashCode.java: 462 bytes
 - TrimLines.java: 5,172 bytes
@@ -3875,7 +3875,7 @@ will result in the output
 .output
 [source]
 ----
-2025-02-21 15:15:30
+2025-02-22 00:25:12
 ----
 
 

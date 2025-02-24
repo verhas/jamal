@@ -16,6 +16,21 @@ else
 fi
 
 #
+# Create a temporary directory to store the Git-tracked files
+#
+mkdir -p ./build_temp
+cd build_temp || exit 1
+TEMP_DIR=$(pwd)
+# shellcheck disable=SC2064
+trap "rm -rf $TEMP_DIR" EXIT
+
+# Copy only the files tracked by Git
+echo "Copying Git-tracked files to temporary directory"
+cd ../../..
+git ls-files | tar -cf - -T - | tar -xf - -C "$TEMP_DIR"
+cd $TEMP_DIR/..
+
+#
 # Create the dockerfile
 #
 cat > Dockerfile <<END
@@ -26,8 +41,8 @@ RUN addgroup TESTGROUP
 RUN adduser -G TESTGROUP -D -s /bin/bash jamal
 
 WORKDIR /home/jamal
-COPY integrationtest .
-RUN chown jamal:TESTGROUP integrationtest
+COPY --chown=jamal:TESTGROUP integrationtest .
+COPY --chown=jamal:TESTGROUP ./build_temp /home/jamal/jamal
 RUN chmod u+xr integrationtest
 USER jamal
 CMD ./integrationtest

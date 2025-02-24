@@ -33,8 +33,11 @@ setup_repository() {
     rm -rf "$JAMAL_HOME/.m2"
     mkdir -p "$JAMAL_HOME/.m2/repository"
 
-    print_step "Cloning the latest version from GitHub"
-    git clone https://github.com/verhas/jamal.git
+    # clone the respository if it is not there
+    if [[ ! -e jamal ]]; then
+        print_step "Cloning the latest version from GitHub"
+        git clone https://github.com/verhas/jamal.git
+    fi
 
     print_step "Building Jamal"
     cd "$JAMAL_HOME/jamal" || exit 1
@@ -194,29 +197,41 @@ test_python_venv(){
       cd || exit 1
       mkdir python_venv_test || exit 1
       cd python_venv_test || exit 1
-      python -m venv .
+      echo "Creating the virtual environment"
+      python -m venv ./venv
+      echo "activating virtual environment"
+      source venv/bin/activate
+      echo "Installing rich using pip"
       pip install rich
 
-      cat << 'END' > test_ven.txt.jam
+      cat << 'END' > test_venv.txt.jam
 {@python (execute directory=".")
-     import sys
+import sys
 
-      try:
-          import rich
-          print("VENV OK")  # Confirms that the script runs inside the virtual environment
-      except ImportError:
-          print("VENV NOT OK")  # This will appear if the virtual environment is not active
-
-      print("Python executable:", sys.executable)  # Prints which Python is used
+try:
+    import rich
+    print("VENV OK")  # Confirms that the script runs inside the virtual environment
+except ImportError:
+    print("VENV NOT OK")  # This will appear if the virtual environment is not active
+    print("Python executable:", sys.executable)  # Prints which Python is used
 }
 END
       cat << 'END' > test_venv.txt
 VENV OK
-Python executable:/home/jamal/venv/bin/python3
 END
       touch .python.sentinel
       chmod 0400 .python.sentinel
-      $JAMAL test_ven.txt.jam test_ven.test
+      $JAMAL test_venv.txt.jam test_venv.test
+      if [[ ! -e test_venv.test ]]; then
+        echo "test_venv.test was not created"
+      fi
+      if [ "$(diff -b test_venv.txt test_venv.test)" ] ;then
+        echo "Python venv created different output"
+        diff -b test_py.txt test_py.test
+        exit 1
+      else
+        echo "venv test successful"
+      fi
 }
 
 # shellcheck disable=SC2090

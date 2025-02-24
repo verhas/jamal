@@ -69,7 +69,7 @@ class CounterFormatter {
 
             return s.replace("$" + name, lower.substring(value - 1, value))
                     .replace("$" + NAME, UPPER.substring(value - 1, value));
-        }else {
+        } else {
             return s;
         }
     }

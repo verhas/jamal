@@ -20,6 +20,7 @@ import java.util.Optional;
  * @param <T> the type of the value stored in the leaf nodes. YOu can store the actual values if they do not change.
  *            You can also store a reference to the value if the value changes.
  */
+@SuppressWarnings("unchecked")
 public class GenericTrie<T> {
     private final Node<T> root = new Node<>();
     private static final int OFFSET = '!';
