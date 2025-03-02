@@ -207,7 +207,7 @@ The value can be a JSON structure, a string, a number or a boolean.
 
 ==== Examples
 
-===== Adding a value to the top level Map
+===== Adding a value to the top-level Map
 
 This example adds a new value to the root of the JSON structure.
 

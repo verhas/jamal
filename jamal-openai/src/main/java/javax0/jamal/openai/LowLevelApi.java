@@ -13,7 +13,9 @@ import java.io.IOException;
 
 public class LowLevelApi {
 
-    public static class Get implements Macro, InnerScopeDependent, Scanner.FirstLine {
+    @Macro.Name("openai:get")
+    public static
+    class Get implements Macro, InnerScopeDependent, Scanner.FirstLine {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var opt = new Options(processor, in, this);
@@ -27,13 +29,11 @@ public class LowLevelApi {
             }
         }
 
-        @Override
-        public String getId() {
-            return "openai:get";
-        }
     }
 
-    public static class Post implements Macro, InnerScopeDependent, Scanner.FirstLine {
+    @Macro.Name("openai:post")
+    public static
+    class Post implements Macro, InnerScopeDependent, Scanner.FirstLine {
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var opt = new Options(processor, in, this);
@@ -46,14 +46,10 @@ public class LowLevelApi {
             }
         }
 
-        @Override
-        public String getId() {
-            return "openai:post";
-        }
     }
 
     private static void check_HashCode(final String hash, final String retval) throws BadSyntax {
-        if( hash == null ) {
+        if (hash == null) {
             return;
         }
         if (hash.length() < 6) {

@@ -8,7 +8,9 @@ import javax0.jamal.tools.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
+@Macro.Name("replaceLines")
+public
+class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -70,8 +72,4 @@ public class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter,
         sb.append(String.join("\n", lines));
     }
 
-    @Override
-    public String getId() {
-        return "replaceLines";
-    }
 }

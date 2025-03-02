@@ -16,7 +16,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 
-public class SnipSave implements Macro, InnerScopeDependent, Scanner.WholeInput {
+@Macro.Name("snip:save")
+public
+class SnipSave implements Macro, InnerScopeDependent, Scanner.WholeInput {
     public static final String NS = "https://snippets.jamal.javax0.com/v1/snippets";
     public static final String SNIPPETS = "snippets";
     public static final String SNIPPET = "snippet";
@@ -91,8 +93,4 @@ public class SnipSave implements Macro, InnerScopeDependent, Scanner.WholeInput 
         }
     }
 
-    @Override
-    public String getId() {
-        return "snip:save";
-    }
 }

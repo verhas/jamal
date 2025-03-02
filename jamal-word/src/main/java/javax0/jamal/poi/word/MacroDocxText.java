@@ -8,7 +8,9 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.util.List;
 
-public class MacroDocxText implements Macro {
+@Macro.Name("docx:text")
+public
+class MacroDocxText implements Macro {
 
 
     private static class CallBack implements XWPFContext.DocxIntermediaryCallBack {
@@ -51,8 +53,4 @@ public class MacroDocxText implements Macro {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "docx:text";
-    }
 }

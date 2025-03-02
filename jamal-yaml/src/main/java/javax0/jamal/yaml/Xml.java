@@ -9,10 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 @Macro.Stateful
-public class Xml implements Macro, InnerScopeDependent, Scanner {
+@Macro.Name("yaml:xml")
+public
+class Xml implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var scanner = newScanner(in,processor);
+        final var scanner = newScanner(in, processor);
         final var clone = Resolver.cloneOption(scanner);
         final var copy = Resolver.copyOption(scanner);
         final var topTag = scanner.str("yamlXmlTopTag", "tag").defaultValue("xml");
@@ -23,11 +25,6 @@ public class Xml implements Macro, InnerScopeDependent, Scanner {
         Resolver.resolve(yamlObject, processor, clone.is(), copy.is());
         //TODO create a new instance to make it thread safe
         return toXml(topTag.get(), attributes.get(), yamlObject.getObject());
-    }
-
-    @Override
-    public String getId() {
-        return "yaml:xml";
     }
 
     private StackLimiter stackLimiter;
@@ -71,7 +68,7 @@ public class Xml implements Macro, InnerScopeDependent, Scanner {
                     closed = true;
                 }
                 if (value instanceof TEXT) {
-                    sb.append(escape(""+value));
+                    sb.append(escape("" + value));
                     ended = true;
                 } else if (value instanceof CDATATEXT) {
                     sb.append("<![CDATA[").append(value).append("]]>");
@@ -87,7 +84,7 @@ public class Xml implements Macro, InnerScopeDependent, Scanner {
                     listToXml(sb, tag, tag.substring(0, tag.length() - 1), (List) value);
                 } else {
                     sb.append("<").append(tag).append(">");
-                    sb.append(escape(""+value));
+                    sb.append(escape("" + value));
                 }
             }
             if (closed && !ended) {
@@ -115,13 +112,13 @@ public class Xml implements Macro, InnerScopeDependent, Scanner {
                     sb.append(">");
                     closed = true;
                 }
-                BadSyntax.when(tagSingular.length() == 0,  "Cannot create aní XML list for the field '%s' it is too short and no !tag was present.", tagPlural);
+                BadSyntax.when(tagSingular.length() == 0, "Cannot create aní XML list for the field '%s' it is too short and no !tag was present.", tagPlural);
                 sb.append("<").append(tagSingular);
                 if (e instanceof Map<?, ?>) {
                     mapToXml(sb, (Map) e);
                 } else if (e instanceof List<?>) {
                     final String ts = tagSingular;
-                    BadSyntax.when(tagSingular.length() < 2,  "Cannot create an XML list for the field '%s'", ts);
+                    BadSyntax.when(tagSingular.length() < 2, "Cannot create an XML list for the field '%s'", ts);
 
                     listToXml(sb, tagSingular, tagSingular.substring(0, tagSingular.length() - 1), (List) e);
                 } else if (e instanceof CDATA) {

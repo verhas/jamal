@@ -10,7 +10,9 @@ import javax0.jamal.tools.Scanner;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-public class Download implements Macro, Scanner {
+@Macro.Name("download")
+public
+class Download implements Macro, Scanner {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -28,11 +30,6 @@ public class Download implements Macro, Scanner {
             throw new BadSyntax(String.format("There was an IOException downloading the file '%s' to '%s'", fromName, to.get()), ioException);
         }
         return "";
-    }
-
-    @Override
-    public String getId() {
-        return "download";
     }
 
 }

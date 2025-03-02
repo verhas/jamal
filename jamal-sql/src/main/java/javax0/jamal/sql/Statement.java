@@ -6,7 +6,9 @@ import javax0.jamal.tools.Scanner;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class Statement implements Macro, Scanner.WholeInput, OptionsControlled {
+@Macro.Name("sql:statement")
+public
+class Statement implements Macro, Scanner.WholeInput, OptionsControlled {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -26,11 +28,6 @@ public class Statement implements Macro, Scanner.WholeInput, OptionsControlled {
             throw new BadSyntax("Cannot connect to the database using the connection string '" + in.toString() + "'", e);
         }
         return "";
-    }
-
-    @Override
-    public String getId() {
-        return "sql:statement";
     }
 
 }

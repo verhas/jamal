@@ -55,6 +55,7 @@ NOTE: The macro `json:get` is somewhat superfluous, because you can get the same
 However, as you can see from the example above, the different approaches provide different readability. Choose wisely.
 end snippet
 */
+@Macro.Name("json:get")
 public class Get implements Macro, InnerScopeDependent {
 
     private static final String INVALID_PATH = "The path '%s' is not valid or cannot be evaluated for the given JSON.";
@@ -81,8 +82,4 @@ public class Get implements Macro, InnerScopeDependent {
         throw new BadSyntax(String.format(INVALID_PATH, in));
     }
 
-    @Override
-    public String getId() {
-        return "json:get";
-    }
 }

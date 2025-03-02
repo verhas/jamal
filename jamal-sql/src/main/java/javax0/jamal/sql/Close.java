@@ -5,7 +5,9 @@ import javax0.jamal.tools.Scanner;
 
 import java.io.Closeable;
 
-public class Close implements Macro, Scanner, OptionsControlled {
+@Macro.Name("sql:close")
+public
+class Close implements Macro, Scanner, OptionsControlled {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var nameSomethingOpen = in.toString().trim();
@@ -20,12 +22,8 @@ public class Close implements Macro, Scanner, OptionsControlled {
             } else BadSyntax.format("The macro '%s' is not closeable", in.toString().trim());
             return "";
         } catch (Exception e) {
-            throw new BadSyntax("Exception while closing '"+nameSomethingOpen+"'", e);
+            throw new BadSyntax("Exception while closing '" + nameSomethingOpen + "'", e);
         }
     }
 
-    @Override
-    public String getId() {
-        return "sql:close";
-    }
 }

@@ -2,7 +2,9 @@ package javax0.jamal.yaml;
 
 import javax0.jamal.api.*;
 
-public class YamlString implements Macro, InnerScopeDependent {
+@Macro.Name("yaml:string")
+public
+class YamlString implements Macro, InnerScopeDependent {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final String id = Define.getMacroIdentifier(in, processor);
@@ -12,8 +14,4 @@ public class YamlString implements Macro, InnerScopeDependent {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "yaml:string";
-    }
 }

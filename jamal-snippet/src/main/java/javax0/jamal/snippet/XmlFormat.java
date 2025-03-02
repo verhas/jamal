@@ -18,7 +18,9 @@ import java.io.StringReader;
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 @Macro.Stateful
-public class XmlFormat implements Macro, InnerScopeDependent, Scanner {
+@Macro.Name("xmlFormat")
+public
+class XmlFormat implements Macro, InnerScopeDependent, Scanner {
 
     private static final PrintStream NULL_ERR = new PrintStream(new OutputStream() {
         public void write(int b) {
@@ -64,11 +66,6 @@ public class XmlFormat implements Macro, InnerScopeDependent, Scanner {
         } finally {
             System.setErr(savedErr);
         }
-    }
-
-    @Override
-    public String getId() {
-        return "xmlFormat";
     }
 
     private static class XmlFormatCloser implements Closer.OutputAware, AutoCloseable {

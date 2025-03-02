@@ -8,7 +8,9 @@ import javax0.jamal.tools.InputHandler;
 
 import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
-public class SnipFile implements Macro {
+@Macro.Name("snip:file")
+public
+class SnipFile implements Macro {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         skipWhiteSpaces(in);
@@ -18,8 +20,4 @@ public class SnipFile implements Macro {
         return SnippetStore.getInstance(processor).file(id);
     }
 
-    @Override
-    public String getId() {
-        return "snip:file";
-    }
 }

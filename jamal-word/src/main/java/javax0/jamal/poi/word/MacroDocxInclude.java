@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class MacroDocxInclude implements Macro {
+@Macro.Name("docx:include")
+public
+class MacroDocxInclude implements Macro {
 
 
     private static class CallBack implements XWPFContext.DocxIntermediaryCallBack {
@@ -125,8 +127,4 @@ public class MacroDocxInclude implements Macro {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "docx:include";
-    }
 }

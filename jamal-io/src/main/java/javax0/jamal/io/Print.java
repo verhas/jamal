@@ -6,7 +6,9 @@ import javax0.jamal.tools.Scanner;
 
 import java.io.PrintStream;
 
-public class Print implements Macro, InnerScopeDependent, Scanner {
+@Macro.Name("io:print")
+public
+class Print implements Macro, InnerScopeDependent, Scanner {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -25,8 +27,4 @@ public class Print implements Macro, InnerScopeDependent, Scanner {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "io:print";
-    }
 }

@@ -5,7 +5,9 @@ import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 
-public class Mkdir implements Macro, InnerScopeDependent, Scanner.FirstLine {
+@Macro.Name("io:mkdir")
+public
+class Mkdir implements Macro, InnerScopeDependent, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -25,8 +27,4 @@ public class Mkdir implements Macro, InnerScopeDependent, Scanner.FirstLine {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "io:mkdir";
-    }
 }

@@ -38,7 +38,9 @@ will result
 
 end snippet
 */
-public class Length implements Macro, InnerScopeDependent {
+@Macro.Name("json:length")
+public
+class Length implements Macro, InnerScopeDependent {
 
     private static final String INVALID_PATH = "The path '%s' is not valid, is not an array or cannot be evaluated for the given JSON.";
 
@@ -53,7 +55,7 @@ public class Length implements Macro, InnerScopeDependent {
                 BadSyntax.when(paths.length == 1 && mkp.json == null, "There is no macro named '%s' in the registry containing a JSON object", mkp.macroId);
                 if (mkp.json != null) {
                     final var json = tools.getJsonFromPath(mkp);
-                    BadSyntax.when(!(json instanceof JSONArray),INVALID_PATH, in);
+                    BadSyntax.when(!(json instanceof JSONArray), INVALID_PATH, in);
                     return Integer.toString(((JSONArray) json).length());
                 }
             } catch (JSONException | IllegalArgumentException e) {
@@ -65,8 +67,4 @@ public class Length implements Macro, InnerScopeDependent {
         throw new BadSyntax(String.format(INVALID_PATH, in));
     }
 
-    @Override
-    public String getId() {
-        return "json:length";
-    }
 }

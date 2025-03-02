@@ -9,7 +9,9 @@ import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
 
-public class Markdown implements Macro, InnerScopeDependent {
+@Macro.Name("md")
+public
+class Markdown implements Macro, InnerScopeDependent {
 
     @Override
     public String evaluate(Input in, Processor processor) {
@@ -22,8 +24,4 @@ public class Markdown implements Macro, InnerScopeDependent {
         return renderer.render(document);
     }
 
-    @Override
-    public String getId() {
-        return "md";
-    }
 }

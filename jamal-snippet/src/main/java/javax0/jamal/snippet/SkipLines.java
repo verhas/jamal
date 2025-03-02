@@ -8,10 +8,12 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class SkipLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
+@Macro.Name("skipLines")
+public
+class SkipLines implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var scanner = newScanner(in,processor);
+        final var scanner = newScanner(in, processor);
         final var skipStart = scanner.pattern("skip").defaultValue("skip");
         final var skipEnd = scanner.pattern("endSkip").defaultValue("end\\s+skip");
         scanner.done();
@@ -66,8 +68,4 @@ public class SkipLines implements Macro, InnerScopeDependent, BlockConverter, Sc
         return joined.isEmpty() || joined.charAt(joined.length() - 1) == '\n' || (lastLineCopied && in.charAt(in.length() - 1) != '\n');
     }
 
-    @Override
-    public String getId() {
-        return "skipLines";
-    }
 }

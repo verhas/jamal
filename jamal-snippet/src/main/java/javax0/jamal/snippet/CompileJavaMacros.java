@@ -24,7 +24,7 @@ public class CompileJavaMacros {
 
     /**
      * The name of the macro that will hold the loaded classes through the {@link
-     * com.javax0.sourcebuddy.Compiler.Loaded} object.
+     * Compiler.Loaded} object.
      */
     // snipline LOADED_CLASSES filter="(.*)"
     public static final String LOADED_CLASSES = "loadedClasses";
@@ -97,13 +97,15 @@ public class CompileJavaMacros {
         return scanner.str("constructor").defaultValue(TRUE);
     }
 
-    public static class Compile implements Macro, Scanner.WholeInput {
+    @Macro.Name("java:sources")
+    public static
+    class Compile implements Macro, Scanner.WholeInput {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-            final var scanner = newScanner(in,processor);
+            final var scanner = newScanner(in, processor);
             final var storeName = storeNameParam(scanner);
-            final var source  = scanner.str("source", "src", "sources").optional();
+            final var source = scanner.str("source", "src", "sources").optional();
             final var classes = scanner.str("class", "classes").optional();
             final var options = scanner.str("options", "compilerOptions").defaultValue("");
             scanner.done();
@@ -242,10 +244,6 @@ public class CompileJavaMacros {
             processor.getRegister().global(new IdentifiedObjectHolder<>(loaded, storeName.get()));
         }
 
-        @Override
-        public String getId() {
-            return "java:sources";
-        }
     }
 
     /**
@@ -253,11 +251,13 @@ public class CompileJavaMacros {
      * fields), there is no need to convert the classes to named objets and to hold them in object holders to retrieve
      * them later by the names. Just return the names comma separated.
      */
-    public static class ListClasses implements Macro, Scanner.WholeInput {
+    @Macro.Name("java:classes")
+    public static
+    class ListClasses implements Macro, Scanner.WholeInput {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-            final var scanner = newScanner(in,processor);
+            final var scanner = newScanner(in, processor);
             final var storeName = storeNameParam(scanner);
             final var selectorParam = selectorParam(scanner);
             final var sep = separatorParam(scanner);
@@ -268,10 +268,6 @@ public class CompileJavaMacros {
                     .collect(Collectors.joining(sep.get()));
         }
 
-        @Override
-        public String getId() {
-            return "java:classes";
-        }
     }
 
     private static class MethodHolder extends IdentifiedObjectHolder<Method> implements UserDefinedMacro {
@@ -398,11 +394,13 @@ public class CompileJavaMacros {
                 Arrays.stream(parameters).skip(1).collect(Collectors.joining(",")));
     }
 
-    public static class ListMethods implements Macro, Scanner.WholeInput {
+    @Macro.Name("java:methods")
+    public static
+    class ListMethods implements Macro, Scanner.WholeInput {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-            final var scanner = newScanner(in,processor);
+            final var scanner = newScanner(in, processor);
             final var storeName = storeNameParam(scanner);
             final var classParam = classParam(scanner);
             final var methodParam = selectorParam(scanner);
@@ -426,17 +424,15 @@ public class CompileJavaMacros {
                     }).collect(Collectors.joining(sep.get()));
         }
 
-        @Override
-        public String getId() {
-            return "java:methods";
-        }
     }
 
-    public static class ListFields implements Macro, Scanner.WholeInput {
+    @Macro.Name("java:fields")
+    public static
+    class ListFields implements Macro, Scanner.WholeInput {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
-            final var scanner = newScanner(in,processor);
+            final var scanner = newScanner(in, processor);
             final var storeName = storeNameParam(scanner);
             final var classParam = classParam(scanner);
             final var fieldParam = selectorParam(scanner);
@@ -460,10 +456,6 @@ public class CompileJavaMacros {
                     }).collect(Collectors.joining(sep.get()));
         }
 
-        @Override
-        public String getId() {
-            return "java:fields";
-        }
     }
 
     private static String randomName(final String hint) {

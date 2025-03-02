@@ -46,6 +46,7 @@ public class Processor implements javax0.jamal.api.Processor {
     final private JShellEngine shellEngine = getEngine();
     // cannot be a set, you cannot easily retrieve the already stored value when you give a new closer 'equals' the existing
     final private Map<AutoCloseable, AutoCloseable> openResources = new LinkedHashMap<>();
+    final private List<BadSyntax> deferredExceptions = new ArrayList<>();
     private final Context context;
     private final Debugger debugger;
     private final DebuggerStub debuggerStub = new DebuggerStub(this);
@@ -223,6 +224,16 @@ public class Processor implements javax0.jamal.api.Processor {
         return output.toString();
     }
 
+    @Override
+    public void deferredThrow(final String errorMessage, final Object... parameters) {
+        deferredThrow(new BadSyntax(String.format(errorMessage, parameters)));
+    }
+
+    @Override
+    public void deferredThrow(final BadSyntax bs) {
+        deferredExceptions.add(bs);
+    }
+
     /**
      * Handles the closing process of the processor with exception handling.
      * If an exception occurs during the closing process, it is thrown after adding a possibly existing processing
@@ -235,7 +246,13 @@ public class Processor implements javax0.jamal.api.Processor {
     private void closeProcessWithExceptionHandling(javax0.jamal.tools.Input output, BadSyntax processingException) throws BadSyntax {
         try {
             if (limiter.down() == 0) {
-                closeProcess(output);
+                if (deferredExceptions.isEmpty()) {
+                    closeProcess(output);
+                } else {
+                    final var bs = new BadSyntax(String.format("There were %d syntax error(s)", deferredExceptions.size()));
+                    deferredExceptions.forEach(bs::addSuppressed);
+                    throw bs;
+                }
             }
         } catch (Exception e) {
             if (processingException != null) {
@@ -443,7 +460,7 @@ public class Processor implements javax0.jamal.api.Processor {
             } catch (BadSyntax bs) {
                 throw new BadSyntaxAt(bs, ref);
             } finally {
-                if( segmentsSize < rf.segment.size() ) {
+                if (segmentsSize < rf.segment.size()) {
                     rf.popSegment();
                 }
             }
@@ -1042,11 +1059,12 @@ public class Processor implements javax0.jamal.api.Processor {
     }
 
     @Override
-    public AutoCloseable deferredClose(AutoCloseable closer) {
+    public <T extends AutoCloseable> T deferredClose(T closer) {
         if (!openResources.containsKey(closer)) {
             openResources.put(closer, closer);
         }
-        return openResources.get(closer);
+        //noinspection unchecked
+        return (T) openResources.get(closer);
     }
 
     private static JShellEngine getEngine() {

@@ -1,3 +1,5 @@
 {%@option failfast%}
-{%biroka%}
-{%miroka%}
+{%@snip:define burka=ka%}
+{%@snip:check id=burke hash=3ebb1c98%}
+{%@snip:check id=burka hash=3ebb1c97%}
+{%@snip:check id=burka hash=3ebb1c96%}

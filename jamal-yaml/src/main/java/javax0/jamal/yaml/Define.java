@@ -7,7 +7,9 @@ import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
 import static javax0.jamal.api.SpecialCharacters.ERROR_REDEFINE;
 import static javax0.jamal.tools.InputHandler.*;
 
-public class Define implements Macro, InnerScopeDependent {
+@Macro.Name("yaml:define")
+public
+class Define implements Macro, InnerScopeDependent {
     final Yaml yaml = YamlFactory.newYaml();
 
     @Override
@@ -40,17 +42,13 @@ public class Define implements Macro, InnerScopeDependent {
             if (optional) {
                 return null;
             }
-            BadSyntax.when(noRedefine,  "The macro '%s' was already defined.", id);
+            BadSyntax.when(noRedefine, "The macro '%s' was already defined.", id);
         }
         skipWhiteSpaces(in);
-        BadSyntax.when(!firstCharIs(in, '='),  "yaml '%s' has no '=' to body", id);
+        BadSyntax.when(!firstCharIs(in, '='), "yaml '%s' has no '=' to body", id);
         skip(in, 1);
         skipWhiteSpaces2EOL(in);
         return id;
     }
 
-    @Override
-    public String getId() {
-        return "yaml:define";
-    }
 }

@@ -18,7 +18,9 @@ import java.util.function.Consumer;
 
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
 
-public class Exec implements Macro, Scanner.FirstLine {
+@Macro.Name("io:exec")
+public
+class Exec implements Macro, Scanner.FirstLine {
 
     final static Consumer<String> DEV_NULL = (String line) -> {
     };
@@ -113,7 +115,7 @@ public class Exec implements Macro, Scanner.FirstLine {
         // end snippet
         scanner.done();
 
-        ScannerTools.badSyntax(this).whenParameters(wait,async).multipleArePresent();
+        ScannerTools.badSyntax(this).whenParameters(wait, async).multipleArePresent();
         BadSyntax.when(force.is() && !destroy.is(), "The `force` option can only be used together with the `destroy` option.");
         BadSyntax.when(destroy.is() && !wait.isPresent(), "The `destroy` option can only be used together with the `wait` option.");
 
@@ -327,12 +329,9 @@ public class Exec implements Macro, Scanner.FirstLine {
         return new File(absolute);
     }
 
-    @Override
-    public String getId() {
-        return "io:exec";
-    }
-
-    public static class WaitFor implements Macro, Scanner.WholeInput {
+    @Name("io:waitFor")
+    public static
+    class WaitFor implements Macro, Scanner.WholeInput {
 
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
@@ -371,10 +370,6 @@ public class Exec implements Macro, Scanner.FirstLine {
             return "";
         }
 
-        @Override
-        public String getId() {
-            return "io:waitFor";
-        }
     }
 
     private static class ProcessHolder implements UserDefinedMacro, ObjectHolder<Process> {

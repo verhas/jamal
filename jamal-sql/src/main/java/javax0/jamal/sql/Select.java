@@ -8,7 +8,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Select implements Macro, Scanner, OptionsControlled {
+@Macro.Name("sql:select")
+public
+class Select implements Macro, Scanner, OptionsControlled {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -32,14 +34,9 @@ public class Select implements Macro, Scanner, OptionsControlled {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "sql:select";
-    }
-
     static class ResultSetHolder extends IdentifiedObjectHolder<ResultSet> implements UserDefinedMacro, AutoCloseable {
 
-        ResultSetHolder(final java.sql.ResultSet resultSet, final String name, final Processor processor) {
+        ResultSetHolder(final ResultSet resultSet, final String name, final Processor processor) {
             super(resultSet, name);
             processor.deferredClose(this);
         }
@@ -61,12 +58,12 @@ public class Select implements Macro, Scanner, OptionsControlled {
             final var resultSet = getObject();
             try {
                 if (columnName.equals("next")) {
-                    BadSyntax.when( params.length > 1, "Result set 'next' must ot have any parameter");
+                    BadSyntax.when(params.length > 1, "Result set 'next' must ot have any parameter");
                     resultSet.next();
                     return "";
                 }
                 if (columnName.equals("close")) {
-                    BadSyntax.when( params.length > 1, "Result set 'close' must ot have any parameter");
+                    BadSyntax.when(params.length > 1, "Result set 'close' must ot have any parameter");
                     resultSet.close();
                     return "";
                 }
@@ -97,10 +94,10 @@ public class Select implements Macro, Scanner, OptionsControlled {
                     case "timestamp":
                         return columnName.isEmpty() ? resultSet.getTimestamp(columnNumber).toString() : resultSet.getTimestamp(columnName).toString();
                     default:
-                        throw BadSyntax.format( "Unknown type '%s'", type);
+                        throw BadSyntax.format("Unknown type '%s'", type);
                 }
             } catch (Exception e) {
-                throw BadSyntax.format( "Cannot read column '%s' as '%s'", columnName, type);
+                throw BadSyntax.format("Cannot read column '%s' as '%s'", columnName, type);
             }
         }
 

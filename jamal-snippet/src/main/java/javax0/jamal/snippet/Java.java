@@ -18,7 +18,9 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 
 public class Java {
 
-    public static class ClassMacro implements Macro, InnerScopeDependent, Scanner {
+    @Macro.Name("java:class")
+    public static
+    class ClassMacro implements Macro, InnerScopeDependent, Scanner {
         private static class Trie {
             static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                     // snippet classFormats
@@ -52,13 +54,11 @@ public class Java {
             }
         }
 
-        @Override
-        public String getId() {
-            return "java:class";
-        }
     }
 
-    public static class FieldMacro implements Macro, InnerScopeDependent, Scanner {
+    @Macro.Name("java:field")
+    public static
+    class FieldMacro implements Macro, InnerScopeDependent, Scanner {
         private static class Trie {
             static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                     // OTFDC -> of the field's defining class
@@ -121,13 +121,11 @@ public class Java {
             }
         }
 
-        @Override
-        public String getId() {
-            return "java:field";
-        }
     }
 
-    public static class MethodMacro implements Macro, InnerScopeDependent, Scanner {
+    @Macro.Name("java:method")
+    public static
+    class MethodMacro implements Macro, InnerScopeDependent, Scanner {
         private static class Trie {
             static final IndexedPlaceHolders formatter = IndexedPlaceHolders.with(
                     // OTMDC -> of the method's defining class
@@ -183,10 +181,6 @@ public class Java {
             }
         }
 
-        @Override
-        public String getId() {
-            return "java:method";
-        }
     }
 
     private static Optional<CompileJavaMacros.Holder> getHolder(final Processor processor, final String id) throws BadSyntax {

@@ -44,7 +44,9 @@ public class StringMacros {
         }
     }
 
-    public static class StringMacro implements Macro, InnerScopeDependent, Scanner {
+    @Macro.Name("string")
+    public static
+    class StringMacro implements Macro, InnerScopeDependent, Scanner {
 
 
         @Override
@@ -69,10 +71,6 @@ public class StringMacros {
             throw new BadSyntax("Unknown string macro: " + parts[1]);
         }
 
-        @Override
-        public String getId() {
-            return "string";
-        }
     }
 
     private static abstract class XWith implements Macro, InnerScopeDependent {
@@ -199,7 +197,7 @@ public class StringMacros {
 
     @Macro.Name({"string:after", "string:before"})
     public static class After implements Macro, Scanner {
-// snippet GETID_AFTER
+        // snippet GETID_AFTER
         @Override
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var action = processor.getId();

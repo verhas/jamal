@@ -6,7 +6,9 @@ import javax0.jamal.tools.Scanner;
 
 import static javax0.jamal.tools.InputHandler.*;
 
-public class Snippet implements Macro, OptionsControlled, Scanner {
+@Macro.Name("snip:define")
+public
+class Snippet implements Macro, OptionsControlled, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -34,8 +36,4 @@ public class Snippet implements Macro, OptionsControlled, Scanner {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "snip:define";
-    }
 }

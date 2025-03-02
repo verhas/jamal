@@ -11,6 +11,7 @@ import javax0.jamal.tools.param.StringParameter;
 
 import java.util.Locale;
 
+@Macro.Name("snip:check")
 public class SnipCheck implements Macro, Scanner.WholeInput {
 
     // snipline SnipCheck_MIN_LINE
@@ -48,7 +49,8 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
             checkLineCount(lines, id, fileName, message, warning, error, snippet, pos, processor);
             return "";
         }
-        throw new BadSyntax("Neither lines, nor hash is checked in " + getId() + "'" + message.get() + "'");
+        processor.deferredThrow("Neither lines, nor hash is checked in %s '%s'", getId(), message.get());
+        return "";
     }
 
     private void checkLineCount(final IntegerParameter lines,
@@ -72,7 +74,7 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
         if (error.is()) {
             processor.logger().log(System.Logger.Level.ERROR, pos, "The " + getIdString(id, fileName) + " has " + newlines + " lines and not " + lines.get() + ".\n" + "'" + message.get() + "'");
         }
-        throw new BadSyntax("The " + getIdString(id, fileName) + " has " + newlines + " lines and not " + lines.get() + ".\n" + "'" + message.get() + "'");
+        processor.deferredThrow("The %s has %d lines and not %d.\n'%s'", getIdString(id, fileName), newlines, lines.get(), message.get());
     }
 
     private void checkHashString(final StringParameter hashString,
@@ -88,7 +90,7 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
         final var hash = hashString.get().replaceAll("\\.", "").toLowerCase(Locale.ENGLISH);
         if (hash.length() < MIN_LENGTH) {
             BadSyntax.when(hashStringCalculated.contains(hash), "The %s hash is '%s'. '%s' is too short, you need at least %d characters.\n'%s'", getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), MIN_LENGTH, message.get());
-            BadSyntax.format( "The %s hash is '%s', not '%s', which is too short anyway, you need at least %d characters.\n'%s'",
+            BadSyntax.format("The %s hash is '%s', not '%s', which is too short anyway, you need at least %d characters.\n'%s'",
                     getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), MIN_LENGTH, message.get());
         }
         if (hashStringCalculated.contains(hash)) {
@@ -103,11 +105,7 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
             processor.logger().log(System.Logger.Level.ERROR, pos, "The %s hash is '%s', not '%s'.\n'%s'", getIdString(id, fileName), doted(hashStringCalculated), hashString.get(),
                     message.isPresent() ? message.get() : "");
         }
-        if (message.isPresent()) {
-            throw new SnipCheckFailed(getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), message.get(), pos);
-        } else {
-            throw new SnipCheckFailed(getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), null, pos);
-        }
+        processor.deferredThrow(new SnipCheckFailed(getIdString(id, fileName), doted(hashStringCalculated), hashString.get(), message.orNull(), pos));
     }
 
     public static String doted(final String s) {
@@ -128,7 +126,7 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
         final StringBuilder snippet = new StringBuilder();
         if (id.isPresent()) {
             for (final var snipid : id.get().split(",")) {
-                snippet.append(SnippetStore.getInstance(processor).snippet(snipid.trim()));
+                processor.deferBadSyntax(() -> snippet.append(SnippetStore.getInstance(processor).snippet(snipid.trim())));
             }
         }
         if (fileNames.isPresent()) {
@@ -142,8 +140,4 @@ public class SnipCheck implements Macro, Scanner.WholeInput {
         return snippet.toString();
     }
 
-    @Override
-    public String getId() {
-        return "snip:check";
-    }
 }

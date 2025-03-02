@@ -8,6 +8,7 @@ import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Option;
 import javax0.jamal.tools.OptionsStore;
 
+@Macro.Name("catch")
 public class Catch implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -22,10 +23,6 @@ public class Catch implements Macro {
         }
     }
 
-    @Override
-    public String getId() {
-        return "catch";
-    }
 }
 /*template jm_catch
 {template |catch|catch $C$|catch an error|

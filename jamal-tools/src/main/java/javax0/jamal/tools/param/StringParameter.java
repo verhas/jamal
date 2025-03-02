@@ -13,6 +13,17 @@ public class StringParameter extends AbstractTypedParameter<String> {
         return param.get();
     }
 
+    public String orNull() throws BadSyntax {
+        return orElse(null);
+    }
+
+    public String orElse(String defaultValue) throws BadSyntax {
+        if (isPresent()) {
+            return param.get();
+        } else {
+            return defaultValue;
+        }
+    }
 
     public StringParameter required() {
         checkDone(DoneAction.REQUIRED);

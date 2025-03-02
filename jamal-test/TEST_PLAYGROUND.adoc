@@ -1,28 +1,40 @@
 [WARNING]
 --
-* User macro '{%biroka ...' is not defined. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/1:3
+* There were 4 syntax error(s)
+--
+[WARNING]
+--
+* There were 4 syntax error(s)
 --
 {%@option failfast%}
+{%@snip:define burka=ka%}
+{%@snip:check id=burke hash=3ebb1c98%}
+{%@snip:check id=burka hash=3ebb1c97%}
+{%@snip:check id=burka hash=3ebb1c96%}
 [WARNING]
 --
-* User macro '{%biroka ...' is not defined. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/1:3
---
-{%biroka%}
-{%miroka%}
-[WARNING]
---
-* User macro '{%biroka ...' is not defined. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/1:3
+* There were 4 syntax error(s)
 --
 [source]
 ----
-User macro '{%biroka ...' is not defined. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/1:3
-	javax0.jamal.engine.Processor(throwForUndefinedUdMacro:610)
-	javax0.jamal.engine.Processor(evalUserDefinedMacro:563)
-	javax0.jamal.engine.Processor(evalMacro:417)
-	javax0.jamal.engine.Processor(processMacro:327)
-	javax0.jamal.engine.Processor(process:202)
-	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:451)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:288)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:205)
-sed -i.bak  '' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam
+There were 4 syntax error(s)
+
+Suppressed exceptions:
+Snippet 'burke' is not defined	javax0.jamal.snippet.SnippetStore(fetchSnippet:197)
+	javax0.jamal.snippet.SnippetStore(snippet:159)
+	javax0.jamal.snippet.SnipCheck(lambda$getSnippetContent$1:129)
+	javax0.jamal.api.Processor(deferBadSyntax:250)
+	javax0.jamal.snippet.SnipCheck(getSnippetContent:129)
+	javax0.jamal.snippet.SnipCheck(evaluate:41)
+
+The id(burke) hash is 'e3b0c442.98fc1c14.9afbf4c8.996fb924.27ae41e4.649b934c.a495991b.7852b855' does not contain '3ebb1c98'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam[snip:check]/2:14	javax0.jamal.snippet.SnipCheck(checkHashString:108)
+	javax0.jamal.snippet.SnipCheck(evaluate:44)
+
+The id(burka) hash is '3ebb1c99.b12b7746.3e97c3a0.f206e4fd.46176cd1.b8e18381.6a67338c.04b25e5b' does not contain '3ebb1c97'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam[snip:check]/3:14	javax0.jamal.snippet.SnipCheck(checkHashString:108)
+	javax0.jamal.snippet.SnipCheck(evaluate:44)
+
+The id(burka) hash is '3ebb1c99.b12b7746.3e97c3a0.f206e4fd.46176cd1.b8e18381.6a67338c.04b25e5b' does not contain '3ebb1c96'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam[snip:check]/4:14	javax0.jamal.snippet.SnipCheck(checkHashString:108)
+	javax0.jamal.snippet.SnipCheck(evaluate:44)
+
+sed -i.bak  's/3ebb1c98/e3b0c442/g;s/3ebb1c97/3ebb1c99/g;s/3ebb1c96/3ebb1c99/g;' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam
 ----

@@ -42,7 +42,9 @@ will result
 
 end snippet
 */
-public class Keys implements Macro, InnerScopeDependent, Scanner {
+@Macro.Name("json:keys")
+public
+class Keys implements Macro, InnerScopeDependent, Scanner {
 
     private static final String INVALID_PATH = "The path '%s' is not valid, is not a structure or cannot be evaluated for the given JSON.";
 
@@ -73,8 +75,4 @@ public class Keys implements Macro, InnerScopeDependent, Scanner {
         throw new BadSyntax(String.format(INVALID_PATH, in));
     }
 
-    @Override
-    public String getId() {
-        return "json:keys";
-    }
 }

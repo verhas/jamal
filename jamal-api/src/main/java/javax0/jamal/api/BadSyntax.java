@@ -139,6 +139,9 @@ public class BadSyntax extends Exception {
     public interface ThrowingSupplier<T> {
         T get() throws BadSyntax;
     }
+    public interface ThrowingRunnable {
+        void run() throws BadSyntax;
+    }
 
     /**
      * This method throws a {@code BadSyntax} exception when the {@code condition} is {@code true}.

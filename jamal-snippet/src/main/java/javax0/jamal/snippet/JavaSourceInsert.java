@@ -13,7 +13,9 @@ import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.Input.makeInput;
 
-public class JavaSourceInsert implements Macro, Scanner.FirstLine {
+@Macro.Name("java:insert")
+public
+class JavaSourceInsert implements Macro, Scanner.FirstLine {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -39,11 +41,6 @@ public class JavaSourceInsert implements Macro, Scanner.FirstLine {
             processor.deferredClose(() -> BadSyntax.when(closer.isUpdated(), "The file " + file.get() + " was updated."));
         }
         return in.toString();
-    }
-
-    @Override
-    public String getId() {
-        return "java:insert";
     }
 
     private static class JavaSourceInsertCloser implements AutoCloseable, Closer.OutputAware, Closer.ProcessorAware {
@@ -75,7 +72,7 @@ public class JavaSourceInsert implements Macro, Scanner.FirstLine {
         public void close() throws BadSyntax {
             final String fileName = FileTools.absolute(pos.file, file);
             final String newContent;
-            final var originalContent= getFileContent(fileName);
+            final var originalContent = getFileContent(fileName);
             if (wholeFile) {
                 newContent = output.toString();
             } else {

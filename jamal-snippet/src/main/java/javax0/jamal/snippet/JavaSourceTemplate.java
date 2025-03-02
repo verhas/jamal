@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.engine.UserDefinedMacro;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Params;
 import javax0.jamal.tools.Scanner;
@@ -19,7 +20,9 @@ import java.util.regex.Pattern;
 
 import static javax0.jamal.tools.Input.makeInput;
 
-public class JavaSourceTemplate implements Macro, Scanner.FirstLine {
+@Macro.Name("java:template")
+public
+class JavaSourceTemplate implements Macro, Scanner.FirstLine {
     private static final Pattern segmentStartPattern = Pattern.compile("^\\s*//\\s*<\\s*editor-fold(.*>)");
     private static final Pattern segmentEndPattern = Pattern.compile("^\\s*//\\s*</\\s*editor-fold\\s*>");
     private static final Pattern segmentHeaderPattern = Pattern.compile("^\\s*//(.*)$");
@@ -42,9 +45,9 @@ public class JavaSourceTemplate implements Macro, Scanner.FirstLine {
             final var templateMacro = template.get();
             templateContent =
                     processor.getRegister().getMacro(templateMacro)
-                            .filter(m -> m instanceof javax0.jamal.engine.UserDefinedMacro)
-                            .map(m -> (javax0.jamal.engine.UserDefinedMacro) m)
-                            .map(javax0.jamal.engine.UserDefinedMacro::getContent)
+                            .filter(m -> m instanceof UserDefinedMacro)
+                            .map(m -> (UserDefinedMacro) m)
+                            .map(UserDefinedMacro::getContent)
                             .orElseThrow(() -> new BadSyntax(String.format("The template '%s' is not defined", templateMacro)));
             BadSyntax.when(in.toString().trim().length() > 0, "The input should be empty when applying a template.");
         } else {
@@ -52,17 +55,12 @@ public class JavaSourceTemplate implements Macro, Scanner.FirstLine {
             processor.getRegister().define(processor.newUserDefinedMacro(template.get(), templateContent, NOARGS));
         }
         final String resultAggregation;
-        if( path.isPresent()) {
+        if (path.isPresent()) {
             resultAggregation = processFiles(FileTools.absolute(in.getReference(), path.get()), template.get(), update.is(), throwUp.is(), processor, templateContent);
-        }else{
+        } else {
             resultAggregation = "";
         }
         return debug.is() ? resultAggregation : "";
-    }
-
-    @Override
-    public String getId() {
-        return "java:template";
     }
 
     private String processFiles(final String path,

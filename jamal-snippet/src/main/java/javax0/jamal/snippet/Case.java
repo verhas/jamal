@@ -27,59 +27,50 @@ public class Case {
     /**
      * Converts the argument of the macro to all characters lower case.
      */
-    public static class Lower implements Macro {
+    @Macro.Name("case:lower")
+    public static
+    class Lower implements Macro {
         @Override
         public String evaluate(Input input, Processor processor) {
             InputHandler.skipWhiteSpaces(input);
             return input.toString().trim().toLowerCase();
         }
 
-        @Override
-        public String getId() {
-            return "case:lower";
-        }
     }
 
     /**
      * Converts the argument of the macro to all characters upper case.
      */
-    public static class Upper implements Macro {
+    @Macro.Name("case:upper")
+    public static
+    class Upper implements Macro {
         @Override
         public String evaluate(Input input, Processor processor) {
             return input.toString().trim().toUpperCase();
-        }
-        @Override
-        public String getId() {
-            return "case:upper";
         }
     }
 
     /**
      * Capitalizes the input. Changes the first character to upper case.
      */
-    public static class Cap implements Macro {
+    @Macro.Name("case:cap")
+    public static
+    class Cap implements Macro {
         @Override
         public String evaluate(Input input, Processor processor) {
             return capitalize(input.toString().trim());
         }
-        @Override
-        public String getId() {
-            return "case:cap";
-        }
-
     }
 
     /**
      * Uncapitalizes the input. Changes the first character to lower case.
      */
-    public static class Decap implements Macro {
+    @Macro.Name("case:decap")
+    public static
+    class Decap implements Macro {
         @Override
         public String evaluate(Input input, Processor processor) {
             return deCapitalize(input.toString().trim());
-        }
-        @Override
-        public String getId() {
-            return "case:decap";
         }
     }
 }

@@ -4,7 +4,9 @@ import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 import org.jruby.RubyString;
 
-public class RubyCloser implements Macro, InnerScopeDependent, Scanner {
+@Macro.Name("ruby:closer")
+public
+class RubyCloser implements Macro, InnerScopeDependent, Scanner {
     private static class Closer implements AutoCloseable, javax0.jamal.api.Closer.OutputAware {
         private Input result;
         private final Shell shell;
@@ -42,8 +44,4 @@ public class RubyCloser implements Macro, InnerScopeDependent, Scanner {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "ruby:closer";
-    }
 }

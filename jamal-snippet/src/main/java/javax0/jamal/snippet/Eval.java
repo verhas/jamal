@@ -7,7 +7,9 @@ import javax0.jamal.tools.Scanner;
 
 import static javax0.jamal.tools.Input.makeInput;
 
-public class Eval implements Macro, OptionsControlled, Scanner {
+@Macro.Name("snip:eval")
+public
+class Eval implements Macro, OptionsControlled, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -16,7 +18,7 @@ public class Eval implements Macro, OptionsControlled, Scanner {
         final var snippet = scanner.str(null, "snippet").optional();
         scanner.done();
         BadSyntax.when((line.isPresent() || file.isPresent()) && snippet.isPresent(), "Either 'line' and/or 'file' or 'snippet' must be present as option on '\"+getId()+\"' macro.\"");
-        BadSyntax.when(!file.isPresent() && !snippet.isPresent(),"Either 'file' or 'snippet' must be present as option on '"+getId()+"' macro.");
+        BadSyntax.when(!file.isPresent() && !snippet.isPresent(), "Either 'file' or 'snippet' must be present as option on '" + getId() + "' macro.");
         InputHandler.skipWhiteSpaces(in);
         BadSyntax.when(in.isEmpty() && !snippet.isPresent(), "Missing snippet");
         final Position pos;
@@ -37,8 +39,4 @@ public class Eval implements Macro, OptionsControlled, Scanner {
         return processor.process(input);
     }
 
-    @Override
-    public String getId() {
-        return "snip:eval";
-    }
 }

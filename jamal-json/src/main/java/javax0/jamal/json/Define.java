@@ -7,9 +7,9 @@ import static javax0.jamal.api.SpecialCharacters.DEFINE_OPTIONALLY;
 import static javax0.jamal.api.SpecialCharacters.ERROR_REDEFINE;
 import static javax0.jamal.tools.InputHandler.*;
 
+@Macro.Name("json:define")
 public class Define implements Macro, InnerScopeDependent, Scanner {
-
-    /* snippet Define_macro_documentation
+/* snippet Define_macro_documentation
 You can use this macro to define a JSon structure.
 A JSON structure can be a map, a list or a string.
 JSon supports other primitive values, but Jamal being a text macro processor handles all other primitive types as strings.
@@ -126,8 +126,4 @@ end snippet
         return id;
     }
 
-    @Override
-    public String getId() {
-        return "json:define";
-    }
 }

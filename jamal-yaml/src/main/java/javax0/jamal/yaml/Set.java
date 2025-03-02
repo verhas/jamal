@@ -9,10 +9,12 @@ import ognl.OgnlException;
 import static javax0.jamal.tools.InputHandler.*;
 
 
-public class Set implements Macro, InnerScopeDependent, Scanner {
+@Macro.Name("yaml:set")
+public
+class Set implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var scanner = newScanner(in,processor);
+        final var scanner = newScanner(in, processor);
         final var clone = Resolver.cloneOption(scanner);
         final var copy = Resolver.copyOption(scanner);
         final var from = scanner.str("yamlDataSource", "from").optional();
@@ -56,8 +58,4 @@ public class Set implements Macro, InnerScopeDependent, Scanner {
         return fromId;
     }
 
-    @Override
-    public String getId() {
-        return "yaml:set";
-    }
 }

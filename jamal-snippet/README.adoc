@@ -175,7 +175,7 @@ Since 1.7.4 option `onceAs`
 This macro collects text snippets from files.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The syntax of the macro is
 
@@ -325,7 +325,7 @@ The output of the `collect` macro is an empty string.
 
 The macro behaviour can be altered using options.
 
-These options are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These options are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 * `include`
@@ -808,8 +808,8 @@ will result in
 .output
 [source]
 ----
-../jamal-snippet/documentation/macros/snippy.txt
-../jamal-snippet/documentation/macros/snip_define.adoc.jam
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snippy.txt
+/Users/verhasp/github/jamal/jamal-snippet/documentation/macros/snip_define.adoc.jam
 ----
 
 
@@ -1136,7 +1136,7 @@ You cannot use `warning` and `error` together.
 This macro lists the defined snippets.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The list is represented as comma-delimited, which contains the names of the snippets.
@@ -1180,7 +1180,7 @@ This is not an error in Jamal, only if you try to use any of these snippets.
 This macro saves all the collected snippets to a file.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The file name must be specified by the parameter `output`.
 The general syntax of the macro is
@@ -1272,7 +1272,7 @@ It is saved as a `CDATA` section(s).
 This macro can load the snippets from a file, which was saved by <<snipSave,`snip:save`>>.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 The file's name has to be specified by the parameter `input`.
 The general syntax of the macro is
@@ -1322,7 +1322,7 @@ If you want to change something in the XML file and edit some snippet code tempo
 This macro can cut off the unneeded spaces from the start and end of the lines.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 When you include a code fragment in the documentation as a snippet, the lines may have extra spaces at the start.
@@ -1794,7 +1794,7 @@ will result
 .output
 [source]
 ----
-../jamal-snippet/README.adoc.jam:1012:30
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc.jam:1011:30
 ----
 
 
@@ -2017,7 +2017,7 @@ If you write `semver` (case insensitive) instead of the fully qualified domain n
 This macro can put numbers in front of the lines, sequentially numbering them.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The syntax of the macro is
@@ -2090,7 +2090,7 @@ Any illegal formatting will result in an error.
 This macro deletes, or keeps the selected lines from its input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The format of the macro is
@@ -2183,7 +2183,7 @@ In this case only the comment lines remained that start with `//` at the start o
 You can use this macro to skip lines from the snippet.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 It is similar to <<killLines,`killLines`>> but this macro deletes ranges of lines instead of individual lines.
@@ -2302,7 +2302,7 @@ In that case you can switch it off using the option `(detectNoChange=false)` in 
 This macro replaces strings in the input.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 It works similarly to the macro <<replace,`replace`>>.
@@ -2750,7 +2750,7 @@ The content of the file `simple.jrf` generated below is:
 [source]
 ----
 # This is a Jamal reference file containing serialized base64 encoded macros
-# Created: 2025-02-24 12:31:23 +0100
+# Created: 2025-03-02 11:57:09 +0100
 # id|openStr|closeStr|verbatim|tailParameter|pure|content|parameters
 # b
 Yg==|ew==|fQ==|0|0|0|VGhlIHZhbHVlIG9mIGI=|
@@ -2847,7 +2847,7 @@ Save them to your source repository only if they are needed to support CI/CD doc
 This macro reflows the content.
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The default behavior is to remove all single new-line characters replacing them with spaces.
@@ -3026,7 +3026,7 @@ In this document, we use different snippets collected from the Java files of the
 One of the snippets is named `collect_options`.
 It contains the lines that list the options for implementing the macro `snip:collect`.
 
-The snippet `collect_options` is defined in the file `Collect.java` at the line 45.
+The snippet `collect_options` is defined in the file `Collect.java` at the line 42.
 
 You can find the previous sentence in the `README.adoc.jam` file as:
 .Jamal source
@@ -3122,7 +3122,7 @@ It can kill/keep lines, skip, replace, trim, lines, select line ranges; it can r
 
 
 The first line following the macro identifier until the end of the line may contain parameters.
-These parameters are parsed using the Standard Parameter Parsing as defined in link:../../../documentation/PAROPS.adoc[PAROPS].
+These parameters are parsed using the Standard Parameter Parsing as defined in link:../documentation/PAROPS.adoc[PAROPS].
 
 
 The macro implementation itself is calling the underlying other macros, so the functionality what and how it does the above actions are identical.
@@ -3529,17 +3529,17 @@ will result
 ----
 - jamal: 96 bytes
 - snippet: 2,496 bytes
-- JavaMatcherBuilderMacros.java: 19,751 bytes
+- JavaMatcherBuilderMacros.java: 19,070 bytes
 - Snip.java: 4,597 bytes
 - ReplaceUtil.java: 1,033 bytes
-- SnipSave.java: 4,691 bytes
+- SnipSave.java: 4,640 bytes
 - DevRoot.java: 2,315 bytes
 - Sort.java: 8,608 bytes
-- Decorate.java: 12,215 bytes
-- Case.java: 2,439 bytes
+- Decorate.java: 12,163 bytes
+- Case.java: 2,202 bytes
 - NumberLines.java: 2,679 bytes
 - RangeMacro.java: 1,069 bytes
-- Untab.java: 2,216 bytes
+- Untab.java: 2,164 bytes
 - Plural.java: 2,136 bytes
 - DateMacro.java: 681 bytes
 - Format.java: 930 bytes
@@ -3549,66 +3549,66 @@ will result
 - Pluralizer.java: 1,561 bytes
 - MethodTool.java: 7,761 bytes
 - Def.java: 952 bytes
-- Eval.java: 1,827 bytes
-- SnipTransform.java: 16,950 bytes
+- Eval.java: 1,781 bytes
+- SnipTransform.java: 16,899 bytes
 - Base64.java: 3,606 bytes
-- FilesMacro.java: 11,400 bytes
-- Collect.java: 24,771 bytes
-- SnipFile.java: 680 bytes
+- FilesMacro.java: 11,282 bytes
+- Collect.java: 24,715 bytes
+- SnipFile.java: 629 bytes
 - CounterFormatter.java: 4,600 bytes
 - Repeat.java: 1,120 bytes
-- HashCode.java: 462 bytes
+- HashCode.java: 411 bytes
 - TrimLines.java: 5,172 bytes
-- JavaSourceInsert.java: 8,813 bytes
+- JavaSourceInsert.java: 8,762 bytes
 - ThinXml.java: 8,777 bytes
 - Decorator.java: 9,094 bytes
 - Memoize.java: 9,538 bytes
 - LineCount.java: 500 bytes
 - Replace.java: 3,494 bytes
-- SnipLine.java: 691 bytes
+- SnipLine.java: 640 bytes
 - SnipCheckFailed.java: 775 bytes
 - SemVerCollator.java: 9,016 bytes
 - CounterHierarchical.java: 6,611 bytes
 - SnipXml.java: 537 bytes
-- ThinXmlMacro.java: 453 bytes
+- ThinXmlMacro.java: 402 bytes
 - BlockConverter.java: 1,912 bytes
 - UrlEncode.java: 855 bytes
 - Reference.java: 3,259 bytes
 - Numbers.java: 1,785 bytes
 - Unicode.java: 2,114 bytes
 - Counter.java: 2,166 bytes
-- CompileJavaMacros.java: 23,173 bytes
-- StringMacros.java: 15,470 bytes
-- JavaSourceTemplate.java: 7,443 bytes
+- CompileJavaMacros.java: 22,917 bytes
+- StringMacros.java: 15,419 bytes
+- JavaSourceTemplate.java: 7,378 bytes
 - AbstractXmlDefine.java: 1,032 bytes
 - Dictionary.java: 1,826 bytes
-- Clear.java: 471 bytes
+- Clear.java: 420 bytes
 - KillLines.java: 1,589 bytes
-- SnipLoad.java: 3,298 bytes
+- SnipLoad.java: 3,247 bytes
 - Rot13.java: 928 bytes
 - SnippetStore.java: 11,145 bytes
-- Download.java: 2,265 bytes
+- Download.java: 2,213 bytes
 - ListDir.java: 5,184 bytes
-- XmlFormat.java: 3,693 bytes
+- XmlFormat.java: 3,641 bytes
 - SnippetXmlReader.java: 6,515 bytes
 - XmlInsert.java: 5,902 bytes
-- SnipProperties.java: 1,346 bytes
+- SnipProperties.java: 1,295 bytes
 - Xml.java: 539 bytes
 - CounterMacro.java: 4,186 bytes
 - Variation.java: 6,370 bytes
-- SnipList.java: 1,078 bytes
+- SnipList.java: 1,027 bytes
 - ShellVar.java: 5,301 bytes
 - Locate.java: 5,772 bytes
 - XmlDocument.java: 6,273 bytes
-- References.java: 9,306 bytes
-- Java.java: 11,364 bytes
-- ReplaceLines.java: 3,320 bytes
-- SkipLines.java: 2,675 bytes
-- SnipCheck.java: 7,556 bytes
+- References.java: 9,257 bytes
+- Java.java: 11,187 bytes
+- ReplaceLines.java: 3,269 bytes
+- SkipLines.java: 2,625 bytes
+- SnipCheck.java: 7,367 bytes
 - IdempotencyFailed.java: 1,816 bytes
 - Reflow.java: 1,973 bytes
 - Pos.java: 5,016 bytes
-- Snippet.java: 1,559 bytes
+- Snippet.java: 1,508 bytes
 ----
 
 
@@ -3875,7 +3875,7 @@ will result in the output
 .output
 [source]
 ----
-2025-02-27 17:32:21
+2025-03-02 12:20:37
 ----
 
 
@@ -4234,7 +4234,7 @@ will result in
 .output
 [source]
 ----
-/Users/verhasp/github/jamal/jamal-snippet/../jamal-snippet/README.adoc
+/Users/verhasp/github/jamal/jamal-snippet/README.adoc
 ----
 
 

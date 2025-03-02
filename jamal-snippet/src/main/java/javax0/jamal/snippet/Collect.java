@@ -25,16 +25,13 @@ import java.util.stream.Stream;
 /**
  * Scan a file or the directory tree and collect the snippets from the files.
  */
-public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
+@Macro.Name("snip:collect")
+public
+class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
     private enum State {IN, OUT}
 
     private static final String IMPOSSIBLE_TO_MATCH = "a^";
     private static final String EVERYTHING_MATCHES = ".*";
-
-    @Override
-    public String getId() {
-        return "snip:collect";
-    }
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -206,7 +203,7 @@ public class Collect implements Macro, InnerScopeDependent, Scanner.WholeInput {
         try {
             javaLexed = new JavaLexed(String.join("\n", lines));
         } catch (Exception e) {
-            throw new BadSyntax("There is some problem collecting snippets from file '" + file + "'", e)    ;
+            throw new BadSyntax("There is some problem collecting snippets from file '" + file + "'", e);
         }
         for (final var collector : javaSnippetCollectors.split(",")) {
             if (collector == null || collector.isEmpty()) {

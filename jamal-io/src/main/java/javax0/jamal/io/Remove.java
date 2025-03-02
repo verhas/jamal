@@ -7,13 +7,16 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Remove implements Macro, InnerScopeDependent, Scanner.FirstLine {
+@Macro.Name("io:remove")
+public
+class Remove implements Macro, InnerScopeDependent, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -48,7 +51,7 @@ public class Remove implements Macro, InnerScopeDependent, Scanner.FirstLine {
         try {
             Files.delete(f.toPath());
             return true;
-        } catch (java.nio.file.DirectoryNotEmptyException dne) {
+        } catch (DirectoryNotEmptyException dne) {
             try (final var sw = new StringWriter();
                  final var pw = new PrintWriter(sw)) {
                 dne.printStackTrace(pw);
@@ -69,8 +72,4 @@ public class Remove implements Macro, InnerScopeDependent, Scanner.FirstLine {
         return false;
     }
 
-    @Override
-    public String getId() {
-        return "io:remove";
-    }
 }

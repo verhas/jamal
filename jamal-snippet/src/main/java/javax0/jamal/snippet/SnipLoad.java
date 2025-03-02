@@ -9,7 +9,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-public class SnipLoad implements Macro, InnerScopeDependent, Scanner.WholeInput {
+@Macro.Name("snip:load")
+public
+class SnipLoad implements Macro, InnerScopeDependent, Scanner.WholeInput {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -69,8 +71,4 @@ public class SnipLoad implements Macro, InnerScopeDependent, Scanner.WholeInput 
         return regex == null || regex.length() == 0 ? x -> true : Pattern.compile(regex).asPredicate();
     }
 
-    @Override
-    public String getId() {
-        return "snip:load";
-    }
 }

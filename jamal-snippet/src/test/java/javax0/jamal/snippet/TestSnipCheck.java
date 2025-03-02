@@ -12,7 +12,7 @@ public class TestSnipCheck {
         TestThat.theInput("" +
                 "{@snip:define wubaba=}" +
                 "{@snip:check id=\"wubaba\"}"
-        ).throwsBadSyntax("Neither lines, nor hash is checked in snip:check''");
+        ).throwsBadSyntax("Neither lines, nor hash is checked in snip:check ''");
     }
 
     @Test

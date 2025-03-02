@@ -9,11 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class SnipProperties implements Macro {
-    @Override
-    public String getId() {
-        return "snip:properties";
-    }
+@Macro.Name("snip:properties")
+public
+class SnipProperties implements Macro {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {

@@ -5,7 +5,9 @@ import javax0.jamal.tools.Scanner;
 
 import java.util.stream.Collectors;
 
-public class SnipList implements Macro, InnerScopeDependent, Scanner.WholeInput {
+@Macro.Name("snip:list")
+public
+class SnipList implements Macro, InnerScopeDependent, Scanner.WholeInput {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -21,8 +23,4 @@ public class SnipList implements Macro, InnerScopeDependent, Scanner.WholeInput 
                 .collect(Collectors.joining(listSeparator.get()));
     }
 
-    @Override
-    public String getId() {
-        return "snip:list";
-    }
 }

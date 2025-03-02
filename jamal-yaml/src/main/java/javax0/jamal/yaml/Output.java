@@ -8,7 +8,9 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.StringWriter;
 
 @Macro.Stateful
-public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, Closer.ProcessorAware, AutoCloseable, Scanner {
+@Macro.Name("yaml:output")
+public
+class Output implements Macro, InnerScopeDependent, Closer.OutputAware, Closer.ProcessorAware, AutoCloseable, Scanner {
     final Yaml yaml = YamlFactory.newYaml();
 
     private Processor processor;
@@ -51,8 +53,4 @@ public class Output implements Macro, InnerScopeDependent, Closer.OutputAware, C
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "yaml:output";
-    }
 }

@@ -5,7 +5,9 @@ import javax0.jamal.tools.Scanner;
 
 import java.sql.SQLException;
 
-public class Loop implements Macro, Scanner, OptionsControlled {
+@Macro.Name("sql:loop")
+public
+class Loop implements Macro, Scanner, OptionsControlled {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -26,8 +28,4 @@ public class Loop implements Macro, Scanner, OptionsControlled {
         return output.toString();
     }
 
-    @Override
-    public String getId() {
-        return "sql:loop";
-    }
 }

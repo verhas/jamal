@@ -10,12 +10,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 
-public class Dump implements Macro, InnerScopeDependent, Scanner {
+@Macro.Name("yaml:dump")
+public
+class Dump implements Macro, InnerScopeDependent, Scanner {
     final Yaml yaml = YamlFactory.newYaml();
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
-        final var scanner = newScanner(input,processor);
+        final var scanner = newScanner(input, processor);
         final var clone = Resolver.cloneOption(scanner);
         final var copy = Resolver.copyOption(scanner);
         scanner.done();
@@ -39,8 +41,4 @@ public class Dump implements Macro, InnerScopeDependent, Scanner {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "yaml:dump";
-    }
 }

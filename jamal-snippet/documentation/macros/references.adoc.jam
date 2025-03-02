@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}\
-{%#snip:check file={%JAVA_DIR%}References.java hash=ff2a7026%}
+{%#snip:check file={%JAVA_DIR%}References.java hash=d21a9d16%}
 
 Occasionally, you may need to reference a part of the text that is defined later in the document.
 However, macros cannot be used before they are defined.

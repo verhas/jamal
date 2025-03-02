@@ -22,31 +22,31 @@ import java.util.*;
 public interface ServiceLoaded {
 
     /**
-     * Load the classes that implement the interface {@code klass} and are provided by the modules or are available.
+     * Load the classes that implement the interface {@code service} and are provided by the modules or are available.
      *
-     * @param klass the interface for which the implementing class instances are needed
+     * @param service the interface for which the implementing class instances are needed
      * @param <T>   the interface
      * @return the list of instances
      */
-    static <T> List<T> getInstances(Class<T> klass) {
-        final var services =  getInstances(klass, Thread.currentThread().getContextClassLoader());
+    static <T> List<T> getInstances(Class<T> service) {
+        final var services =  getInstances(service, Thread.currentThread().getContextClassLoader());
         if(!services.isEmpty()){
             return services;
         }
-        return getInstances(klass, ServiceLoaded.class.getClassLoader());
+        return getInstances(service, ServiceLoaded.class.getClassLoader());
     }
 
-    static <T> List<T> getInstances(Class<T> klass, final ClassLoader cl) {
+    static <T> List<T> getInstances(Class<T> service, final ClassLoader cl) {
         List<T> list = new ArrayList<>();
         try {
-            final ServiceLoader<T> services = ServiceLoader.load(klass, cl);
+            final ServiceLoader<T> services = ServiceLoader.load(service, cl);
             services.iterator().forEachRemaining(list::add);
             if (list.isEmpty()) {
-                loadViaMetaInf(klass, list, cl);
+                loadViaMetaInf(service, list, cl);
             }
             return list;
         } catch (ServiceConfigurationError ignored) {
-            loadViaMetaInf(klass, list, cl);
+            loadViaMetaInf(service, list, cl);
             return list;
         }
     }

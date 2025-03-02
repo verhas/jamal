@@ -148,7 +148,7 @@ public interface Processor extends AutoCloseable {
     /**
      * Register an AutoCloseable closer that has to be closed when the execution is finished.
      * <p>
-     * Some user defined (Java implemented) or built-in macro may create resources that perform some actions
+     * Some user-defined (Java implemented) or built-in macro may create resources that perform some actions
      * asynchronous. The typical example is when a macro that creates some external resource starts a separate thread to
      * execute the task. This task has to be joined at the end of the processing. The general model is that there is a
      * resource that has to be closed. The {@code closer} may be the resource itself or some object that will close the
@@ -181,7 +181,7 @@ public interface Processor extends AutoCloseable {
      * the input is processed, the invocation of the closers registered in the first round continues. Any closer
      * registered during the call to {@link Processor#process(Input) process(Input)} from a closer will be ignored.
      * <p>
-     * Calling this method the macro can register an {@link AutoCloseable} object. The method {@link
+     * Calling this method, the macro can register an {@link AutoCloseable} object. The method {@link
      * AutoCloseable#close() close()} will be invoked when the method {@link Processor#process(Input)} finishes its top
      * level execution. When the method is called in recursive calls from a macro or from any other place the deferred
      * resources will not be closed upon return, only when the top level call is to be returned.
@@ -191,6 +191,9 @@ public interface Processor extends AutoCloseable {
      * once. In the order of executions, the first registering is relevant. A closer {@code c2} is treated as already
      * registered if there is a registered closer {@code c1} so that {@code c1.equals(c2)}.
      * <p>
+     * It is important that the closer implemented {@link Object#equals(Object) equals(Object other)} never returns
+     * {@code true} if the {@code other} object is not an instance of the same class.
+     * <p>
      * It also means that any call to this method must use the return value of the method to reference the closer and
      * not the object passed as argument, unless they are the same object. If you pass an object {@code c2} that is
      * {@code c1.equals(c2)} but are not the exact same, then the method will return {@code c1} and the object {@code
@@ -199,19 +202,56 @@ public interface Processor extends AutoCloseable {
      * This approach was created to allow the macros to create cheap closer objects and call them from the macro
      * evaluation. In this case, the macro can register the closer when it knows that a closer is needed, and it does
      * not need to maintain a state and remember if there was already a closer registered. Also, the closer is not
-     * directly associated with the macro making it possible to register multiple closers assuming they are not
+     * directly associated with the macro, making it possible to register multiple closers assuming they are not
      * equal to each other.
      * <p>
      * Note that this method, or any other method of the processor MUST NOT be invoked from other than the main thread
-     * of the Jamal processing. Even if a macro spawns a new thread the new thread must not do anything with the
+     * of the Jamal processing. Even if a macro spawns a new thread, the new thread must not do anything with the
      * processor.
+     * <p>
+     * The closer has to implement {@link AutoCloseable} and not {@link java.io.Closeable} because
+     * {@link java.io.Closeable} does not allow
+     * checked exceptions, like BadSyntax from the method {@link AutoCloseable#close() close()}.
      *
-     * @param closer the autocloseable object to be closed at the end of the processing.
+     * @param closer the AutoCloseable object to be closed at the end of the processing.
      * @return the registered closer. It may not be the same closer as the argument {@code closer}. If the closer
      * was already registered, then the first registered closer will be returned. More formally, if there was a {@code
      * closer2} already registered such that {@code closer2.equals(closer)} then {@code closer2} will be returned.
      */
-    AutoCloseable deferredClose(AutoCloseable closer);
+    <T extends AutoCloseable> T deferredClose(T closer);
+
+    /**
+     * Create a bad syntax exception and add it to the list of exceptions to be thrown at the end of the processing.
+     * <p>
+     * This is a convenience method proxying {@link #deferredThrow(BadSyntax)}.
+     *
+     * @param errorMessage is the error message used in String format
+     * @param parameters   the parameters to create the error message
+     */
+    void deferredThrow(final String errorMessage, Object... parameters);
+
+    /**
+     * Add the BadSyntax exception to the list of exceptions to be thrown at the end of the processing.
+     * <p>
+     * Call this method instead of throwing a BadSyntax exception whenever further processing of the input is
+     * possible and can be advantageous to discover further syntax errors. That way the user can fix multiple
+     * syntax errors without having to rerun the program with the fixed first error, then the second and so on.
+     * <p>
+     * It is recommended to call {@link #newUserDefinedMacro(String, String, String...)} unless there is a special
+     * need to create the exception on the caller side, for example, adding a cause to the exception.
+     *
+     *
+     * @param bs the BadSyntax to be thrown
+     */
+    void deferredThrow(final BadSyntax bs);
+
+    default void deferBadSyntax(BadSyntax.ThrowingRunnable runner){
+        try{
+            runner.run();
+        }catch(BadSyntax bs){
+            deferredThrow(bs);
+        }
+    }
 
     /**
      * Get the context object that the embedding application was setting. The context object is a general object and the
@@ -369,6 +409,7 @@ public interface Processor extends AutoCloseable {
          * @return the structure containing the result, which is nothing, or final name
          */
         IOHookResult write(final String fileName, final String content);
+
         IOHookResult write(final String fileName, final byte[] content);
     }
 

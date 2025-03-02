@@ -13,11 +13,9 @@ import java.util.Collections;
  * This can be used, when a snippet is included into the macro file and some program code is tabulated. In that case
  * this snippet will be moved to the left as much as possible.
  */
-public class Untab implements Macro, InnerScopeDependent, BlockConverter , Scanner.FirstLine {
-    @Override
-    public String getId() {
-        return "untab";
-    }
+@Macro.Name("untab")
+public
+class Untab implements Macro, InnerScopeDependent, BlockConverter, Scanner.FirstLine {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {

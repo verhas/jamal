@@ -38,7 +38,9 @@ import java.util.stream.Collectors;
  * it will automatically be added to the set of actions. In such a case, the listed macros are invoked first in the
  * order of the listing and after that all other macros that were configured in the order as they are listed above.
  */
-public class SnipTransform implements Macro {
+@Macro.Name("snip:transform")
+public
+class SnipTransform implements Macro {
     private static final Set<String> knownActions = Set.of("kill", "skip", "replace", "trim", "reflow", "number", "untab", "range");
     private static final Map<String, String> actionAliases = Map.of(
             "ranges", "range"
@@ -337,8 +339,4 @@ public class SnipTransform implements Macro {
         return sb.toString();
     }
 
-    @Override
-    public String getId() {
-        return "snip:transform";
-    }
 }

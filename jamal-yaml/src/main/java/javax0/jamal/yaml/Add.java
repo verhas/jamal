@@ -11,14 +11,16 @@ import org.yaml.snakeyaml.Yaml;
 import java.util.List;
 import java.util.Map;
 
-public class Add implements Macro, InnerScopeDependent, Scanner.FirstLine {
+@Macro.Name("yaml:add")
+public
+class Add implements Macro, InnerScopeDependent, Scanner.FirstLine {
     final Yaml yaml = YamlFactory.newYaml();
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
-        final var scanner = newScanner(in,processor);
-        final var to      = scanner.str("yamlDataTarget", "to");
-        final var key     = scanner.str(null, "key").optional();
+        final var scanner = newScanner(in, processor);
+        final var to = scanner.str("yamlDataTarget", "to");
+        final var key = scanner.str(null, "key").optional();
         final var flatten = scanner.bool(null, "flat", "flatten");
         scanner.done();
         final var dotIndex = to.get().indexOf('.');
@@ -107,8 +109,4 @@ public class Add implements Macro, InnerScopeDependent, Scanner.FirstLine {
         return id;
     }
 
-    @Override
-    public String getId() {
-        return "yaml:add";
-    }
 }

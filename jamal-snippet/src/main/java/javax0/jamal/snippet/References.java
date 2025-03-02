@@ -15,7 +15,9 @@ import java.util.*;
 
 import static javax0.jamal.tools.InputHandler.isGlobalMacro;
 
-public class References implements Macro, Scanner.WholeInput {
+@Macro.Name("references")
+public
+class References implements Macro, Scanner.WholeInput {
 
     // snipline XREFS filter="(.*)"
     public static final String XREFS = "xrefs";
@@ -47,8 +49,8 @@ public class References implements Macro, Scanner.WholeInput {
             for (var macroSerialized : macrosSerialized) {
                 if (notComment(macroSerialized)) {// empty and comment lines are ignored
                     final var macro = deserializer.deserialize(macroSerialized);
-                    if( macro instanceof Configurable){
-                        ((Configurable)macro).configure(Configurable.Keys.SOFT,true);
+                    if (macro instanceof Configurable) {
+                        ((Configurable) macro).configure(Configurable.Keys.SOFT, true);
                     }
                     processor.defineGlobal(macro);
                 }
@@ -79,11 +81,6 @@ public class References implements Macro, Scanner.WholeInput {
      */
     private static UserDefinedMacro getDeserializerMacroObject(Processor processor) throws BadSyntax {
         return processor.newUserDefinedMacro("_", "");
-    }
-
-    @Override
-    public String getId() {
-        return "references";
     }
 
     static class ReferenceHolder implements Evaluable, Identified, ObjectHolder<Set<String>> {

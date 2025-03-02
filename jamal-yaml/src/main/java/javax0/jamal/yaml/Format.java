@@ -4,7 +4,9 @@ import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 import org.yaml.snakeyaml.DumperOptions;
 
-public class Format implements Macro, InnerScopeDependent, Scanner.WholeInput {
+@Macro.Name("yaml:format")
+public
+class Format implements Macro, InnerScopeDependent, Scanner.WholeInput {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -67,8 +69,4 @@ public class Format implements Macro, InnerScopeDependent, Scanner.WholeInput {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "yaml:format";
-    }
 }

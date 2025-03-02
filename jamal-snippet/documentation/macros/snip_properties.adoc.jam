@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}SnipProperties.java hash=a6d3348b%}
+{%#snip:check file={%JAVA_DIR%}SnipProperties.java hash=c1a5797c%}
 This macro will load properties from a "properties" file or an "XML" file.
 The names of the properties will become the names of the snippets and the values of the snippets.
 

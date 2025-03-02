@@ -1,45 +1,27 @@
-[WARNING]
---
-* There is no built-in macro with the id 'groovy:property' at /Users/verhasp/github/jamal/jamal-groovy/README.adoc.jam/25:19
---
-{%@comment of %}\
-{%@comment this file is converted using runtime information from the module and therefore it cannot be processed by the asciidoctor plugin: off, as above%}\
 = Jamal Groovy integration module
-{%@import readmemacros.jim%}\
-{%@import ../RELEASES.jim%}\
-{%@snip:collect from="src/test/java/"%}\
-{%@snip:collect from="src/main/java/"%}\
-{%@snip:collect from="../jamal-snippet/src/test/java/javax0/jamal/documentation"%}\
-{%#counter:define id=macroChapter {%@define format=$roman. %}%}
+
 
 Using this integration module you can mix Jamal macro text with Groovy code snippets.
 To use this module you have to add the dependency to you Maven project, as:
-{%@snip:xml pom=pom.xml%}\
-{%#define VERSION={%pom /project/version/text()%}%}\
 
 [source,xml]
 ----
 <dependency>
     <groupId>com.javax0.jamal</groupId>
     <artifactId>jamal-groovy</artifactId>
-    <version>{%VERSION%}</version>
+    <version>2.8.3-SNAPSHOT</version>
 </dependency>
 
 ----
  Following that you can use the macros
-[WARNING]
---
-* There is no built-in macro with the id 'groovy:property' at /Users/verhasp/github/jamal/jamal-groovy/README.adoc.jam/25:19
---
-{%@groovy:property chapters = 0%}{%@comment count the chapters and then we can use this in the text where we says how mny macros are there%}
-{%@define chap($x)=. <<$x,`groovy:$x`>> {%@groovy:import
-chapters++%}%}
 
-{%chap eval%}
-{%chap import%}
-{%chap shell%}
-{%chap property%}
-{%chap closer%}{%#define chapNR={%@groovy:eval chapters%}%}
+
+
+. <<eval,`groovy:eval`>> 
+. <<import,`groovy:import`>> 
+. <<shell,`groovy:shell`>> 
+. <<property,`groovy:property`>> 
+. <<closer,`groovy:closer`>> 
 
 macros.
 
@@ -58,7 +40,7 @@ Instead, Groovy scripts perform the tasks eliminating the need for writing a sep
 
 The next chapter, <<Sample,Sample>> describes this process as a non-trivial example for using the Groovy engine.
 
-The package defines {%chapNR%} macros.
+The package defines 5 macros.
 
 The macro `groovy:eval` evaluates a simple expression.
 `groovy:import` can import Groovy code.
@@ -68,28 +50,34 @@ Finally, `groovy:closer` makes it possible to implement closer scripts.
 
 The different macros use GroovyShell objects to execute the Groovy scripts.
 These shell objects are automatically created and named.
-{%@define ShellObjects=ShellObjects%}{%@define ShellObjectsTitle=Using Multiple Shell Objects%}\
-Their use is detailed in the chapter <<{%ShellObjects%},{%ShellObjectsTitle%}>>
+Their use is detailed in the chapter <<ShellObjects,Using Multiple Shell Objects>>
 If you do not want to use multiple, separated Groovy shells, you do not need to worry about the shell objects.
 One will be created upon the first use of one of the Groovy macros and used throughout the Jamal file.
 
-{%@define chap($x)=[[$x]]
-==== {%macroChapter%}`groovy:$x`
-%}
 
-{%chap eval%}
+
+[[eval]]
+==== i. `groovy:eval`
+
 
 The macro `groovy:eval` uses its whole input as a groovy expression and evaluates it.
 For example the following macro call:
-{%sample/
+[source]
+----
 {@groovy:eval 1+1}
-%}
+----
 
 will result:
 
-{%output%}
+[source]
+----
+2
+----
 
-{%chap import%}
+
+[[import]]
+==== ii. `groovy:import`
+
 
 This macro can import a Groovy file into the shell.
 The macro has two forms:
@@ -125,7 +113,9 @@ This will result an empty string, which is, what the macro `groovy:import` resul
 
 Use `groovy:import` if you do not want to include the result of the script into your output or if the script is in a separate Groovy file.
 
-{%chap shell%}
+[[shell]]
+==== iii. `groovy:shell`
+
 
 You can execute script using `groovy:shell` and get the result as a string into the Jamal output.
 The format of the macro is
@@ -147,7 +137,9 @@ Using `something.groovy` is just a reasonable convention that you may like to fo
 The `script content` will be evaluated, and the final result will be the result of the macro.
 Use this macro in case your script is longer and not just a simple one liner, in which case you can use the macro `groovy:eval`.
 
-{%chap property%}
+[[property]]
+==== iv. `groovy:property`
+
 
 This macro sets and gets a Groovy shell property.
 Groovy shells can communicate with the embedding application, in this case this is Jamal, via so called bindings.
@@ -155,26 +147,37 @@ A "bindings" is map that assignes values to a string.
 In the Groovy script you can access these bindings as global variables.
 For example the following sample
 
-{%sample/
+[source]
+----
 {@groovy:property myProp=(int)55}
 {@groovy:eval myProp+45}
-%}
+----
 
 and it will result
 
-{%output%}
+[source]
+----
+100
+----
+
 
 You can also fetch the value of a property that was set before by the Groovy script or by the `groovy:property` macro:
 
 
-{%sample/
+[source]
+----
 {@groovy:eval yourProp=133}
 {@groovy:property yourProp}
-%}
+----
 
 will result
 
-{%output%}
+[source]
+----
+133
+133
+----
+
 
 once by the result of the `groovy:eval` and once as the `groovy:property` also fetched this value.
 
@@ -204,7 +207,9 @@ The default is to set the property to be a string.
 The casting `(string)` is available in case you want to emphasize that the value should be handled as a string.
 It may also happen that you want to pass a *string* that starts with the characters `(int)` or something similar.
 
-{%chap closer%}
+[[closer]]
+==== v. `groovy:closer`
+
 
 Using the macro `groovy:closer` you can create a so-called closer script.
 The script can be used to modify the whole output after the processing of Jamal has finished.
@@ -235,13 +240,11 @@ This approach needs more memory creating and copying the result.
 You can specify any number of closer scripts using the different or the same Groovy shell.
 The scripts will all be invoked one after the other in the order as they were defined in the Jamal source.
 
-[[{%ShellObjects%}]]
-=== {%ShellObjectsTitle%}
+[[ShellObjects]]
+=== Using Multiple Shell Objects
 
-{%#define defaultShellName={%@snip defaultShellName /"(.*)"/%}%}\
-{%#define shellNamingMacro={%@snip shellNamingMacro /"(.*)"/%}%}\
 
-If you do not specify any shell object it will be created automatically using the name `{%defaultShellName%}`.
+If you do not specify any shell object it will be created automatically using the name `:groovyShell`.
 
 Groovy shell objects are stored along with the user defined macros.
 This has two consequences.
@@ -256,28 +259,29 @@ This is a feature to ease the use of the Groovy shells when you have only one.
 It will be created and be available everywhere in the Jamal file even if the first use of Groovy was in a local scope.
 
 The name of the shell can be overwritten defining the user defined macro
-`{%shellNamingMacro%}` or using macro options.
+`groovyShell` or using macro options.
 
 It can be done using the usual built-in macro `define`, as in the example
-{%@define myLocalShell=myLocalShell%}
-{%#comment
-we need this here, to be safe. note the # in front of 'comment'. It will be evaluated what is here.
-{%sample/
-{@undefine {%shellNamingMacro%}}
-%}{%output%} output has to be used to execute the commands in the sample
-%}\
-{%sample/
+
+[source]
+----
 {@groovy:eval z = 13}
-{@define {%shellNamingMacro%}={%myLocalShell%}}
+{@define groovyShell=myLocalShell}
 {@try! {@groovy:eval z}}
-%}
+----
 
 will result the output:
 
-{%output%}
+[source]
+----
+13
 
-The reason for this is that the first evaluation is executed in a shell named `{%defaultShellName%}`.
-The second evaluation, however runs in a different shell, named `{%myLocalShell%}`.
+Error evaluating groovy script using eval
+----
+
+
+The reason for this is that the first evaluation is executed in a shell named `:groovyShell`.
+The second evaluation, however runs in a different shell, named `myLocalShell`.
 
 [NOTE]
 ====
@@ -291,96 +295,210 @@ On the other hand using `{@try...}` will pass the content unevaluated, and the m
 This is not Groovy module specific, but it is a very common mistake.
 ====
 
-There is a resource file named {%#file {%@define fileFormat=`$name`%}{%@define root=src/main/resources/%}groovy.jim%}.
+There is a resource file named `groovy.jim`.
 You can import this file and then use the macros defined in it.
 The previous example will look the following:
 
-{%#comment
-we need this here, because all samples run in the same processor, and the shell was renamed
-{%sample/
-{@undefine {%shellNamingMacro%}}
-%}{%output%} see above
-%}
 
-{%sample/
+
+[source]
+----
 {@import res:groovy.jim}
 {@groovy:eval z = 13}
-{shell={%myLocalShell%}}
+{shell=myLocalShell}
 {@try! {@groovy:eval z}}
-%}
+----
 
 will result the output:
 
-{%output%}
+[source]
+----
+13
+
+Error evaluating groovy script using eval
+----
+
 
 This is the same as the previous one, not surprisingly.
 
-All Groovy macros are link:../GLOSSARY.adoc[inner scope dependent], which means that you can define the macro `{%shellNamingMacro%}` inside the Groovy macro call.
+All Groovy macros are link:../GLOSSARY.adoc[inner scope dependent], which means that you can define the macro `groovyShell` inside the Groovy macro call.
 In that case the definition, following the Jamal rules will be local to the Groovy macro.
 
 For example
-{%#comment
-we need this here, because all samples run in the same processor, and the shell was renamed
-{%sample/
-{@undefine {%shellNamingMacro%}}
-%}{%output%}
-%}
 
-{%sample/
+
+[source]
+----
 {@import res:groovy.jim}
 {@groovy:eval z = 13}
-{@try! {#groovy:eval {shell={%myLocalShell%}}z}}
+{@try! {#groovy:eval {shell=myLocalShell}z}}
 {@groovy:eval z = 13}
-%}
+----
 
 will result the output:
 
-{%output%}
+[source]
+----
+13
+Error evaluating groovy script using eval
+13
+----
+
 
 The second evaluation is performed in a different shell, but the definition of the shell name is local to the macro `groovy:eval`.
 (What is more, it is local to the `try` macro.)
 
 The simplest way (starting with version 1.9.0) is to specify the shell name using an option.
-The macro `groovyShell` reads the option named `{%defaultShellName%}` which also has the alias `shell`.
+The macro `groovyShell` reads the option named `:groovyShell` which also has the alias `shell`.
 Note that when macros use options the name of the option can also be used to name macro that holds the value of the macro.
 Aliases are not checked as macro names.
 
 The above example using options will look as the following:
-{%#comment
-we need this here, because all samples run in the same processor, and the shell was renamed
-{%sample/
-{@undefine {%shellNamingMacro%}}
-%}{%output%}
-%}
 
-{%sample/
-{@groovy:eval z = 13}
-{@try! {#groovy:eval (shell={%myLocalShell%}) z}}
-{@groovy:eval z = 13}
-%}
-
-will result the same output:
-
-{%output%}
-
-[[Sample]]
-=== Sample Application, Converting this `README.adoc`
-{%@define $lang=groovy%}
-{%@define $Lang=Groovy%}
-{%@include ../scriptingReadme.adoc.jim%}
 
 [source]
 ----
-{%#trimLines
-{%@snip Groovy_Jamal_Doc_Execution
-        final var processor = new Processor("{%", "%}");
-        final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam", processor);
-        final var shell = Shell.getShell(processor, Shell.DEFAULT_GROOVY_SHELL_NAME);
-        shell.property("processor", new Processor("{", "}"));
-        processor.defineGlobal(shell);
-        final var result = processor.process(in);
-%}
-%}
+{@groovy:eval z = 13}
+{@try! {#groovy:eval (shell=myLocalShell) z}}
+{@groovy:eval z = 13}
+----
+
+will result the same output:
+
+[source]
+----
+13
+Error evaluating groovy script using eval
+13
+----
+
+
+[[Sample]]
+=== Sample Application, Converting this `README.adoc`
+
+
+In this chapter, I will tell the story and the technology used to maintain this documentation file.
+Several macros are used during the maintenance of the documentation to ensure that the documentation is correct and up-to-date.
+This particular document's processing uses Groovy scripts, which are used instead of some built-in macros for demonstration purposes.
+
+
+The documentation of Jamal is a series of Asciidoc files.
+The Asciidoc format was invented to be a documentation source format that is easy to read and edit.
+At the same time, Jamal can also convert it to many different output formats.
+Asciidoc, however, provides only limited possibility to eliminate redundancy and to ensure consistency.
+This is where Jamal comes into play.
+
+Jamal's documentation is maintained in `xxx.adoc.jam` files, and they are converted to `xxx.adoc` files.
+With this workflow, the Asciidoc files are not source files.
+They are intermediate files along the conversion path.
+Jamal `define` macros are used to eliminate text repetition, redundancy whenever it is possible.
+The Jamal snippet library macros are used to keep the sample codes included in the document up-to-date.
+
+[NOTE]
+====
+When reading this part of the documentation, you are probably familiar with the basic functionalities of Jamal.
+If you need to refresh the memory, then read the link:README.adoc[documentation] in the project's root folder.
+Snippet macros are documented in the link:jamal-snippet/README.adoc[Snippet README.adoc] file.
+It is unnecessary to know and understand how the snippet macros work to read this chapter, but it is a recommended read in general.
+====
+
+Technical documentation using Jamal and the snippet macros usually generates the documentation in multiple steps.
+
+* Run the tests, including the sample code, and capture the sample output in one or more output files.
+
+* Process the Jamal source of the documentation and include from the source code and the generated sample output files the samples.
+
+For example, a Java application can support the documentation with unit test samples.
+Some of the unit tests serve the purpose of testing only, while others are there to document specific code parts.
+The output of the documentation purposed tests is captured into output files.
+The test file `jamal-groovy/src/test/java/javax0/jamal/groovy/TestGroovyMacros.java` contains
+
+[source,java]
+----
+// snippet sample_snippet
+@Test
+@DisplayName("Test a simple groovy eval")
+void testSimpleEval() throws Exception {
+    TestThat.theInput("{@groovy:eval 6+3}").results("9");
+}
+// end snippet
+----
+To get this content into the document what we have to write is the following:
+
+
+        [source,java]
+        ----
+        // snippet sample_snippet
+        {%@snip sample_snippet %}\
+        // end snippet
+        ----
+
+
+The output generated (none in this case) can also be included using the `snip` macro.
+
+It is logical to run the tests and generate the test output in an initial step in the case of Java.
+However, when we test and document Jamal processing, it is a logical idea to use the Jamal environment, which is converting the documentation.
+The external approach with an initial step is also possible, but it is not needed.
+
+The sample Jamal code can be included in the documentation as a code sample.
+Using Jamal macros, Jamal can also convert it to the corresponding output, which can also be included in the resulting document without saving it into an intermediate file.
+
+To do that, the Jamal Snippet package unit test file
+`jamal-snippet/src/test/java/javax0/jamal/documentation/TestConvertReadme.java`
+uses a built-in macro, implemented in the file:
+
+* `jamal-snippet/src/test/java/javax0/jamal/documentation/Output.java`
+
+This Java implemented macro is available on the classpath when the unit test runs.
+
+[NOTE]
+====
+Executing the Jamal processing of a Java software package documentation via the unit tests has other advantages.
+The macros `java:class` and `java:method` can check that the class and method names referenced in the document are valid.
+Class and method names may change during refactoring.
+The documentation many times does not follow this change and becomes stale.
+When the classes and methods are referenced using these macros, they throw an exception if the class or method does not exist.
+====
+
+This class is very simple:
+
+[source,java]
+----
+public class Output implements Macro {
+    final Processor localProc = new javax0.jamal.engine.Processor("{", "}");
+
+    @Override
+    public String evaluate(Input in, Processor processor) throws BadSyntax {
+        return localProc.process(new javax0.jamal.tools.Input(in.toString(), in.getPosition()));
+    }
+}
+----
+
+It creates a single Jamal processor instance and uses it to evaluate the input passed to it.
+This macro runs a Jamal processor separate from the Jamal processor that is converting the document.
+However, the two Jamal processors run in the same JVM, and one is invoking the other through this built-in macro.
+
+To simplify the use, there is a `readmemacros.jim` macro import file that defines the user-defined macro `sample` and `output`.
+(A built-in macro can have the same name as a user-defined.)
+The macro `sample` results in its content in Asciidoc code sample format, adding `[source]\n----` before and `----` after the sample code.
+At the same time, it also saves the sample code in a user-defined variable called `lastCode`.
+The macro `output` uses the `lastCode` and using the built-in `output` from the `Output.java` displays the calculated result as a code block.
+
+It is very similar when we are using Groovy, but in this case, we do not need the built-in macro `output`.
+When Jamal converts this document, the readmemacros.jim` inside the `jamal-groovy` directory contains some Groovy scripts instead of the built-in macros.
+
+The unit test code that invokes the Jamal processor to convert this document is the following:
+
+
+
+[source]
+----
+final var processor = new Processor("{%", "%}");
+final var in = FileTools.getInput(directory + "/" + fileName + "." + ext + ".jam", processor);
+final var shell = Shell.getShell(processor, Shell.DEFAULT_GROOVY_SHELL_NAME);
+shell.property("processor", new Processor("{", "}"));
+processor.defineGlobal(shell);
+final var result = processor.process(in);
 ----
 
 It is almost a standard invocation of the Jamal processor.
@@ -388,14 +506,20 @@ The only difference is that it creates a Groovy shell using the default shell na
 When Jamal runs any Groovy code running in the same shell will be able to access the processor.
 
 Using this possibility the user defined macros `sample` and `output` are simply the following:
-{%@snip:collect from="readmemacros.jim"%}
+
 
 * `sample`
 
 [source]
 ----
-{%#replaceLines replace="/^(.*)$/    $1/"
-{%@snip Groovy_sample_user_defined_macro%}%}
+    {%@define sample(code)=[source]
+    ----
+    {%#trimLines
+    {%@groovy:property lastCode=(string)code%}{%@groovy:shell
+    lastCode.replaceAll('^\\n+','').replaceAll('\\n+$','')
+    %}%}
+    ----%}
+    
 ----
 
 This macro displays the sample as a code block in Asciidoc format.
@@ -405,8 +529,14 @@ At the same time it also saves the sample text into a Groovy bindings property.
 
 [source]
 ----
-{%#replaceLines replace="/^(.*)$/    $1/"
-{%@snip Groovy_output_user_defined_macro%}%}
+    {%@define output=[source]
+    ----
+    {%#trimLines
+    {%@groovy:shell
+    processor.process(new javax0.jamal.tools.Input(lastCode))%}%}
+    ----
+    %}
+    
 ----
 
 This macro uses the saved property `lastCode` to access to the text of the last sample.
@@ -414,18 +544,18 @@ It converts the text to a Jamal `Input` objects and then invokes the processor.
 The result value of the macro is the output of the processor.
 
 In this chapter we discussed how documentations should be "programs" to avoid redundacy in the source and to support consistency.
-After that we made a short detour discussing the Jamal snippets, which have a full documentation in the file link:{%@file ../jamal-snippet/README.adoc%}[Snippet README].
+After that we made a short detour discussing the Jamal snippets, which have a full documentation in the file link:../jamal-snippet/README.adoc[Snippet README].
 We also discussed how the documentation conversion works with snippets and Jamal samples in the Snippet module.
 Finally, we had a look at how simpler it is using the Groovy integration.
 
 NOTE: None of the sample codes in the source `README.adoc.jam` was manually copied.
 
 This clearly demonstrates the power and flexibility of Jamal enhanced with the Groovy integration.
-If you like the idea, but Groovy is not your favourite scripting language have a look at the link:{%@file ../jamal-ruby/README.adoc%}[Ruby Integration] documentation and give it a try.
+If you like the idea, but Groovy is not your favourite scripting language have a look at the link:../jamal-ruby/README.adoc[Ruby Integration] documentation and give it a try.
 
 == Loading the macros
 
-Starting with the version `{%RELEASE:BUDAPEST%}` the library is not configured to be on the class path of the command line version or the Asciidoctor preprocessor.
+Starting with the version `2.0.0` the library is not configured to be on the class path of the command line version or the Asciidoctor preprocessor.
 The reason is security.
 The interpreter, just as well as the Ruby and ScriptBasic interpreters, can execute arbitrary code.
 If you want to use the ScriptBasic interpreter you have to
@@ -433,33 +563,16 @@ If you want to use the ScriptBasic interpreter you have to
 * modify the property `maven.load.include` and `maven.load.exclude` in the file `~/.jamal/settings.properties` to include the `groovy` module.
 For example:
 
-  maven.load.include=com.javax0.jamal:jamal-groovy:{%VERSION%}
+  maven.load.include=com.javax0.jamal:jamal-groovy:2.8.3-SNAPSHOT
 
 * add the line
 
-  {@maven:load com.javax0.jamal:jamal-groovy:{%VERSION%}}
+  {@maven:load com.javax0.jamal:jamal-groovy:2.8.3-SNAPSHOT}
 +
 to the Jamal file where you want to use the ScriptBasic interpreter.
 
 * To include the resource file `groovy.jim` you have to add the line
 
-  {@import maven:com.javax0.jamal:jamal-groovy:{%VERSION%}::groovy.jim}
+  {@import maven:com.javax0.jamal:jamal-groovy:2.8.3-SNAPSHOT::groovy.jim}
 +
 instead importing it as a resource.
-[WARNING]
---
-* There is no built-in macro with the id 'groovy:property' at /Users/verhasp/github/jamal/jamal-groovy/README.adoc.jam/25:19
---
-[source]
-----
-There is no built-in macro with the id 'groovy:property' at /Users/verhasp/github/jamal/jamal-groovy/README.adoc.jam/25:19
-	javax0.jamal.api.BadSyntaxAt(when:96)
-	javax0.jamal.engine.util.MacroQualifier(getMacro:70)
-	javax0.jamal.engine.util.MacroQualifier(<init>:41)
-	javax0.jamal.engine.Processor(processMacro:314)
-	javax0.jamal.engine.Processor(process:202)
-	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:451)
-	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:288)
-	javax0.jamal.asciidoc.JamalPreprocessor(process:205)
-sed -i.bak  '' /Users/verhasp/github/jamal/jamal-groovy/README.adoc.jam
-----

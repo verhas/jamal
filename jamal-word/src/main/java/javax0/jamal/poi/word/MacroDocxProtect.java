@@ -34,7 +34,9 @@ import java.util.function.Consumer;
  *
  * end::protect[]
  */
-public class MacroDocxProtect implements Macro, Scanner.WholeInput {
+@Macro.Name("docx:protect")
+public
+class MacroDocxProtect implements Macro, Scanner.WholeInput {
     private static class CallBack implements XWPFContext.DocxTerminalCallBack {
         private XWPFDocument document;
         String password;
@@ -149,8 +151,4 @@ public class MacroDocxProtect implements Macro, Scanner.WholeInput {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "docx:protect";
-    }
 }

@@ -1,5 +1,5 @@
 {%@import macrodoc.jim%}
-{%#snip:check file={%JAVA_DIR%}Snippet.java hash=0801cc8e%}
+{%#snip:check file={%JAVA_DIR%}Snippet.java hash=49fed279%}
 You can use this macro to define a snippet.
 Snippets are usually collected from project files, but it is also possible to define them via the macro `snip:define`.
 For example,

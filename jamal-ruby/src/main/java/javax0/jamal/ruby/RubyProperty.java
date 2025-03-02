@@ -9,7 +9,9 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-public class RubyProperty implements Macro, InnerScopeDependent, Scanner {
+@Macro.Name("ruby:property")
+public
+class RubyProperty implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var shell = Shell.getShell(in, processor, this);
@@ -32,21 +34,21 @@ public class RubyProperty implements Macro, InnerScopeDependent, Scanner {
     private static Object cast(String s, Ruby ruby) throws BadSyntax {
         try {
             return
-                cast(s, "to_sym", k -> RubySymbol.newSymbol(ruby, k)).orElseGet(() ->
-                    cast(s, "to_r", k -> toRational(ruby, k)).orElseGet(() ->
-                        cast(s, "to_f", k -> RubyFloat.newFloat(ruby, Double.parseDouble(k))).orElseGet(() ->
-                            cast(s, "to_i", k -> RubyFixnum.newFixnum(ruby, Long.parseLong(k))).orElseGet(() ->
-                                cast(s, "to_c", k -> toComplex(ruby, k)).orElseGet(() ->
-                                    cast(s, "to_c/i", k -> toComplexInt(ruby, k)).orElseGet(() ->
-                                        cast(s, "to_s", k -> RubyString.newString(ruby, k)).orElseGet(
-                                            () -> RubyString.newString(ruby, s)
-                                        )
+                    cast(s, "to_sym", k -> RubySymbol.newSymbol(ruby, k)).orElseGet(() ->
+                            cast(s, "to_r", k -> toRational(ruby, k)).orElseGet(() ->
+                                    cast(s, "to_f", k -> RubyFloat.newFloat(ruby, Double.parseDouble(k))).orElseGet(() ->
+                                            cast(s, "to_i", k -> RubyFixnum.newFixnum(ruby, Long.parseLong(k))).orElseGet(() ->
+                                                    cast(s, "to_c", k -> toComplex(ruby, k)).orElseGet(() ->
+                                                            cast(s, "to_c/i", k -> toComplexInt(ruby, k)).orElseGet(() ->
+                                                                    cast(s, "to_s", k -> RubyString.newString(ruby, k)).orElseGet(
+                                                                            () -> RubyString.newString(ruby, s)
+                                                                    )
+                                                            )
+                                                    )
+                                            )
                                     )
-                                )
                             )
-                        )
-                    )
-                );
+                    );
         } catch (Exception e) {
             throw new BadSyntax("There was an error during casting the value '" + s + "'", e);
         }
@@ -71,7 +73,7 @@ public class RubyProperty implements Macro, InnerScopeDependent, Scanner {
             throw new IllegalArgumentException("Ruby complex has to be 'R+Ci' format and '" + s + "' is not.");
         }
         return RubyComplex.newComplexRaw(ruby, RubyFloat.newFloat(ruby, Double.parseDouble(matcher.group(1))),
-            RubyFloat.newFloat(ruby, Double.parseDouble(matcher.group(2))));
+                RubyFloat.newFloat(ruby, Double.parseDouble(matcher.group(2))));
     }
 
     private static RubyComplex toComplexInt(Ruby ruby, final String s) {
@@ -80,7 +82,7 @@ public class RubyProperty implements Macro, InnerScopeDependent, Scanner {
             throw new IllegalArgumentException("Ruby complex has to be 'R+Ci' format and '" + s + "' is not.");
         }
         return RubyComplex.newComplexRaw(ruby, RubyFixnum.newFixnum(ruby, Long.parseLong(matcher.group(1))),
-            RubyFixnum.newFixnum(ruby, Long.parseLong(matcher.group(2))));
+                RubyFixnum.newFixnum(ruby, Long.parseLong(matcher.group(2))));
     }
 
     private static Optional<Object> cast(String s, String prefix, Function<String, Object> converter) {
@@ -91,8 +93,4 @@ public class RubyProperty implements Macro, InnerScopeDependent, Scanner {
         return Optional.empty();
     }
 
-    @Override
-    public String getId() {
-        return "ruby:property";
-    }
 }

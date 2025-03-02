@@ -4,9 +4,11 @@ import javax0.jamal.api.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Set implements Macro, InnerScopeDependent {
+@Macro.Name("json:set")
+public
+class Set implements Macro, InnerScopeDependent {
 
-    /* snippet Set_macro_documentation
+/* snippet Set_macro_documentation
 Add some value to an already existing JSON structure.
 The format of the macro is:
 
@@ -31,7 +33,7 @@ The value can be a JSON structure, a string, a number or a boolean.
 
 ==== Examples
 
-===== Adding a value to the top level Map
+===== Adding a value to the top-level Map
 
 This example adds a new value to the root of the JSON structure.
 
@@ -108,8 +110,4 @@ will result:
     }
 
 
-    @Override
-    public String getId() {
-        return "json:set";
-    }
 }

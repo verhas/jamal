@@ -7,8 +7,11 @@ import javax0.jamal.tools.Scanner;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
-public class Connect implements Macro, Scanner, OptionsControlled {
+@Macro.Name("sql:connect")
+public
+class Connect implements Macro, Scanner, OptionsControlled {
     @Override
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
@@ -45,15 +48,9 @@ public class Connect implements Macro, Scanner, OptionsControlled {
 
     }
 
+    static class SqlConnectionHolder extends IdentifiedObjectHolder<Connection> implements AutoCloseable {
 
-    @Override
-    public String getId() {
-        return "sql:connect";
-    }
-
-    static class SqlConnectionHolder extends IdentifiedObjectHolder<java.sql.Connection> implements AutoCloseable {
-
-        SqlConnectionHolder(final java.sql.Connection connection, final String name, final Processor processor) {
+        SqlConnectionHolder(final Connection connection, final String name, final Processor processor) {
             super(connection, name);
             processor.deferredClose(this);
         }
@@ -65,9 +62,9 @@ public class Connect implements Macro, Scanner, OptionsControlled {
         }
     }
 
-    static class SqlStatementHolder extends IdentifiedObjectHolder<java.sql.Statement> implements AutoCloseable {
+    static class SqlStatementHolder extends IdentifiedObjectHolder<Statement> implements AutoCloseable {
 
-        SqlStatementHolder(final java.sql.Statement statement, final String name, final Processor processor) {
+        SqlStatementHolder(final Statement statement, final String name, final Processor processor) {
             super(statement, name);
             processor.deferredClose(this);
         }

@@ -61,6 +61,7 @@ public class FilesMacro {
     /**
      * Check that the directory exists, and it is a directory.
      */
+    @Macro.Name("directory")
     public static class Directory implements Macro, InnerScopeDependent, Scanner {
 
         @Override
@@ -93,16 +94,14 @@ public class FilesMacro {
             }
         }
 
-        @Override
-        public String getId() {
-            return "directory";
-        }
     }
 
     /**
      * Check that the file exists, and it is a file.
      */
-    public static class FileMacro implements Macro, InnerScopeDependent, Scanner {
+    @Macro.Name("file")
+    public static
+    class FileMacro implements Macro, InnerScopeDependent, Scanner {
 
 
         @Override
@@ -134,10 +133,6 @@ public class FilesMacro {
             }
         }
 
-        @Override
-        public String getId() {
-            return "file";
-        }
     }
 
     static String formatString(final String format,

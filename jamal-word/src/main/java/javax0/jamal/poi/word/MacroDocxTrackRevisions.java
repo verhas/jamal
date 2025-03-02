@@ -30,7 +30,9 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
  *
  * end::trackChanges[]
  */
-public class MacroDocxTrackRevisions implements Macro, Scanner.WholeInput {
+@Macro.Name("docx:trackChanges")
+public
+class MacroDocxTrackRevisions implements Macro, Scanner.WholeInput {
     private static class CallBack implements XWPFContext.DocxTerminalCallBack {
         private XWPFDocument document;
         private final boolean off;
@@ -60,8 +62,4 @@ public class MacroDocxTrackRevisions implements Macro, Scanner.WholeInput {
         return "";
     }
 
-    @Override
-    public String getId() {
-        return "docx:trackChanges";
-    }
 }

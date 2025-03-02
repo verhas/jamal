@@ -14,7 +14,9 @@ import java.util.stream.Stream;
  * This macro will convert the operation to a Java DSL interpretation.
  * The rest of the input after the macro is treated as Java code inside an {@code evaluate()} method returning a string.
  */
-public class Jdsl implements Macro, Scanner.WholeInput {
+@Macro.Name("java:dsl")
+public
+class Jdsl implements Macro, Scanner.WholeInput {
 
 
     private static class State implements AutoCloseable, Closer.OutputAware {
@@ -113,8 +115,4 @@ public class Jdsl implements Macro, Scanner.WholeInput {
         }
     }
 
-    @Override
-    public String getId() {
-        return "java:dsl";
-    }
 }

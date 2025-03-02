@@ -14,7 +14,9 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class Decorate implements Macro, Scanner {
+@Macro.Name("decorate")
+public
+class Decorate implements Macro, Scanner {
     static final String DEFAULT_PF_DICTIONARY_NAME = "decor$pfDict";
     static final String DEFAULT_CM_DICTIONARY_NAME = "decor$cmDict";
 
@@ -86,7 +88,7 @@ public class Decorate implements Macro, Scanner {
         return String.join("", words);
     }
 
-    private static final List<Function<String, String>> DEFAULT_DECORATORS = List.of(s ->  s + " ", s ->s );
+    private static final List<Function<String, String>> DEFAULT_DECORATORS = List.of(s -> s + " ", s -> s);
 
     private List<Function<String, String>> getDecorators(Processor processor, List<String> macros) {
         if (macros.isEmpty()) {
@@ -96,7 +98,7 @@ public class Decorate implements Macro, Scanner {
                 .map(s -> MacroConverter.toFunction(processor, s))
                 .map(f -> (Function<String, String>) (String a) -> f.apply(new String[]{a}))
                 .collect(Collectors.toCollection(ArrayList::new));
-        if( decorators.size() == 1 ){
+        if (decorators.size() == 1) {
             decorators.add(s -> s);
         }
         return decorators;
@@ -275,8 +277,4 @@ public class Decorate implements Macro, Scanner {
         return words.toArray(String[]::new);
     }
 
-    @Override
-    public String getId() {
-        return "decorate";
-    }
 }

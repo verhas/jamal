@@ -43,6 +43,10 @@ class ExceptionDumper {
             output.append(t.getMessage());
         }
         for (final var s : t.getStackTrace()) {
+            if (s.getClassName().startsWith("javax0.jamal.engine")) {
+                output.append("\n");
+                break; // we do not need to dump the engine trace or above embedding
+            }
             if (s.getClassName().startsWith("javax0.jamal")) {
                 output.append(String.format("\t%s(%s:%d)\n", s.getClassName(), s.getMethodName(), s.getLineNumber()));
             }

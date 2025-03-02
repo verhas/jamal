@@ -42,10 +42,14 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
 
     /**
      * A signal interface to be implemented by all macros that implement state.
-     * Implementing state, a.k.a. having a non-static non-final field, is not recommended, but it is possible.
+     * Implementing state, a.k.a. having a non-static non-final field is possible.
      * When a macro is stateful then it has to be annotated using {@link Macro.Stateful}.
      * <p>
      * The use of this macro helps to ensure that the developer is aware of the fact that the macro is stateful.
+     * <p>
+     * The macro loading implementation uses a separate service loader for each processor instance, therefore, it
+     * is guaranteed that the macro object is not shared between processors and hence the state os tied to the
+     * current processor.
      */
     @Target(java.lang.annotation.ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)

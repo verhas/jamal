@@ -5,7 +5,9 @@ import javax0.jamal.tools.Scanner;
 
 import java.io.File;
 
-public class IoFile implements Macro, InnerScopeDependent, Scanner.WholeInput {
+@Macro.Name("io:file")
+public
+class IoFile implements Macro, InnerScopeDependent, Scanner.WholeInput {
 
     private enum Condition {
         exists, isDirectory, isFile, canExecute, canRead, canWrite, isHidden
@@ -43,8 +45,4 @@ public class IoFile implements Macro, InnerScopeDependent, Scanner.WholeInput {
         }
     }
 
-    @Override
-    public String getId() {
-        return "io:file";
-    }
 }
