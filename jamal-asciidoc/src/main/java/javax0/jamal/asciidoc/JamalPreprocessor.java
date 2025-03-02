@@ -424,7 +424,7 @@ public class JamalPreprocessor extends Preprocessor implements ExtensionRegistry
 
     private static void appendExceptionDump(final Result r, final String inputFileName, final List<String> lines) {
         if (r.exception != null) {
-            lines.add("[source]");
+            lines.add("[subs=\"attributes\"]");
             lines.add("----");
             lines.addAll(List.of(ExceptionDumper.dump(r.exception, inputFileName).toString().split("\n")));
             lines.add("----");

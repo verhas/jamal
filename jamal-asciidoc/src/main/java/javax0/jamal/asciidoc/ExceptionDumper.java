@@ -42,15 +42,13 @@ class ExceptionDumper {
         if (printMessage) {
             output.append(t.getMessage());
         }
+        output.append("<button onclick=\"this.nextElementSibling.style.display=(this.nextElementSibling.style.display==='none'?'inline':'none');\">[+]</button><span style=\"display:none;\">\n");
         for (final var s : t.getStackTrace()) {
-            if (s.getClassName().startsWith("javax0.jamal.engine")) {
-                output.append("\n");
-                break; // we do not need to dump the engine trace or above embedding
-            }
             if (s.getClassName().startsWith("javax0.jamal")) {
                 output.append(String.format("\t%s(%s:%d)\n", s.getClassName(), s.getMethodName(), s.getLineNumber()));
             }
         }
+        output.append("</span><br/>\n");
         if (t.getCause() != null) {
             output.append("Causing Exception:\n");
             dumpIt(t.getCause(), true);

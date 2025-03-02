@@ -1,11 +1,9 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.Macro;
 import javax0.jamal.api.*;
-import javax0.jamal.tools.InputHandler;
-import javax0.jamal.tools.Scanner;
-import javax0.jamal.tools.ScannerTools;
-import javax0.jamal.tools.Throwing;
+import javax0.jamal.api.Input;
+import javax0.jamal.api.Macro;
+import javax0.jamal.tools.*;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
@@ -32,6 +30,7 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
         // snipline RestrictedDefineParameters filter="(.*)"
         final var IdOnly = scanner.bool("RestrictedDefineParameters");
         scanner.done();
+        final var validator = Parop.validator(processor);
 
         ScannerTools.badSyntax(this).whenBooleans(noRedefineParam, optionalParam).multipleAreTrue();
         ScannerTools.badSyntax(this).whenBooleans(globalParam, exportParam).multipleAreTrue();
@@ -44,10 +43,13 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
             skipWhiteSpaces(input);
         }
         var optional = firstCharIs(input, DEFINE_OPTIONALLY);
-        BadSyntax.when(optionalParam.is() && optional, "You cannot use %s and '?' in the define at the same time.", optionalParam.name());
-
         var noRedefine = firstCharIs(input, ERROR_REDEFINE);
-        BadSyntax.when(noRedefineParam.is() && noRedefine, "You cannot use %s and '!' in the define at the same time.", noRedefineParam.name());
+        if (validator
+                .when(optionalParam.is() && optional).then("You cannot use %s and '?' in the define at the same time.", optionalParam.name())
+                .when(noRedefineParam.is() && noRedefine).then("You cannot use %s and '!' in the define at the same time.", noRedefineParam.name())
+                .anyFailed()) {
+            return "";
+        }
 
         if (optional || noRedefine) {
             skip(input, 1);
@@ -68,10 +70,15 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
             if (optional) {
                 return "";
             }
-            BadSyntax.when(!softDefined(existing.get()) && noRedefine, "The macro '%s' was already defined.", id);
+            if (validator.when(!softDefined(existing.get()) && noRedefine).then("The macro '%s' was already defined.", id)
+                    .hasFailed()) {
+                return "";
+            }
         }
         skipWhiteSpaces(input);
-        BadSyntax.when(id.endsWith(":") && !firstCharIs(input, '('), "The () in define is not optional when the macro name ends with ':'.");
+        if (validator.when(id.endsWith(":") && !firstCharIs(input, '(')).then("The () in define is not optional when the macro name ends with ':'.").hasFailed()) {
+            return "";
+        }
         final String[] params;
         final Map<String, String> paramDefaults;
         if (defaults.isPresent()) {
@@ -82,15 +89,17 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
             params = getParameters(input, id);
         }
 
-        if (IdOnly.is()) {
-            BadSyntax.when(!Arrays.stream(params).allMatch(InputHandler::isIdentifier), "The parameters of the define must be identifiers.");
+        if (IdOnly.is() && validator.when(!Arrays.stream(params).allMatch(InputHandler::isIdentifier)).then("The parameters of the define must be identifiers.").hasFailed()) {
+            return "";
         }
 
         final var pure = firstCharIs(input, ':');
         if (pure) {
             skip(input, 1);
         }
-        BadSyntax.when(!firstCharIs(input, '='), "define '%s' has no '=' to body", id);
+        if (validator.when(!firstCharIs(input, '=')).then("define '%s' has no '=' to body", id).hasFailed()) {
+            return "";
+        }
         skip(input, 1);
         final Identified macro;
         if (javaDefined.isPresent()) {
@@ -116,7 +125,7 @@ public class Define implements Macro, OptionsControlled.Core, Scanner.Core {
                     configurable.configure(Configurable.Keys.XTENDED, true);
                     configurable.configure(Configurable.Keys.DEFAULTS, paramDefaults);
                 } catch (Exception e) {
-                    throw new BadSyntax("The defaults parameter is invalid.", e);
+                    processor.deferredThrow(new BadSyntax("The defaults parameter is invalid.", e));
                 }
             }
         }

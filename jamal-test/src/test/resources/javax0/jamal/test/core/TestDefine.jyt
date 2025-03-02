@@ -234,7 +234,7 @@ Test globally defined macro optional redefinition in local scope using option 'o
 
 Using option 'optional' together with '?' is error:
    Input: "{@define :a=1}{#ident {@define [optional] ?:a=2}{:a}}"
-   Throws: "You cannot use optional and '\\?' in the define at the same time.*"
+   Throws: "You cannot use optional and '\\?' in the define.*"
 
 You cannot use [optional failIfRedefined]:
   Input: "{@define [ifNotDefined failIfDefined] a=13}"
@@ -310,7 +310,7 @@ macro redefinition can result error in case we use !:
 
 "You cannot use option 'failIfDefined' and '!' together":
   Input: "{@define a=y}{@define [failIfDefined] ! a=x}{a}"
-  Throws: "You cannot use failIfDefined and '!' in the define at the same time.*"
+  Throws: "You cannot use failIfDefined and '!' in the define.*"
 
 conditional redefinition does not redefine any higher scope already defined macro:
   Input: "{#ident {@define :a=y}}{@define ? a=x}{a}"

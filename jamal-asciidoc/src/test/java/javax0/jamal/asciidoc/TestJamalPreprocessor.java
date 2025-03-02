@@ -95,7 +95,7 @@ public class TestJamalPreprocessor {
                         "--\n" +
                         "* User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + SEGMENT +
                         "--\n" +
-                        "[source]\n" +
+                        "[subs=\"attributes\"]\n" +
                         "----\n" +
                         "User macro '{%zebra ...' is not defined. Did you mean '@debug'? at " + TEST_INPUT + SEGMENT
                 , actual);

@@ -1,7 +1,8 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.Macro;
 import javax0.jamal.api.*;
+import javax0.jamal.api.Macro;
+import javax0.jamal.tools.Parop;
 import javax0.jamal.tools.Scanner;
 
 import static javax0.jamal.api.SpecialCharacters.QUERY;
@@ -42,8 +43,12 @@ public class Env implements Macro, Scanner.Core {
         final var scanner = newScanner(in, processor);
         final var mode = scanner.enumeration(Mode.class).defaultValue(Mode.normal);
         scanner.done();
+        final var validator = Parop.validator(processor);
+
         final var variableName = in.toString().trim();
-        BadSyntax.when(variableName.isEmpty(), "Empty string as environment variable name");
+        if (validator.when(variableName.isEmpty()).then("Empty string as environment variable name").hasFailed()) {
+            return "";
+        }
         final var lastChar = variableName.charAt(variableName.length() - 1);
         final var testChar = lastChar == QUERY;
         final var reportChar = lastChar == REPORT_ERRMES;
@@ -53,7 +58,7 @@ public class Env implements Macro, Scanner.Core {
         if (testChar || mode.get(Mode.class) == Mode.query) {
             return "" + (null != value);
         } else {
-            BadSyntax.when((mode.get(Mode.class)== Mode.report || reportChar) && null == value, "Environment variable '%s' is not defined", name);
+            BadSyntax.when((mode.get(Mode.class) == Mode.report || reportChar) && null == value, "Environment variable '%s' is not defined", name);
             return null == value ? "" : value;
         }
     }

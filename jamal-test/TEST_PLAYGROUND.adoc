@@ -11,30 +11,94 @@
 {%@snip:check id=burke hash=3ebb1c98%}
 {%@snip:check id=burka hash=3ebb1c97%}
 {%@snip:check id=burka hash=3ebb1c96%}
+{%
 [WARNING]
 --
 * There were 4 syntax error(s)
 --
-[source]
+[subs="attributes"]
 ----
 There were 4 syntax error(s)
-
+<button onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display==='none'?'inline':'none');">[+]</button><span style="display:none;">
+	javax0.jamal.engine.Processor(closeProcessWithExceptionHandling:252)
+	javax0.jamal.engine.Processor(process:220)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:451)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:288)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:205)
+</span><br/>
 Suppressed exceptions:
-Snippet 'burke' is not defined	javax0.jamal.snippet.SnippetStore(fetchSnippet:197)
+Snippet 'burke' is not defined<button onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display==='none'?'inline':'none');">[+]</button><span style="display:none;">
+	javax0.jamal.snippet.SnippetStore(fetchSnippet:197)
 	javax0.jamal.snippet.SnippetStore(snippet:159)
 	javax0.jamal.snippet.SnipCheck(lambda$getSnippetContent$1:129)
 	javax0.jamal.api.Processor(deferBadSyntax:250)
 	javax0.jamal.snippet.SnipCheck(getSnippetContent:129)
 	javax0.jamal.snippet.SnipCheck(evaluate:41)
-
-The id(burke) hash is 'e3b0c442.98fc1c14.9afbf4c8.996fb924.27ae41e4.649b934c.a495991b.7852b855' does not contain '3ebb1c98'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam[snip:check]/2:14	javax0.jamal.snippet.SnipCheck(checkHashString:108)
+	javax0.jamal.engine.Processor(evaluateBuiltinMacro:540)
+	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:480)
+	javax0.jamal.engine.Processor(safeEvaluate:489)
+	javax0.jamal.engine.Processor(evaluateBuiltInMacro:480)
+	javax0.jamal.engine.Processor(evalMacro:429)
+	javax0.jamal.engine.Processor(processMacro:342)
+	javax0.jamal.engine.Processor(process:203)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:451)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:288)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:205)
+</span><br/>
+The id(burke) hash is 'e3b0c442.98fc1c14.9afbf4c8.996fb924.27ae41e4.649b934c.a495991b.7852b855' does not contain '3ebb1c98'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam[snip:check]/2:14<button onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display==='none'?'inline':'none');">[+]</button><span style="display:none;">
+	javax0.jamal.snippet.SnipCheck(checkHashString:108)
 	javax0.jamal.snippet.SnipCheck(evaluate:44)
-
-The id(burka) hash is '3ebb1c99.b12b7746.3e97c3a0.f206e4fd.46176cd1.b8e18381.6a67338c.04b25e5b' does not contain '3ebb1c97'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam[snip:check]/3:14	javax0.jamal.snippet.SnipCheck(checkHashString:108)
+	javax0.jamal.engine.Processor(evaluateBuiltinMacro:540)
+	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:480)
+	javax0.jamal.engine.Processor(safeEvaluate:489)
+	javax0.jamal.engine.Processor(evaluateBuiltInMacro:480)
+	javax0.jamal.engine.Processor(evalMacro:429)
+	javax0.jamal.engine.Processor(processMacro:342)
+	javax0.jamal.engine.Processor(process:203)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:451)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:288)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:205)
+</span><br/>
+The id(burka) hash is '3ebb1c99.b12b7746.3e97c3a0.f206e4fd.46176cd1.b8e18381.6a67338c.04b25e5b' does not contain '3ebb1c97'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam[snip:check]/3:14<button onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display==='none'?'inline':'none');">[+]</button><span style="display:none;">
+	javax0.jamal.snippet.SnipCheck(checkHashString:108)
 	javax0.jamal.snippet.SnipCheck(evaluate:44)
-
-The id(burka) hash is '3ebb1c99.b12b7746.3e97c3a0.f206e4fd.46176cd1.b8e18381.6a67338c.04b25e5b' does not contain '3ebb1c96'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam[snip:check]/4:14	javax0.jamal.snippet.SnipCheck(checkHashString:108)
+	javax0.jamal.engine.Processor(evaluateBuiltinMacro:540)
+	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:480)
+	javax0.jamal.engine.Processor(safeEvaluate:489)
+	javax0.jamal.engine.Processor(evaluateBuiltInMacro:480)
+	javax0.jamal.engine.Processor(evalMacro:429)
+	javax0.jamal.engine.Processor(processMacro:342)
+	javax0.jamal.engine.Processor(process:203)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:451)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:288)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:205)
+</span><br/>
+The id(burka) hash is '3ebb1c99.b12b7746.3e97c3a0.f206e4fd.46176cd1.b8e18381.6a67338c.04b25e5b' does not contain '3ebb1c96'. at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam[snip:check]/4:14<button onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display==='none'?'inline':'none');">[+]</button><span style="display:none;">
+	javax0.jamal.snippet.SnipCheck(checkHashString:108)
 	javax0.jamal.snippet.SnipCheck(evaluate:44)
+	javax0.jamal.engine.Processor(evaluateBuiltinMacro:540)
+	javax0.jamal.engine.Processor(lambda$evaluateBuiltInMacro$6:480)
+	javax0.jamal.engine.Processor(safeEvaluate:489)
+	javax0.jamal.engine.Processor(evaluateBuiltInMacro:480)
+	javax0.jamal.engine.Processor(evalMacro:429)
+	javax0.jamal.engine.Processor(processMacro:342)
+	javax0.jamal.engine.Processor(process:203)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:451)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:288)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:205)
+</span><br/>
+Macro was not terminated in the file.
 
+ at /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam/5:3<button onclick="this.nextElementSibling.style.display=(this.nextElementSibling.style.display==='none'?'inline':'none');">[+]</button><span style="display:none;">
+	javax0.jamal.api.Macro(macroNotTerminated:333)
+	javax0.jamal.api.Macro(fetch:244)
+	javax0.jamal.engine.util.MacroBodyFetcher(getNextMacroBody:51)
+	javax0.jamal.engine.Processor(getNextMacroBody:959)
+	javax0.jamal.engine.Processor(processMacro:323)
+	javax0.jamal.engine.Processor(process:203)
+	javax0.jamal.asciidoc.JamalPreprocessor(processJamal:451)
+	javax0.jamal.asciidoc.JamalPreprocessor(runJamalInProcess:288)
+	javax0.jamal.asciidoc.JamalPreprocessor(process:205)
+</span><br/>
 sed -i.bak  's/3ebb1c98/e3b0c442/g;s/3ebb1c97/3ebb1c99/g;s/3ebb1c96/3ebb1c99/g;' /Users/verhasp/github/jamal/jamal-test/TEST_PLAYGROUND.adoc.jam
 ----
