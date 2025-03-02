@@ -24,6 +24,8 @@ __currently there are no known bugs in this release__
 
 * Debugger was updated, including now filtering for macros.
 
+* The asciidoctor version of the program displays the errors at the end of the document interactive in a more readable way.
+
 * You can define built-in macros in a very simple way using Python.
 Needs Python installed.
 
@@ -31,6 +33,8 @@ Needs Python installed.
 Integration tests also run in GitHub.
 
 * The macro `references` define macros "soft" when loaded from a reference file, so you can `{@define !...}` them.
+
+* Macros can define errors that are collected and are displayed at the end of the processing even if the `failfast` option is on.
 
 {%RELEASE HARKIV%}
 
