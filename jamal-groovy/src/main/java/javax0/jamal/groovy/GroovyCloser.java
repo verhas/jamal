@@ -3,6 +3,9 @@ package javax0.jamal.groovy;
 import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 
+import java.util.Objects;
+
+@Macro.Name("groovy:closer")
 public class GroovyCloser implements Macro, InnerScopeDependent, Scanner {
     private static class Closer implements AutoCloseable, javax0.jamal.api.Closer.OutputAware {
         private Input result;
@@ -20,11 +23,7 @@ public class GroovyCloser implements Macro, InnerScopeDependent, Scanner {
             shell.property("result", resultSB);
             try {
                 final var sb = shell.evaluate(closerScript, null);
-                if (sb != null ) {
-                    result.replace(sb);
-                }else{
-                    result.replace(resultSB);
-                }
+                result.replace(Objects.requireNonNullElse(sb, resultSB));
             } catch (Exception e) {
                 throw new BadSyntax("There was an exception '"
                     + e.getMessage()
@@ -44,10 +43,5 @@ public class GroovyCloser implements Macro, InnerScopeDependent, Scanner {
         final var closer = new Closer(shell, in.toString());
         processor.deferredClose(closer);
         return "";
-    }
-
-    @Override
-    public String getId() {
-        return "groovy:closer";
     }
 }

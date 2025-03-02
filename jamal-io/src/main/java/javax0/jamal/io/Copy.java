@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+@Macro.Name("io:copy")
 public class Copy implements Macro, Scanner.WholeInput {
 
     @Override
@@ -57,10 +58,5 @@ public class Copy implements Macro, Scanner.WholeInput {
             throw new BadSyntax(String.format("There was an IOException copying the file '%s' to '%s'", fromName, toName), ioException);
         }
         return "";
-    }
-
-    @Override
-    public String getId() {
-        return "io:copy";
     }
 }

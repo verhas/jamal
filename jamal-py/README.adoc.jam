@@ -133,7 +133,7 @@ These locations are the following:
 
 === Common
 
-If the above operating-system specific locations fail, then the code will try
+If the above operating-system-specific locations fail, then the code will try
 
 * `python3`,
 * `python`,

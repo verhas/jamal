@@ -9,6 +9,7 @@ import javax0.jamal.tools.Cast;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 
+@Macro.Name("groovy:property")
 public class GroovyProperty implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -27,10 +28,5 @@ public class GroovyProperty implements Macro, InnerScopeDependent, Scanner {
         InputHandler.skipWhiteSpaces(in);
         shell.property(id, Cast.cast(in.toString()));
         return "";
-    }
-
-    @Override
-    public String getId() {
-        return "groovy:property";
     }
 }

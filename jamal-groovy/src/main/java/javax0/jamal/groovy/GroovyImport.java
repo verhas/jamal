@@ -5,6 +5,7 @@ import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 
+@Macro.Name("groovy:import")
 public class GroovyImport implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
@@ -24,10 +25,5 @@ public class GroovyImport implements Macro, InnerScopeDependent, Scanner {
             throw new BadSyntax("There was an exception '" + e.getMessage() + "' executing the groovy script '" + scriptName + "'.", e);
         }
         return "";
-    }
-
-    @Override
-    public String getId() {
-        return "groovy:import";
     }
 }

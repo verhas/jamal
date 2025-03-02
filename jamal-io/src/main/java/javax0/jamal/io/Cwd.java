@@ -6,14 +6,10 @@ import javax0.jamal.api.Processor;
 
 import java.io.File;
 
+@Macro.Name("io:cwd")
 public class Cwd implements Macro {
     @Override
     public String evaluate(Input in, Processor processor) {
         return new File(".").getAbsolutePath();
-    }
-
-    @Override
-    public String getId() {
-        return "io:cwd";
     }
 }

@@ -3,6 +3,7 @@ package javax0.jamal.groovy;
 import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 
+@Macro.Name("groovy:eval")
 public class GroovyEval implements Macro, InnerScopeDependent, Scanner {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         try {
@@ -11,10 +12,5 @@ public class GroovyEval implements Macro, InnerScopeDependent, Scanner {
         } catch (Exception e) {
             throw new BadSyntax("Error evaluating groovy script using eval", e);
         }
-    }
-
-    @Override
-    public String getId() {
-        return "groovy:eval";
     }
 }

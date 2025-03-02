@@ -193,7 +193,7 @@ public class PythonInterpreter implements AutoCloseable {
      * @throws RuntimeException if no valid Python interpreter is found either in the virtual environment or system-wide
      */
     private String findPythonInterpreter() {
-        if (workingDirectory != null && !workingDirectory.isBlank() && (venvPath = Paths.get(workingDirectory, venv)).toFile().exists()) {
+        if (workingDirectory != null && !workingDirectory.isBlank() && venv != null && (venvPath = Paths.get(workingDirectory, venv)).toFile().exists()) {
             final var isWin = System.getProperty("os.name").toLowerCase().contains("win");
             Path pythonBin = venvPath.resolve(isWin ? "Scripts/python.exe" : "bin/python"); // Linux/macOS
 
