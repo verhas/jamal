@@ -221,6 +221,21 @@ public interface Processor extends AutoCloseable {
     <T extends AutoCloseable> T deferredClose(T closer);
 
     /**
+     * Set the value to {@code true} to defer the exceptions that come from {@link #deferredThrow(BadSyntax)} or
+     * {@link #deferredThrow(String, Object...)} calls.
+     * <p>
+     * Set the value to {@code false} to ignore the deferring and throw them immediately.
+     * <p>
+     * The return value can be stored and used later to restore the previous value.
+     * This call is used in the macro `try` that needs the exceptions to be thrown so that it can catch them.
+     *
+     * @param newValue the new value of the deferring
+     * @return the old value, so it can be stored and used later to restore the old value.
+     * It is vital not to set it to anything other than the old value, otherwise `try` macros would not work nested.
+     */
+    boolean setDeferring(final boolean newValue);
+
+    /**
      * Create a bad syntax exception and add it to the list of exceptions to be thrown at the end of the processing.
      * <p>
      * This is a convenience method proxying {@link #deferredThrow(BadSyntax)}.
@@ -228,7 +243,7 @@ public interface Processor extends AutoCloseable {
      * @param errorMessage is the error message used in String format
      * @param parameters   the parameters to create the error message
      */
-    void deferredThrow(final String errorMessage, Object... parameters);
+    void deferredThrow(final String errorMessage, Object... parameters) throws BadSyntax;
 
     /**
      * Add the BadSyntax exception to the list of exceptions to be thrown at the end of the processing.
@@ -240,15 +255,14 @@ public interface Processor extends AutoCloseable {
      * It is recommended to call {@link #newUserDefinedMacro(String, String, String...)} unless there is a special
      * need to create the exception on the caller side, for example, adding a cause to the exception.
      *
-     *
      * @param bs the BadSyntax to be thrown
      */
-    void deferredThrow(final BadSyntax bs);
+    void deferredThrow(final BadSyntax bs) throws BadSyntax;
 
-    default void deferBadSyntax(BadSyntax.ThrowingRunnable runner){
-        try{
+    default void deferBadSyntax(BadSyntax.ThrowingRunnable runner) throws BadSyntax {
+        try {
             runner.run();
-        }catch(BadSyntax bs){
+        } catch (BadSyntax bs) {
             deferredThrow(bs);
         }
     }

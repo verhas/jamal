@@ -1,5 +1,6 @@
 package javax0.jamal.tools;
 
+import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Processor;
 
 /**
@@ -71,11 +72,11 @@ public class Parop {
     }
 
     public interface Then {
-        When then(String format, Object... objetcs);
+        When then(String format, Object... objetcs) throws BadSyntax;
     }
 
     public final class ThenTrue implements Then {
-        public When then(String format, Object... objects) {
+        public When then(String format, Object... objects) throws BadSyntax {
             processor.deferredThrow(format, objects);
             return new WhenOff();
         }

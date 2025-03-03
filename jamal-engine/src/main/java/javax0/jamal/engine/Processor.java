@@ -47,6 +47,7 @@ public class Processor implements javax0.jamal.api.Processor {
     // cannot be a set, you cannot easily retrieve the already stored value when you give a new closer 'equals' the existing
     final private Map<AutoCloseable, AutoCloseable> openResources = new LinkedHashMap<>();
     final private List<BadSyntax> deferredExceptions = new ArrayList<>();
+    private boolean deferExceptions = true; // can be switched off when executing in 'try' macro
     private final Context context;
     private final Debugger debugger;
     private final DebuggerStub debuggerStub = new DebuggerStub(this);
@@ -224,14 +225,26 @@ public class Processor implements javax0.jamal.api.Processor {
         return output.toString();
     }
 
+
     @Override
-    public void deferredThrow(final String errorMessage, final Object... parameters) {
+    public boolean setDeferring(final boolean newValue){
+        final var b = deferExceptions;
+        deferExceptions = newValue;
+        return b;
+    }
+
+    @Override
+    public void deferredThrow(final String errorMessage, final Object... parameters) throws BadSyntax{
         deferredThrow(new BadSyntax(String.format(errorMessage, parameters)));
     }
 
     @Override
-    public void deferredThrow(final BadSyntax bs) {
-        deferredExceptions.add(bs);
+    public void deferredThrow(final BadSyntax bs) throws BadSyntax {
+        if( deferExceptions ) {
+            deferredExceptions.add(bs);
+        }else{
+            throw bs;
+        }
     }
 
     /**

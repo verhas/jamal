@@ -1,7 +1,7 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.Macro;
 import javax0.jamal.api.*;
+import javax0.jamal.api.Macro;
 import javax0.jamal.tools.Option;
 
 import java.util.Objects;
@@ -28,12 +28,15 @@ public class Try implements Macro {
         String retval;
         final var caught = new Option(CAUGHT_ERROR_OPTION);
         processor.define(caught);
+        final boolean oldDeferring = processor.setDeferring(false);
         try {
             retval = processInput(in, processor, query, err);
             caught.set(false);
         } catch (BadSyntax bs) {
             retval = handleBadSyntax(processor, query, report, markerStart, err, bs);
             caught.set(true);
+        }finally {
+            processor.setDeferring(oldDeferring);
         }
         return retval;
     }
@@ -71,7 +74,8 @@ public class Try implements Macro {
      * @return the output, which is either {@code "false"}, the error message or an empty string
      * @throws BadSyntax if some other exception is thrown during processing
      */
-    private static String handleBadSyntax(Processor processor, boolean query, boolean report, Marker markerStart, int err, BadSyntax bs) throws BadSyntax {
+    private static String handleBadSyntax(Processor processor, boolean query, boolean report, Marker markerStart, int err, BadSyntax bs) throws
+        javax0.jamal.api.BadSyntax {
         bs = getFirstError(processor, err, bs);
         cleanUpTheMarkerStack(processor, markerStart);
         if (query) {
