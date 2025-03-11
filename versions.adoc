@@ -16,7 +16,7 @@ If all dependencies are up-to-date, then the output should not contain any `*[re
 
 * `OK`  `LEVENSHTEIN_VERSION` `1.0.0` 
 
-* `*[red]#NO#*`  `MAVEN_COMPILER_PLUGIN_VERSION` `3.13.0` `*[red]#upgrade to 4.0.0-beta-1#*`
+* `*[red]#NO#*`  `MAVEN_COMPILER_PLUGIN_VERSION` `3.13.0` `*[red]#upgrade to 4.0.0-beta-2#*`
 +
 We do not upgrade to beta versions.
 
@@ -27,7 +27,7 @@ We do not upgrade to beta versions.
 
 * `OK`  `MAVEN_ASSEMBLY_PLUGIN_VERSION` `3.7.1` 
 
-* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `3.9.9` `*[red]#upgrade to 4.0.0-rc-2#*`
+* `*[red]#NO#*`  `MAVEN_PLUGIN_API` `3.9.9` `*[red]#upgrade to 4.0.0-rc-3#*`
 +
 We do not upgrade to beta versions.
 
@@ -51,17 +51,17 @@ We do not upgrade to beta versions.
 
 * `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.8.1` 
 
-* `OK`  `JUPITER_VERSION` `5.11.4` 
+* `OK`  `JUPITER_VERSION` `5.12.0` 
 
-* `OK`  `MOCKITO_VERSION` `5.15.2` 
+* `OK`  `MOCKITO_VERSION` `5.16.0` 
 
-* `OK`  `JRUBY_VERSION` `9.4.10.0` 
+* `OK`  `JRUBY_VERSION` `9.4.12.0` 
 
-* `OK`  `GROOVY_VERSION` `3.0.23` 
+* `OK`  `GROOVY_VERSION` `3.0.24` 
 
-* `OK`  `OGNL_VERSION` `3.4.5` 
+* `OK`  `OGNL_VERSION` `3.4.6` 
 
-* `OK`  `SNAKEYAML_VERSION` `2.3` 
+* `OK`  `SNAKEYAML_VERSION` `2.4` 
 
 * `OK`  `JSON_ORG_VERSION` `20250107` 
 
@@ -102,7 +102,7 @@ When the new Asciidoctor version is released and used as an IntelliJ plugin we w
 
 * `OK`  `SOURCE_BUDDY` `2.5.3` 
 
-* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `3.9.8` `*[red]#upgrade to 4.0.0-rc-2#*`
+* `*[red]#NO#*`  `MAVEN_CORE_VERSION` `3.9.8` `*[red]#upgrade to 4.0.0-rc-3#*`
 +
 We do not upgrade to beta versions.
 
@@ -118,4 +118,4 @@ We do not upgrade to beta versions.
 
 * `OK`  `JSQLPARSER_VERSION` `5.1` 
 
-* `OK`  `JSOUP_VERSION` `1.18.3` 
+* `*[red]#NO#*`  `JSOUP_VERSION` `1.18.3` `*[red]#upgrade to 1.19.1#*`

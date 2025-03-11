@@ -2750,7 +2750,7 @@ The content of the file `simple.jrf` generated below is:
 [source]
 ----
 # This is a Jamal reference file containing serialized base64 encoded macros
-# Created: 2025-03-10 20:18:59 +0100
+# Created: 2025-03-10 20:36:41 +0100
 # id|openStr|closeStr|verbatim|tailParameter|pure|content|parameters
 # b
 Yg==|ew==|fQ==|0|0|0|VGhlIHZhbHVlIG9mIGI=|
@@ -3875,7 +3875,7 @@ will result in the output
 .output
 [source]
 ----
-2025-03-10 20:36:41
+2025-03-11 20:44:54
 ----
 
 

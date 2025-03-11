@@ -1,6 +1,7 @@
 package javax0.jamal.groovy;
 
 import javax0.jamal.engine.Processor;
+import javax0.jamal.testsupport.SentinelSmith;
 import javax0.jamal.tools.FileTools;
 import org.junit.jupiter.api.Test;
 
@@ -28,6 +29,7 @@ public class TestConvertGroovyReadme {
 
     @Test
     void convertGroovyReadme() throws Exception {
+        SentinelSmith.forge("groovy");
         generateAdoc("../jamal-groovy");
     }
 }

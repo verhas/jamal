@@ -2,6 +2,7 @@ package javax0.jamal.ruby;
 
 import javax0.jamal.api.BadSyntax;
 import javax0.jamal.engine.Processor;
+import javax0.jamal.testsupport.SentinelSmith;
 import javax0.jamal.tools.FileTools;
 import javax0.jamal.tools.Input;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,7 @@ public class TestConvertRubyReadme {
 
     @Test
     void convertRubyReadme() throws Exception {
+        SentinelSmith.forge("ruby");
         generateAdoc("../jamal-ruby");
     }
 }
