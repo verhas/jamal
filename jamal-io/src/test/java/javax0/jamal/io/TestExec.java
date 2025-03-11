@@ -1,5 +1,6 @@
 package javax0.jamal.io;
 
+import javax0.jamal.testsupport.SentinelSmith;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.*;
 
@@ -8,11 +9,16 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 /**
- * Testing external process execution is system dependent and makes not much sense to do uint testing.
+ * Testing external process execution is system-dependent and makes not much sense to do uint testing.
  * These tests are integration tests that are executed only occasionally.
  */
 @Disabled("Integration tests, runs on MacOS only. Run it from IDE interactively, not part of the every day build. Not portable and slow.")
 public class TestExec {
+
+    @BeforeAll
+    static void beforeAll() throws Exception {
+        SentinelSmith.forge("exec");
+    }
 
     @Test
     @DisplayName("Executing 'java -version' will print out the Java version to the console.")
@@ -30,6 +36,7 @@ public class TestExec {
     @Test
     @DisplayName("Executing 'echo hello' print out 'hello' to file")
     void testOutputToFile() throws Exception {
+        SentinelSmith.forge("exec");
         // tag::pwd[]
         System.setProperty("exec", "pwd");
         // end::pwd[]
@@ -42,7 +49,7 @@ public class TestExec {
                                 // end::pwd[]
                         )
                         .ignoreLineEnding()
-                        .atPosition(".", 1, 1)
+                        .atPosition("./in.jam", 1, 1)
                         .results().endsWith("/target\n"));
     }
 
@@ -58,7 +65,7 @@ public class TestExec {
                                 "{@io:exec command=EXEC output=\"target/catoutput.txt\"\n" +
                                 "hello, this is the text for the file}"
                         // end::cat[]
-                ).atPosition(".", 1, 1)
+                ).atPosition("./in.jam", 1, 1)
                 .results("");
         Assertions.assertEquals("hello, this is the text for the file", Files.readString(Paths.get("target/catoutput.txt")));
     }
@@ -73,7 +80,7 @@ public class TestExec {
                                 // tag::echo[]
                                 "{@io:exec command=EXEC argument=\"hello\"}"
                         // end::echo[]
-                ).atPosition(".", 1, 1)
+                ).atPosition("./in.jam", 1, 1)
                 .results("hello");
     }
 
@@ -86,14 +93,14 @@ public class TestExec {
         Files.write(Paths.get("target/async.sh"), "sleep 1\necho hello".getBytes(StandardCharsets.UTF_8));
         TestThat.theInput("" +
                         "{@io:exec command=EXEC argument=target/async.sh}"
-                ).atPosition(".", 1, 1)
+                ).atPosition("./in.jam", 1, 1)
                 .results("hello");
         final var start = System.currentTimeMillis();
         TestThat.theInput("" +
                                 // tag::sleep[]
                                 "{@io:exec asynch=PROC001 command=EXEC argument=target/async.sh}"
                         // end::sleep[]
-                ).atPosition(".", 1, 1)
+                ).atPosition("./in.jam", 1, 1)
                 .results("");
         final var runTime = System.currentTimeMillis() - start;
         // This is not deterministic as it MAY happen in some circumstances that the test execution is slower than 1 second.
@@ -107,7 +114,7 @@ public class TestExec {
         Files.write(Paths.get("target/async.sh"), "sleep 1\necho hello".getBytes(StandardCharsets.UTF_8));
         TestThat.theInput("" +
                         "{@io:exec asynch=PROC001 command=EXEC argument=target/async.sh output=target/async_echo_output.txt}"
-                ).atPosition(".", 1, 1)
+                ).atPosition("./in.jam", 1, 1)
                 .results("");
         Thread.sleep(2000);
         Assertions.assertTrue(Files.exists(Paths.get("target/async_echo_output.txt")));
@@ -307,7 +314,7 @@ public class TestExec {
         void testNoCommand() throws Exception {
             TestThat.theInput("" +
                     "{@io:exec}"
-            ).throwsBadSyntax("'command' for the macro 'exec' is mandatory\\.");
+            ).throwsBadSyntax("The mandatory parameters 'command' are missing for the macro 'io:exec'");
         }
 
         @Test

@@ -54,20 +54,21 @@ public class Use implements Macro {
     }
 
     /**
-     * Remove all white space characters from the string and replace them with a single space character.
-     * The final string will not have any other white space character than normal space and there will be no sequence of
+     * Remove all multiple white space characters from the string and replace them with a single space character.
+     * The final string will contain only SPACE characters, and there will be no sequence of
      * consecutive space characters.
      *
      * @param useDeclaration the string to be trimmed
      * @return the trimmed string
      */
     private static String getTrimmed(String useDeclaration) {
-        return useDeclaration
-                .replace("\n", " ")
-                .replace("\r", " ")
-                .replace("\t", " ")
-                .replaceAll("\\s+", " ")
-                .trim();
+        final var sb = new StringBuilder(useDeclaration);
+        for (int i = 0; i < useDeclaration.length(); i++) {
+            if (Character.isWhitespace(sb.charAt(i))) {
+                sb.setCharAt(i, ' ');
+            }
+        }
+        return sb.toString().replaceAll("\\s+", " ").trim();
     }
 
     /**

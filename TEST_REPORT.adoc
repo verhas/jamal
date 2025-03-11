@@ -25,9 +25,9 @@ Currently, there is no such reporting, but it is developing in the Junit Pioneer
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.extra.TestUndefinedMacroDoesNotMessUpMarkStack::test 0.003sec`
-* `javax0.jamal.test.extra.TestUndefinedMacroDoesNotMessUpMarkStack::test2 0.003sec`
-* `Total: 0.006sec`
+* `javax0.jamal.test.extra.TestUndefinedMacroDoesNotMessUpMarkStack::test 0.005sec`
+* `javax0.jamal.test.extra.TestUndefinedMacroDoesNotMessUpMarkStack::test2 0.005sec`
+* `Total: 0.010sec`
 
 
 
@@ -42,36 +42,36 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.json.TestJson::testAll 0.008sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.007sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.005sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.006sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.003sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.003sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.006sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.001sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.001sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.001sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.003sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.002sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.001sec`
-* `javax0.jamal.test.json.TestJson::testAll 0.003sec`
-* `Total: 0.080sec`
+* `javax0.jamal.test.json.TestJson::testAll()[1][1] 0.008sec`
+* `javax0.jamal.test.json.TestJson::testAll()[1][2] 0.008sec`
+* `javax0.jamal.test.json.TestJson::testAll()[2][1] 0.005sec`
+* `javax0.jamal.test.json.TestJson::testAll()[2][2] 0.003sec`
+* `javax0.jamal.test.json.TestJson::testAll()[2][3] 0.004sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][1] 0.005sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][2] 0.003sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][3] 0.004sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][4] 0.004sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][5] 0.004sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][6] 0.004sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][7] 0.003sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][8] 0.003sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][9] 0.004sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][10] 0.004sec`
+* `javax0.jamal.test.json.TestJson::testAll()[3][11] 0.003sec`
+* `javax0.jamal.test.json.TestJson::testAll()[4][1] 0.006sec`
+* `javax0.jamal.test.json.TestJson::testAll()[4][2] 0.003sec`
+* `javax0.jamal.test.json.TestJson::testAll()[4][3] 0.002sec`
+* `javax0.jamal.test.json.TestJson::testAll()[4][4] 0.002sec`
+* `javax0.jamal.test.json.TestJson::testAll()[4][5] 0.003sec`
+* `javax0.jamal.test.json.TestJson::testAll()[4][6] 0.002sec`
+* `javax0.jamal.test.json.TestJson::testAll()[4][7] 0.002sec`
+* `javax0.jamal.test.json.TestJson::testAll()[5][1] 0.004sec`
+* `javax0.jamal.test.json.TestJson::testAll()[5][2] 0.003sec`
+* `javax0.jamal.test.json.TestJson::testAll()[5][3] 0.006sec`
+* `javax0.jamal.test.json.TestJson::testAll()[6][1] 0.004sec`
+* `javax0.jamal.test.json.TestJson::testAll()[6][2] 0.003sec`
+* `javax0.jamal.test.json.TestJson::testAll()[6][3] 0.003sec`
+* `Total: 0.112sec`
 
 
 
@@ -86,10 +86,11 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestErrorPositions::testSimpleErrors 0.003sec`
-* `javax0.jamal.test.core.TestErrorPositions::errorInMacroParameter 0.002sec`
-* `javax0.jamal.test.core.TestErrorPositions::errorInPostMacroEvaluation 0.004sec`
-* `Total: 0.009sec`
+* `javax0.jamal.test.core.TestErrorPositions::testSimpleErrors 0.004sec`
+* `javax0.jamal.test.core.TestErrorPositions::errorInMacroParameter 0.003sec`
+* `javax0.jamal.test.core.TestErrorPositions::testErrorPosition 0.003sec`
+* `javax0.jamal.test.core.TestErrorPositions::errorInPostMacroEvaluation 0.003sec`
+* `Total: 0.013sec`
 
 
 
@@ -120,8 +121,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.extra.TestUrlInclude::test 0.09sec`
-* `Total: 0.09sec`
+* `javax0.jamal.test.extra.TestUrlInclude::test 0.027sec`
+* `Total: 0.027sec`
 
 
 
@@ -136,10 +137,10 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestEnv::testEnv 0.006sec`
-* `javax0.jamal.test.core.TestEnv::testEnvParop 0.004sec`
-* `javax0.jamal.test.core.TestEnv::testEnvThrow 0.004sec`
-* `Total: 0.014sec`
+* `javax0.jamal.test.core.TestEnv::testEnv 0.005sec`
+* `javax0.jamal.test.core.TestEnv::testEnvParop 0.012sec`
+* `javax0.jamal.test.core.TestEnv::testEnvThrow 0.024sec`
+* `Total: 0.041sec`
 
 
 
@@ -154,39 +155,39 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParameterJustPresent 0.108sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParameterJustPresent 0.014sec`
 * `javax0.jamal.test.tools.params.TestParams::testContinuationLine 0.007sec`
 * `javax0.jamal.test.tools.params.TestParams::testMultipleKeyUseError 0.002sec`
-* `javax0.jamal.test.tools.params.TestParams::testMissingParameter 0.009sec`
+* `javax0.jamal.test.tools.params.TestParams::testMissingParameter 0.012sec`
 * `javax0.jamal.test.tools.params.TestParams::testSimpleParametersAlternativesUDNo 0.007sec`
-* `javax0.jamal.test.tools.params.TestParams::testUnusedParameter 0.005sec`
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersBetweenOptionalParensMultiLine 0.005sec`
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersBetweenOptionalParens_ 0.007sec`
-* `javax0.jamal.test.tools.params.TestParams::testUnterminatedMLString 0.01sec`
-* `javax0.jamal.test.tools.params.TestParams::testUnquotedEmptyString 0.006sec`
-* `javax0.jamal.test.tools.params.TestParams::testBooleanParameters 0.006sec`
-* `javax0.jamal.test.tools.params.TestParams::testFetchParameters 0.004sec`
+* `javax0.jamal.test.tools.params.TestParams::testUnusedParameter 0.006sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersBetweenOptionalParensMultiLine 0.009sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersBetweenOptionalParens_ 0.005sec`
+* `javax0.jamal.test.tools.params.TestParams::testUnterminatedMLString 0.005sec`
+* `javax0.jamal.test.tools.params.TestParams::testUnquotedEmptyString 0.005sec`
+* `javax0.jamal.test.tools.params.TestParams::testBooleanParameters 0.008sec`
+* `javax0.jamal.test.tools.params.TestParams::testFetchParameters 0.006sec`
 * `javax0.jamal.test.tools.params.TestParams::testSimpleParametersOneFromUDMacro 0.006sec`
-* `javax0.jamal.test.tools.params.TestParams::testListParametersOneFromUDMacro 0.004sec`
-* `javax0.jamal.test.tools.params.TestParams::testUnterminatedString 0.005sec`
-* `javax0.jamal.test.tools.params.TestParams::testUnquotedEmptyStringLast 0.004sec`
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersBetweenParens 0.003sec`
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParameters 0.004sec`
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersAlternativesUDYes 0.004sec`
-* `javax0.jamal.test.tools.params.TestParams::testMultiLineString 0.005sec`
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersOneFromUDMacroOverride 0.004sec`
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersAlternatives 0.004sec`
-* `javax0.jamal.test.tools.params.TestParams::testMultiValuedParameterMultiValue 0.004sec`
+* `javax0.jamal.test.tools.params.TestParams::testListParametersOneFromUDMacro 0.005sec`
+* `javax0.jamal.test.tools.params.TestParams::testUnterminatedString 0.013sec`
+* `javax0.jamal.test.tools.params.TestParams::testUnquotedEmptyStringLast 0.007sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersBetweenParens 0.009sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParameters 0.009sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersAlternativesUDYes 0.007sec`
+* `javax0.jamal.test.tools.params.TestParams::testMultiLineString 0.004sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersOneFromUDMacroOverride 0.008sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersAlternatives 0.008sec`
+* `javax0.jamal.test.tools.params.TestParams::testMultiValuedParameterMultiValue 0.006sec`
 * `javax0.jamal.test.tools.params.TestParams::testMultiLineStringML 0.004sec`
-* `javax0.jamal.test.tools.params.TestParams::testUnterminatedLineString 0.004sec`
-* `javax0.jamal.test.tools.params.TestParams::testMultiValuedParameterSingleValue 0.003sec`
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersBetweenOptionalParens 0.003sec`
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersOptionalParenMissing 0.004sec`
-* `javax0.jamal.test.tools.params.TestParams::testNonPresentEmptyList 0.003sec`
-* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersBetweenParensML 0.004sec`
-* `javax0.jamal.test.tools.params.TestParams::testNoUDMacroForBoolean 0.003sec`
-* `javax0.jamal.test.tools.params.TestParams::testUndefinedKey 0.009sec`
-* `Total: 0.260sec`
+* `javax0.jamal.test.tools.params.TestParams::testUnterminatedLineString 0.006sec`
+* `javax0.jamal.test.tools.params.TestParams::testMultiValuedParameterSingleValue 0.006sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersBetweenOptionalParens 0.006sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersOptionalParenMissing 0.007sec`
+* `javax0.jamal.test.tools.params.TestParams::testNonPresentEmptyList 0.006sec`
+* `javax0.jamal.test.tools.params.TestParams::testSimpleParametersBetweenParensML 0.006sec`
+* `javax0.jamal.test.tools.params.TestParams::testNoUDMacroForBoolean 0.011sec`
+* `javax0.jamal.test.tools.params.TestParams::testUndefinedKey 0.01sec`
+* `Total: 0.230sec`
 
 
 
@@ -201,59 +202,59 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.006sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.005sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.005sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.004sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.009sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.005sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.017sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.001sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.001sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.001sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.001sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.003sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.003sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.004sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.001sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.001sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.003sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.004sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.003sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.004sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.003sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.003sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `javax0.jamal.test.yaml.TestYaml::testAll 0.002sec`
-* `Total: 0.147sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[1][1] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[2][1] 0.007sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[2][2] 0.014sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[3][1] 0.029sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[3][2] 0.02sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[4][1] 0.01sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[4][2] 0.005sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[4][3] 0.004sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[4][4] 0.014sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[4][5] 0.007sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[4][6] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[4][7] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[4][8] 0.031sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[5][1] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[5][2] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[5][3] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[5][4] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[5][5] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[5][6] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][1] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][2] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][3] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][4] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][5] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][6] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][7] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][8] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][9] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][10] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][11] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][12] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][13] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][14] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][15] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][16] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[6][17] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[7][1] 0.005sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[7][2] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[7][3][1] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[7][3][2] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][1] 0.004sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][2] 0.004sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][3] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][4] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][5] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][6] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][7] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][8] 0.005sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][9] 0.003sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][10] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][11] 0.002sec`
+* `javax0.jamal.test.yaml.TestYaml::testAll()[8][12] 0.002sec`
+* `Total: 0.252sec`
 
 
 
@@ -268,13 +269,13 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.extra.TestUdProtection::worksWithSimpleReplace 0.004sec`
-* `javax0.jamal.test.extra.TestUdProtection::worksWhenSeparatorContainsOther 0.002sec`
+* `javax0.jamal.test.extra.TestUdProtection::worksWithSimpleReplace 0.005sec`
+* `javax0.jamal.test.extra.TestUdProtection::worksWhenSeparatorContainsOther 0.011sec`
 * `javax0.jamal.test.extra.TestUdProtection::escapeSaves 0.003sec`
-* `javax0.jamal.test.extra.TestUdProtection::verbatimShowsTheEscapeMacrosInserted 0.002sec`
-* `javax0.jamal.test.extra.TestUdProtection::escapeDoesNotWorkWithParametersInside 0.002sec`
-* `javax0.jamal.test.extra.TestUdProtection::worksWhenSeparatorContainsOtherVerbatim 0.003sec`
-* `Total: 0.016sec`
+* `javax0.jamal.test.extra.TestUdProtection::verbatimShowsTheEscapeMacrosInserted 0.006sec`
+* `javax0.jamal.test.extra.TestUdProtection::escapeDoesNotWorkWithParametersInside 0.005sec`
+* `javax0.jamal.test.extra.TestUdProtection::worksWhenSeparatorContainsOtherVerbatim 0.004sec`
+* `Total: 0.034sec`
 
 
 
@@ -289,12 +290,12 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.extra.TestUserDefinedScopesAndExport::testUserDefinedScopeLocking 0.002sec`
-* `javax0.jamal.test.extra.TestUserDefinedScopesAndExport::testUserDefinedScopeLockingTwoArgumentas 0.002sec`
-* `javax0.jamal.test.extra.TestUserDefinedScopesAndExport::testUserDefinedScopeLockingNonExport 0.003sec`
-* `javax0.jamal.test.extra.TestUserDefinedScopesAndExport::testUserDefinedScopeLockingOneArgument 0.002sec`
-* `javax0.jamal.test.extra.TestUserDefinedScopesAndExport::testUserDefinedScopeLockingExport 0.002sec`
-* `Total: 0.011sec`
+* `javax0.jamal.test.extra.TestUserDefinedScopesAndExport::testUserDefinedScopeLocking 0.007sec`
+* `javax0.jamal.test.extra.TestUserDefinedScopesAndExport::testUserDefinedScopeLockingTwoArgumentas 0.005sec`
+* `javax0.jamal.test.extra.TestUserDefinedScopesAndExport::testUserDefinedScopeLockingNonExport 0.005sec`
+* `javax0.jamal.test.extra.TestUserDefinedScopesAndExport::testUserDefinedScopeLockingOneArgument 0.005sec`
+* `javax0.jamal.test.extra.TestUserDefinedScopesAndExport::testUserDefinedScopeLockingExport 0.003sec`
+* `Total: 0.025sec`
 
 
 
@@ -309,8 +310,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestDefineClass::testJavaDefinedUserDefinedMacro 0.008sec`
-* `Total: 0.008sec`
+* `javax0.jamal.test.core.TestDefineClass::testJavaDefinedUserDefinedMacro 0.016sec`
+* `Total: 0.016sec`
 
 
 
@@ -325,8 +326,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.extra.TestUserDefinedPostEval::testPostEval 0.002sec`
-* `Total: 0.002sec`
+* `javax0.jamal.test.extra.TestUserDefinedPostEval::testPostEval 0.006sec`
+* `Total: 0.006sec`
 
 
 
@@ -341,8 +342,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.TestLastRelease::testLastRelease 0.339sec`
-* `Total: 0.339sec`
+* `javax0.jamal.test.TestLastRelease::testLastRelease 0.276sec`
+* `Total: 0.276sec`
 
 
 
@@ -357,8 +358,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestImportWithForce::test 0.026sec`
-* `Total: 0.026sec`
+* `javax0.jamal.test.core.TestImportWithForce::test 0.018sec`
+* `Total: 0.018sec`
 
 
 
@@ -373,24 +374,24 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestMacro::testUdAliasDefinedGlobal 0.006sec`
-* `javax0.jamal.test.core.TestMacro::testBuiltInAliasDefined 0.008sec`
-* `javax0.jamal.test.core.TestMacro::testBuiltInName 0.004sec`
+* `javax0.jamal.test.core.TestMacro::testUdAliasDefinedGlobal 0.005sec`
+* `javax0.jamal.test.core.TestMacro::testBuiltInAliasDefined 0.003sec`
+* `javax0.jamal.test.core.TestMacro::testBuiltInName 0.003sec`
 * `javax0.jamal.test.core.TestMacro::testBuiltInAliasDefinedGlobal 0.003sec`
-* `javax0.jamal.test.core.TestMacro::testUdAlias 0.006sec`
-* `javax0.jamal.test.core.TestMacro::testBuiltInAlias 0.002sec`
-* `javax0.jamal.test.core.TestMacro::throwsExportException 0.003sec`
-* `javax0.jamal.test.core.TestMacro::testBuiltInUndefinedAlias 0.005sec`
+* `javax0.jamal.test.core.TestMacro::testUdAlias 0.003sec`
+* `javax0.jamal.test.core.TestMacro::testBuiltInAlias 0.003sec`
+* `javax0.jamal.test.core.TestMacro::throwsExportException 0.004sec`
+* `javax0.jamal.test.core.TestMacro::testBuiltInUndefinedAlias 0.002sec`
 * `javax0.jamal.test.core.TestMacro::testBuiltInAliasDefined2 0.003sec`
-* `javax0.jamal.test.core.TestMacro::testUserDefinedUndefinedAliasUsedDefault 0.004sec`
-* `javax0.jamal.test.core.TestMacro::testUserDefinedUndefinedEvaluete 0.003sec`
-* `javax0.jamal.test.core.TestMacro::testUserDefinedUndefinedAlias 0.004sec`
-* `javax0.jamal.test.core.TestMacro::testBuiltInUndefinedEvaluete 0.003sec`
-* `javax0.jamal.test.core.TestMacro::testUserDefinedUndefinedEvalueteDefault 0.003sec`
-* `javax0.jamal.test.core.TestMacro::testUdName 0.002sec`
-* `javax0.jamal.test.core.TestMacro::testUdAliasDefined1 0.008sec`
+* `javax0.jamal.test.core.TestMacro::testUserDefinedUndefinedAliasUsedDefault 0.003sec`
+* `javax0.jamal.test.core.TestMacro::testUserDefinedUndefinedEvaluete 0.002sec`
+* `javax0.jamal.test.core.TestMacro::testUserDefinedUndefinedAlias 0.002sec`
+* `javax0.jamal.test.core.TestMacro::testBuiltInUndefinedEvaluete 0.005sec`
+* `javax0.jamal.test.core.TestMacro::testUserDefinedUndefinedEvalueteDefault 0.004sec`
+* `javax0.jamal.test.core.TestMacro::testUdName 0.016sec`
+* `javax0.jamal.test.core.TestMacro::testUdAliasDefined1 0.016sec`
 * `javax0.jamal.test.core.TestMacro::testUdAliasDefined2 0.003sec`
-* `Total: 0.070sec`
+* `Total: 0.080sec`
 
 
 
@@ -405,14 +406,14 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.examples.TestArray::testInvalidArrayAccesses(String)[1] 0.005sec`
-* `javax0.jamal.test.examples.TestArray::testInvalidArrayAccesses(String)[2] 0.002sec`
-* `javax0.jamal.test.examples.TestArray::testInvalidArrayAccesses(String)[3] 0.002sec`
-* `javax0.jamal.test.examples.TestArray::testInvalidArrayAccesses(String)[4] 0.002sec`
-* `javax0.jamal.test.examples.TestArray::testValidArrayAccesses(String, String)[1] 0.002sec`
-* `javax0.jamal.test.examples.TestArray::testValidArrayAccesses(String, String)[2] 0.002sec`
-* `javax0.jamal.test.examples.TestArray::testValidArrayAccesses(String, String)[3] 0.001sec`
-* `Total: 0.016sec`
+* `javax0.jamal.test.examples.TestArray::testInvalidArrayAccesses(String)[1] 0.007sec`
+* `javax0.jamal.test.examples.TestArray::testInvalidArrayAccesses(String)[2] 0.007sec`
+* `javax0.jamal.test.examples.TestArray::testInvalidArrayAccesses(String)[3] 0.004sec`
+* `javax0.jamal.test.examples.TestArray::testInvalidArrayAccesses(String)[4] 0.011sec`
+* `javax0.jamal.test.examples.TestArray::testValidArrayAccesses(String, String)[1] 0.008sec`
+* `javax0.jamal.test.examples.TestArray::testValidArrayAccesses(String, String)[2] 0.003sec`
+* `javax0.jamal.test.examples.TestArray::testValidArrayAccesses(String, String)[3] 0.003sec`
+* `Total: 0.043sec`
 
 
 
@@ -427,10 +428,10 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestJshell::testJShellError 0.533sec`
-* `javax0.jamal.test.core.TestJshell::testJShellDocument 0.4sec`
-* `javax0.jamal.test.core.TestJshell::testJShellExecution 0.322sec`
-* `Total: 1.255sec`
+* `javax0.jamal.test.core.TestJshell::testJShellError 0.488sec`
+* `javax0.jamal.test.core.TestJshell::testJShellDocument 0.309sec`
+* `javax0.jamal.test.core.TestJshell::testJShellExecution 0.37sec`
+* `Total: 1.167sec`
 
 
 
@@ -445,8 +446,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestEvalistFor::testEvalistInclude 0.016sec`
-* `Total: 0.016sec`
+* `javax0.jamal.test.core.TestEvalistFor::testEvalistInclude 0.023sec`
+* `Total: 0.023sec`
 
 
 
@@ -461,8 +462,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.yaml.TestConvertYamlReadme::generateDoc 0.077sec`
-* `Total: 0.077sec`
+* `javax0.jamal.test.yaml.TestConvertYamlReadme::generateDoc 0.078sec`
+* `Total: 0.078sec`
 
 
 
@@ -477,8 +478,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestNullMacro::testNullMacro 0.003sec`
-* `Total: 0.003sec`
+* `javax0.jamal.test.core.TestNullMacro::testNullMacro 0.008sec`
+* `Total: 0.008sec`
 
 
 
@@ -493,341 +494,341 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestCore::testMacroMacro 0.004sec`
-* `javax0.jamal.test.core.TestCore::testMacroMacro 0.003sec`
-* `javax0.jamal.test.core.TestCore::testMacroMacro 0.004sec`
-* `javax0.jamal.test.core.TestCore::testMacroMacro 0.002sec`
-* `javax0.jamal.test.core.TestCore::testMacroMacro 0.004sec`
-* `javax0.jamal.test.core.TestCore::testMacroMacro 0.003sec`
-* `javax0.jamal.test.core.TestCore::testMacroMacro 0.003sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.003sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.006sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.003sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.004sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.003sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.004sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.004sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.007sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.004sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.005sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.004sec`
-* `javax0.jamal.test.core.TestCore::testEscapep 0.014sec`
-* `javax0.jamal.test.core.TestCore::testDefineDefault 0.007sec`
-* `javax0.jamal.test.core.TestCore::testDefineDefault 0.006sec`
-* `javax0.jamal.test.core.TestCore::testDefineDefault 0.005sec`
-* `javax0.jamal.test.core.TestCore::testDefineDefault 0.013sec`
-* `javax0.jamal.test.core.TestCore::testDefineDefault 0.009sec`
-* `javax0.jamal.test.core.TestCore::testOptions 0.004sec`
-* `javax0.jamal.test.core.TestCore::testOptions 0.004sec`
-* `javax0.jamal.test.core.TestCore::testOptions 0.004sec`
-* `javax0.jamal.test.core.TestCore::testOptions 0.003sec`
-* `javax0.jamal.test.core.TestCore::testOptions 0.003sec`
-* `javax0.jamal.test.core.TestCore::testOptions 0.003sec`
-* `javax0.jamal.test.core.TestCore::testAllCoreMacrosB 0.272sec`
-* `javax0.jamal.test.core.TestCore::testAllCoreMacrosB 0.171sec`
-* `javax0.jamal.test.core.TestCore::testAllCoreMacrosB 0.217sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.005sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.002sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.029sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.001sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.001sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.002sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.002sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.001sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.005sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.004sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.01sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.023sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.007sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.004sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.007sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.002sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.002sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.003sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.003sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.002sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.001sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.002sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.002sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.002sec`
-* `javax0.jamal.test.core.TestCore::testFor 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.005sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.004sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.007sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.011sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.012sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.003sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.003sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.001sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.002sec`
-* `javax0.jamal.test.core.TestCore::testSep 0.003sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.003sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.003sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.002sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.003sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.002sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.003sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.003sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.003sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.003sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.005sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.007sec`
-* `javax0.jamal.test.core.TestCore::testTry 0.004sec`
-* `javax0.jamal.test.core.TestCore::testUse 0.002sec`
-* `javax0.jamal.test.core.TestCore::testUse 0.002sec`
-* `javax0.jamal.test.core.TestCore::testUse 0.003sec`
-* `javax0.jamal.test.core.TestCore::testBlock 0.005sec`
-* `javax0.jamal.test.core.TestCore::testBlock 0.003sec`
-* `javax0.jamal.test.core.TestCore::testBlock 0.004sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.005sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.009sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.004sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.004sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.004sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefer 0.002sec`
-* `javax0.jamal.test.core.TestCore::testError 0.003sec`
-* `javax0.jamal.test.core.TestCore::testIdent 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.157sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.003sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.004sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.003sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.005sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.001sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.001sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEval 0.004sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.003sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.01sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.001sec`
-* `javax0.jamal.test.core.TestCore::testIf 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefineXtended 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefineXtended 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefineXtended 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefineXtended 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefineXtended 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefineXtended 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefineXtended 0.005sec`
-* `javax0.jamal.test.core.TestCore::testUndefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testUndefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testUndefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testUndefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testUndefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testUndefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testUndefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testUndefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testUndefine 0.005sec`
+* `javax0.jamal.test.core.TestCore::testMacroMacro()[1][1] 0.015sec`
+* `javax0.jamal.test.core.TestCore::testMacroMacro()[1][2] 0.007sec`
+* `javax0.jamal.test.core.TestCore::testMacroMacro()[1][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testMacroMacro()[1][4] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testMacroMacro()[1][5] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testMacroMacro()[1][6] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testMacroMacro()[1][7] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][1] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][2] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][4] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][5] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][6] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][7] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][8] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][9] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][10] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][11] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][12] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][13] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][14][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][14][2] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][14][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][14][4] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][14][5] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEscapep()[1][14][6] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefineDefault()[1][1] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testDefineDefault()[1][2] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefineDefault()[1][3] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefineDefault()[1][4] 0.012sec`
+* `javax0.jamal.test.core.TestCore::testDefineDefault()[1][5] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testOptions()[1][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testOptions()[1][2] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testOptions()[1][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testOptions()[1][4] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testOptions()[1][5] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testOptions()[1][6] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testAllCoreMacrosB()[1][1] 0.29sec`
+* `javax0.jamal.test.core.TestCore::testAllCoreMacrosB()[1][2] 0.169sec`
+* `javax0.jamal.test.core.TestCore::testAllCoreMacrosB()[1][3] 0.219sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][1][1] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][1][2] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][2] 0.023sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][4] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][5] 0.014sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][6] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][7] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][8] 0.007sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][9] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][10] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][11] 0.023sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][12] 0.008sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][13] 0.007sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][14] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][15] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][16] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][17][1] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][17][2] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][17][3] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][17][4] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][17][5] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][17][6] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][17][7] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testFor()[1][17][8] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][1] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][2] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][3] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][4] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][5] 0.017sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][6] 0.018sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][7] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][8] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][9] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][10] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][11] 0.007sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][12] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][13] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][14] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][15] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][16] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][17] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][18] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][19] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][20] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][21] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][22] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][23] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][24] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][25] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][26] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][27] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][28] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][29] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][30] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][31] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][32] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][33] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][34] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][35] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][36] 0.009sec`
+* `javax0.jamal.test.core.TestCore::testSep()[1][37] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][1] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][2] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][4] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][5] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][6] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][7] 0.007sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][8] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][9] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][10] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][11] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testTry()[1][12] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testUse()[1][1] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testUse()[1][2] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testUse()[1][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testBlock()[1][1] 0.01sec`
+* `javax0.jamal.test.core.TestCore::testBlock()[1][2] 0.009sec`
+* `javax0.jamal.test.core.TestCore::testBlock()[1][3] 0.007sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][1] 0.01sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][2] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][3] 0.021sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][4] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][5] 0.013sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][6] 0.02sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][7] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][8] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][9] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][10] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][11] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][12] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefer()[1][13] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testError()[1][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIdent()[1][1] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][1] 0.187sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][2] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][3] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][4] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][5] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][6] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][7] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][8] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][9] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][10] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][11] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][12] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEval()[1][13] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][1] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][2] 0.016sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][3] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][4] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][5] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][6] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][7] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][8] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][9] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][10] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][11] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][12] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][13] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][14] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][15] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][16] 0.011sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][17] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][18] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][19] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][20] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][21] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][22] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][23] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][24] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][25] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][26] 0.013sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][27] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][28] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][29] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][30] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][31] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][32] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][33] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][34] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][35] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][36] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][37] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][38] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][39] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testIf()[1][40] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefineXtended()[1][1][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefineXtended()[1][1][2] 0.039sec`
+* `javax0.jamal.test.core.TestCore::testDefineXtended()[1][1][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefineXtended()[1][2][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefineXtended()[1][2][2] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefineXtended()[1][2][3] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testDefineXtended()[1][2][4] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testUndefine()[1][1][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testUndefine()[1][1][2] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testUndefine()[1][2][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testUndefine()[1][2][2] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testUndefine()[1][2][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testUndefine()[1][2][4] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testUndefine()[1][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testUndefine()[1][4] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testUndefine()[1][5] 0.002sec`
 * `javax0.jamal.test.core.TestCore::testDeprecation 0.001sec`
-* `javax0.jamal.test.core.TestCore::testComment 0.002sec`
-* `javax0.jamal.test.core.TestCore::testRequire 0.003sec`
-* `javax0.jamal.test.core.TestCore::testRequire 0.003sec`
-* `javax0.jamal.test.core.TestCore::testRequire 0.008sec`
-* `javax0.jamal.test.core.TestCore::testRequire 0.002sec`
-* `javax0.jamal.test.core.TestCore::testRequire 0.002sec`
-* `javax0.jamal.test.core.TestCore::testRequire 0.002sec`
-* `javax0.jamal.test.core.TestCore::testRequire 0.002sec`
-* `javax0.jamal.test.core.TestCore::testRequire 0.016sec`
-* `javax0.jamal.test.core.TestCore::testRequire 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.004sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.009sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.004sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.006sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.006sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.005sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.009sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.012sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.004sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.005sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.005sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.006sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.005sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.004sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.007sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testDefine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testEngine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testEngine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testEngine 0.004sec`
-* `javax0.jamal.test.core.TestCore::testEngine 0.243sec`
-* `javax0.jamal.test.core.TestCore::testEngine 0.22sec`
-* `javax0.jamal.test.core.TestCore::testEngine 0.006sec`
-* `javax0.jamal.test.core.TestCore::testEngine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEngine 0.002sec`
-* `javax0.jamal.test.core.TestCore::testEngine 0.003sec`
-* `javax0.jamal.test.core.TestCore::testExport 0.002sec`
-* `javax0.jamal.test.core.TestCore::testExport 0.001sec`
-* `javax0.jamal.test.core.TestCore::testExport 0.002sec`
-* `javax0.jamal.test.core.TestCore::testExport 0.002sec`
-* `javax0.jamal.test.core.TestCore::testExport 0.002sec`
-* `javax0.jamal.test.core.TestCore::testExport 0.002sec`
-* `javax0.jamal.test.core.TestCore::testImport 0.013sec`
-* `javax0.jamal.test.core.TestCore::testImport 0.007sec`
-* `javax0.jamal.test.core.TestCore::testSamples 0.001sec`
-* `javax0.jamal.test.core.TestCore::testDeepEscape 0.002sec`
-* `javax0.jamal.test.core.TestCore::testDeepEscape 0.036sec`
-* `javax0.jamal.test.core.TestCore::testDeepEscape 0.007sec`
-* `javax0.jamal.test.core.TestCore::testNestedUserDefinedMacros 0.002sec`
-* `javax0.jamal.test.core.TestCore::testRecursiveMacro 0.111sec`
-* `javax0.jamal.test.core.TestCore::testRecursiveMacro 0.185sec`
-* `Total: 2.601sec`
+* `javax0.jamal.test.core.TestCore::testComment()[1][1] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testRequire()[1][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testRequire()[1][2][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testRequire()[1][2][2] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testRequire()[1][2][3] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testRequire()[1][2][4] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testRequire()[1][2][5] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testRequire()[1][3] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testRequire()[1][4] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testRequire()[1][5] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][1] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][2] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][3] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][4] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][5] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][6] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][7] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][8] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][9] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][10] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][11] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][12] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][13] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][14] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][15] 0.001sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][16] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][17] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][18] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][19] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][20] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][21] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][22] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][23] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][24] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][25] 0.001sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][26] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][27] 0.001sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][28] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][29] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][30] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][31] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][32] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][33] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][34] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][35] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][36] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][37] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][38] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][39] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][40] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][41] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][42] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][43] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][44] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][45] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][46] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][47] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][48] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][49] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][50] 0.001sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][51] 0.001sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][52] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][53] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][54] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][55] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][56] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][57] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][58] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][59] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][60] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][61] 0.001sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][62] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][63] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][64] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][65] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][66] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][67] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][68] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][69] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][70] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][71] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][72] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][73] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][74] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][75] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][76] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][77] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][78] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][79] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][80] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][81] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][82] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][83] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][84] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][85] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][86] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][87] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][88] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][89] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][90] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][91] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][92] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][93] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][94] 0.006sec`
+* `javax0.jamal.test.core.TestCore::testDefine()[1][95] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEngine()[1][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testEngine()[1][2] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testEngine()[1][3] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testEngine()[1][4] 0.232sec`
+* `javax0.jamal.test.core.TestCore::testEngine()[1][5] 0.2sec`
+* `javax0.jamal.test.core.TestCore::testEngine()[1][6] 0.011sec`
+* `javax0.jamal.test.core.TestCore::testEngine()[1][7] 0.013sec`
+* `javax0.jamal.test.core.TestCore::testEngine()[1][8] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testEngine()[1][9] 0.009sec`
+* `javax0.jamal.test.core.TestCore::testExport()[1][1] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testExport()[1][2] 0.002sec`
+* `javax0.jamal.test.core.TestCore::testExport()[1][3] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testExport()[1][4] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testExport()[1][5] 0.004sec`
+* `javax0.jamal.test.core.TestCore::testExport()[1][6] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testImport()[1][1] 0.013sec`
+* `javax0.jamal.test.core.TestCore::testImport()[1][2] 0.015sec`
+* `javax0.jamal.test.core.TestCore::testSamples()[1][1] 0.007sec`
+* `javax0.jamal.test.core.TestCore::testDeepEscape()[1][1] 0.005sec`
+* `javax0.jamal.test.core.TestCore::testDeepEscape()[1][2] 0.041sec`
+* `javax0.jamal.test.core.TestCore::testDeepEscape()[1][3] 0.007sec`
+* `javax0.jamal.test.core.TestCore::testNestedUserDefinedMacros()[1][1] 0.003sec`
+* `javax0.jamal.test.core.TestCore::testRecursiveMacro()[1][1] 0.143sec`
+* `javax0.jamal.test.core.TestCore::testRecursiveMacro()[1][2] 0.186sec`
+* `Total: 2.952sec`
 
 
 
@@ -842,9 +843,9 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.examples.TestHello::macroWorks 0.001sec`
+* `javax0.jamal.test.examples.TestHello::macroWorks 0.007sec`
 * `javax0.jamal.test.examples.TestHello::testDebugger 0.0sec`
-* `Total: 0.001sec`
+* `Total: 0.007sec`
 
 
 
@@ -859,8 +860,29 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestLog::testLogging 0.006sec`
-* `Total: 0.006sec`
+* `javax0.jamal.test.core.TestLog::testLogging 0.004sec`
+* `Total: 0.004sec`
+
+
+
+
+// define the macro file containing the structured XML content of the file
+// '/Users/verhasp/github/jamal/jamal-test/target/surefire-reports/TEST-javax0.jamal.test.tools.TestSentinel.xml' is the name of the file, replaced by the 'for' loop execution
+
+
+// the title of the section is the name of the file without path
+== TEST-javax0.jamal.test.tools.TestSentinel.xml
+// then we have the full path of the file except the system-specific part (none of your business :-)
+__./jamal-test/target/surefire-reports__
+
+// execute a little BASIC-formatted code for each XML
+* `javax0.jamal.test.tools.TestSentinel::testFixingPermissionsMakesApprovalValid 0.813sec`
+* `javax0.jamal.test.tools.TestSentinel::testCachedValueIsUsedTheSecondTime 0.088sec`
+* `javax0.jamal.test.tools.TestSentinel::testApprovalFileMissing 0.012sec`
+* `javax0.jamal.test.tools.TestSentinel::testApprovalFileWithWrongPermissions 0.012sec`
+* `javax0.jamal.test.tools.TestSentinel::testApprovalFileExistsAndValid 0.013sec`
+* `javax0.jamal.test.tools.TestSentinel::testApprovalFileExistsAndValidCached 0.012sec`
+* `Total: 0.950sec`
 
 
 
@@ -875,10 +897,10 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.examples.TestHelloWorld::macroWorks 0.002sec`
-* `javax0.jamal.test.examples.TestHelloWorld::macroIgnoresInput 0.001sec`
-* `javax0.jamal.test.examples.TestHelloWorld::macroRegisteredGLobal 0.001sec`
-* `Total: 0.004sec`
+* `javax0.jamal.test.examples.TestHelloWorld::macroWorks 0.004sec`
+* `javax0.jamal.test.examples.TestHelloWorld::macroIgnoresInput 0.006sec`
+* `javax0.jamal.test.examples.TestHelloWorld::macroRegisteredGLobal 0.005sec`
+* `Total: 0.015sec`
 
 
 
@@ -894,18 +916,18 @@ __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
 * `javax0.jamal.test.core.TestInclude::testPartialInclude 0.009sec`
-* `javax0.jamal.test.core.TestInclude::testRangeWithSpaces 0.006sec`
-* `javax0.jamal.test.core.TestInclude::testMultipleRanges 0.005sec`
-* `javax0.jamal.test.core.TestInclude::testDescendingRange 0.006sec`
-* `javax0.jamal.test.core.TestInclude::testOneLineRange 0.007sec`
+* `javax0.jamal.test.core.TestInclude::testRangeWithSpaces 0.004sec`
+* `javax0.jamal.test.core.TestInclude::testMultipleRanges 0.004sec`
+* `javax0.jamal.test.core.TestInclude::testDescendingRange 0.005sec`
+* `javax0.jamal.test.core.TestInclude::testOneLineRange 0.004sec`
 * `javax0.jamal.test.core.TestInclude::testOneLineRangeWithMultipleRanges 0.003sec`
-* `javax0.jamal.test.core.TestInclude::testRangeWithTooSmallBoundary 0.002sec`
-* `javax0.jamal.test.core.TestInclude::testRangeWithZero 0.005sec`
+* `javax0.jamal.test.core.TestInclude::testRangeWithTooSmallBoundary 0.004sec`
+* `javax0.jamal.test.core.TestInclude::testRangeWithZero 0.003sec`
 * `javax0.jamal.test.core.TestInclude::testRangeWithTooLargeBoundary 0.003sec`
-* `javax0.jamal.test.core.TestInclude::testNegativeRange 0.004sec`
-* `javax0.jamal.test.core.TestInclude::testMandatoryInclude 0.006sec`
-* `javax0.jamal.test.core.TestInclude::testOptionalInclude 0.004sec`
-* `Total: 0.060sec`
+* `javax0.jamal.test.core.TestInclude::testNegativeRange 0.003sec`
+* `javax0.jamal.test.core.TestInclude::testMandatoryInclude 0.003sec`
+* `javax0.jamal.test.core.TestInclude::testOptionalInclude 0.003sec`
+* `Total: 0.048sec`
 
 
 
@@ -920,13 +942,13 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.statecheck.TestCheckState::testCheckStateSwitchOff 0.004sec`
-* `javax0.jamal.test.statecheck.TestCheckState::testCheckState 0.002sec`
+* `javax0.jamal.test.statecheck.TestCheckState::testCheckStateSwitchOff 0.005sec`
+* `javax0.jamal.test.statecheck.TestCheckState::testCheckState 0.003sec`
 * `javax0.jamal.test.statecheck.TestCheckState::testCheckStateSwitchOffForGlobal 0.002sec`
-* `javax0.jamal.test.statecheck.TestCheckState::testCheckStateInTry 0.003sec`
-* `javax0.jamal.test.statecheck.TestCheckState::testCheckStateTwice 0.007sec`
+* `javax0.jamal.test.statecheck.TestCheckState::testCheckStateInTry 0.002sec`
+* `javax0.jamal.test.statecheck.TestCheckState::testCheckStateTwice 0.004sec`
 * `javax0.jamal.test.statecheck.TestCheckState::testCheckStateForGLobal 0.002sec`
-* `Total: 0.020sec`
+* `Total: 0.018sec`
 
 
 
@@ -941,14 +963,14 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.parser.TestParser::testDeeplyNested 0.012sec`
+* `javax0.jamal.test.parser.TestParser::testDeeplyNested 0.005sec`
 * `javax0.jamal.test.parser.TestParser::simpleTest 0.004sec`
-* `javax0.jamal.test.parser.TestParser::testWithSepLocal 0.002sec`
-* `javax0.jamal.test.parser.TestParser::testWithSep 0.007sec`
-* `javax0.jamal.test.parser.TestParser::testEscape 0.002sec`
-* `javax0.jamal.test.parser.TestParser::testWithSepSep 0.002sec`
-* `javax0.jamal.test.parser.TestParser::testUndefBiMacro 0.002sec`
-* `Total: 0.031sec`
+* `javax0.jamal.test.parser.TestParser::testWithSepLocal 0.005sec`
+* `javax0.jamal.test.parser.TestParser::testWithSep 0.003sec`
+* `javax0.jamal.test.parser.TestParser::testEscape 0.006sec`
+* `javax0.jamal.test.parser.TestParser::testWithSepSep 0.033sec`
+* `javax0.jamal.test.parser.TestParser::testUndefBiMacro 0.004sec`
+* `Total: 0.060sec`
 
 
 
@@ -963,8 +985,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.examples.TestIOHooks::testIOHooks 0.003sec`
-* `Total: 0.003sec`
+* `javax0.jamal.test.examples.TestIOHooks::testIOHooks 0.005sec`
+* `Total: 0.005sec`
 
 
 
@@ -979,8 +1001,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.examples.TestSpacer::spacerSpacesInput 0.001sec`
-* `Total: 0.001sec`
+* `javax0.jamal.test.examples.TestSpacer::spacerSpacesInput 0.004sec`
+* `Total: 0.004sec`
 
 
 
@@ -995,8 +1017,8 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.json.TestConvertJsonReadme::generateDoc 0.052sec`
-* `Total: 0.052sec`
+* `javax0.jamal.test.json.TestConvertJsonReadme::generateDoc 0.038sec`
+* `Total: 0.038sec`
 
 
 
@@ -1011,12 +1033,12 @@ __./jamal-test/target/surefire-reports__
 __./jamal-test/target/surefire-reports__
 
 // execute a little BASIC-formatted code for each XML
-* `javax0.jamal.test.core.TestRequire::testFutureVersion 0.009sec`
-* `javax0.jamal.test.core.TestRequire::testCurrentExactVersion 0.017sec`
-* `javax0.jamal.test.core.TestRequire::testCurrentVersionAsString 0.004sec`
+* `javax0.jamal.test.core.TestRequire::testFutureVersion 0.007sec`
+* `javax0.jamal.test.core.TestRequire::testCurrentExactVersion 0.009sec`
+* `javax0.jamal.test.core.TestRequire::testCurrentVersionAsString 0.002sec`
 * `javax0.jamal.test.core.TestRequire::testFutureVersionOK 0.029sec`
-* `Total: 0.059sec`
+* `Total: 0.047sec`
 
 
 
-Total Test Time: `5.283sec`
+Total Test Time: `6.607sec`

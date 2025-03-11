@@ -81,6 +81,12 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
         String[] value();
     }
 
+    @Target(java.lang.annotation.ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Sentinel {
+        String value();
+    }
+
 
     static List<Macro> getInstances(final ClassLoader cl) {
         return ServiceLoaded.getInstances(Macro.class, cl);

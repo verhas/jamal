@@ -76,7 +76,7 @@ It is generally recommended that the macros are stateless to support multi-threa
 If a macro has to have a state, it must be annotated using the annotation `Macro.Stateful`.
 The statelessness or annotation is checked during macro registering since Jamal version 1.8.0.
 You can switch off the functionality setting this environment variable to `false`.
-It may be needed if you want to use an older, prior 1.8.0 library or a library that does not follow this rule.
+It may be necessary if you want to use an older, prior 1.8.0 library or a library that does not follow this rule.
 
 
 ==== `JAMAL_DEBUG`

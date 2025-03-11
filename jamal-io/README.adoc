@@ -252,7 +252,7 @@ input text}
 The first line of the macro following the name of the macro contains the options.
 The rest of the macro will be used as the input text to the program, and Jamal will feed it into the standard input of the program.
 
-Note that it is not possible to execute an arbitrary program from Jamal.
+Note that it is not possible to execute any arbitrary program from Jamal.
 Anything you want to execute as a separate process has to be configured in the system.
 For security reason, the command specification is a symbolic name.
 The executable should be configured in an environment variable, a system property or a Jamal configuration in the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
@@ -274,6 +274,10 @@ After this you can execute the macro
 
 This will start the program without any argument, defined timeout or input text.
 
+Another security measure is the requirement of the `.exec.sentinel` file.
+The sentinel file is an empty file, that has the given name `.exec.sentinel` and its posix permission should be `0400`.
+It has to be in the same directory where the exec macro containin input file is or in the root directory of the development project.
+
 The options of the macro are defined as follows:
 
 *  `osOnly`, `os`
@@ -291,14 +295,14 @@ When an `input` is defined, the content of the macro will be ignored.
 *  `output`
 defines the file name to be used as standard output for the new process.
 If it is not provided, then the output will appear as the result of the macro.
-When an `output` is defined, the result of the macro will be empty string.
+When an `output` is defined, the result of the macro will be an empty string.
 *  `error`
-defines the file name to be used as standard error for the new process.
+defines the file name to be used as a standard error for the new process.
 If it is not provided, then the standard error will be used.
 *  `command`
 The name of the command to be executed.
 This is not the name of the shell script or any executable.
-For security reason, every executable should be configured via a system property, environment variable or in the `~/.jamal/settings.properties` file.
+For security reasons, every executable should be configured via a system property, environment variable or in the `~/.jamal/settings.properties` file.
 The command itself is the string value of the configuration property.
 The search for the variables first looks at the system properties, then the environment variables and finally in the settings file.
 The name for these is converted to follow the system property and environment variable conventions.
@@ -309,7 +313,7 @@ Also underscore and dot characters are converted back and forth.
 +
 To ease typing, this parameter can be multi-line strings.
 In that case, the non-empty lines are treated as individual parameters before any `arguments` parameters are added.
-Must not start with empty line.
+Must not start with an empty line.
 The first line has to be the configured name of the command.
 *  `argument`, `arguments`
 The arguments to be passed to the command.
@@ -337,12 +341,12 @@ If this option is not provided, the current working directory of the Jamal proce
 *  `async`, `asynch`, `asynchronous`
 Using this option, Jamal will not wait for the command to finish before continuing with the next macro.
 In this case, the output cannot be used as the result of the macro.
-If this option is used, the output of the macro will be empty string.
+If this option is used, the output of the macro will be an empty string.
 The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
 This macro can later be used to wait for the process to finish.
-Although technically the name is a user defined macro, you cannot use it as a conventional user defined macro.
-It does not have any `value` and whenever the code would evaluate the macro it will result an error.
-Similarly, the name MUST NOT be defined as a user defined macro at the time the `exec` macro is evaluated.
+Although technically the name is a user-defined macro, you cannot use it as a conventional user defined macro.
+It does not have any `value` and whenever the code evaluates the macro, it will result in an error.
+Similarly, the name MUST NOT be defined as a user-defined macro at the time the `exec` macro is evaluated.
 The exec macro handles the name as the core built-in macro `define` when a `!` is used after the macro name.
 If there is a user-defined macro of the same name on the same level, an error will occur.
 *  `wait`, `waitMax`, `timeOut`
@@ -357,7 +361,7 @@ This option instructs the macro to destroy the process forcibly.
 This option can only be used together with the destroy option.
 *  `optional`
 This option tells the macro to skip the execution of the command is not configured.
-If the macro uses the option `asynch` the process id will still be defined without a process.
+If the macro uses the option `asynch`, the process id will still be defined without a process.
 Any `io:waitFor` macro waiting for this process should also use the `optional` option.
 
 
@@ -596,12 +600,12 @@ If the pattern is not provided, the execution will start on all operating system
 *  `async`, `asynch`, `asynchronous`, `id`, `name`
 This option should refer to the name, which was specified in the macro `io:exec`.
 The macro will wait for the process that was started with this name to finish.
-Note that this option has two extra aliases, that do not exist in the macro `exec`.
+Note that this option has two extra aliases that do not exist in the macro `exec`.
 These are `id` and `name`.
 *  `wait`, `waitMax`, `timeOut`
 This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
 If the process does not finish in the specified time, a BadSyntax exception will be thrown.
-If this option is not present, the macro will wait for the process to finish without time limit.
+If this option is not present, the macro will wait for the process to finish without a time limit.
 *  `destroy`, `kill`
 This option can be used to destroy the process if it has not finished within the specified time.
 This option can only be used together with the wait option.
@@ -610,7 +614,7 @@ This option instructs the macro to destroy the process forcibly.
 This option can only be used together with the destroy option.
 *  `optional`
 Use this option if the process was started with the `optional` option.
-Using this option will not try to wait for a process, which was not started at the first place.
+Using this option will not try to wait for a process which was not started at the first place.
 
 
 

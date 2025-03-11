@@ -277,6 +277,18 @@ For further information read the link:../jamal-sql/README.adoc[documentation] of
 
 For further information read the link:../jamal-xls/README.adoc[documentation] of the module.
 
+===  `ScriptBasic`
+
+For further information read the link:../jamal-scriptbasic/README.adoc[documentation] of the module.
+
+===  `groovy`
+
+For further information read the link:../jamal-groovy/README.adoc[documentation] of the module.
+
+===  `ruby`
+
+For further information read the link:../jamal-ruby/README.adoc[documentation] of the module.
+
 ===  `rest`
 
 For further information read the link:../jamal-rest/README.adoc[documentation] of the module.
@@ -288,6 +300,10 @@ For further information read the link:../jamal-git/README.adoc[documentation] of
 ===  `python`
 
 For further information read the link:../jamal-py/README.adoc[documentation] of the module.
+
+===  `io`
+
+For further information read the link:../jamal-io/README.adoc[documentation] of the module.
 
 
 

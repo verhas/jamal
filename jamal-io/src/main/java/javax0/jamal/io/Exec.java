@@ -19,8 +19,8 @@ import java.util.function.Consumer;
 import static java.lang.ProcessBuilder.Redirect.INHERIT;
 
 @Macro.Name("io:exec")
-public
-class Exec implements Macro, Scanner.FirstLine {
+@Macro.Sentinel("exec")
+public class Exec implements Macro, Scanner.FirstLine {
 
     final static Consumer<String> DEV_NULL = (String line) -> {
     };
@@ -29,7 +29,7 @@ class Exec implements Macro, Scanner.FirstLine {
     public String evaluate(final Input in, final Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);
         // snippet exec_options
-        final var osOnly = scanner.pattern(null, "osOnly", "os");
+        final var osOnly = scanner.pattern(null, "osOnly", "os").optional();
         // {%@define osOnly=defines a pattern for the operating system's name.
         // The execution will only start if the operating system's name matches the pattern.
         // The pattern is a regular expression.
@@ -37,21 +37,21 @@ class Exec implements Macro, Scanner.FirstLine {
         // It means that it is enough to provide a pattern that matches part of the OS name.
         // For example, `windows` will match `Windows 10` and `Windows 7` but not `Linux`.
         // If the pattern is not provided, the execution will start on all operating systems.%}{%osOnly%}
-        final var input = scanner.str(null, "input");
+        final var input = scanner.str(null, "input").optional();
         // defines the file name to be used as standard input for the new process.
         // If it is not provided, then the content of the macro will be used as input.
         // When an `input` is defined, the content of the macro will be ignored.
-        final var output = scanner.str(null, "output");
+        final var output = scanner.str(null, "output").optional();
         // defines the file name to be used as standard output for the new process.
         // If it is not provided, then the output will appear as the result of the macro.
-        // When an `output` is defined, the result of the macro will be empty string.
-        final var error = scanner.str(null, "error");
-        // defines the file name to be used as standard error for the new process.
+        // When an `output` is defined, the result of the macro will be an empty string.
+        final var error = scanner.str(null, "error").optional();
+        // defines the file name to be used as a standard error for the new process.
         // If it is not provided, then the standard error will be used.
         final var command = scanner.str(null, "command");
         // The name of the command to be executed.
         // This is not the name of the shell script or any executable.
-        // For security reason, every executable should be configured via a system property, environment variable or in the `~/.jamal/settings.properties` file.
+        // For security reasons, every executable should be configured via a system property, environment variable or in the `~/.jamal/settings.properties` file.
         // The command itself is the string value of the configuration property.
         // The search for the variables first looks at the system properties, then the environment variables and finally in the settings file.
         // The name for these is converted to follow the system property and environment variable conventions.
@@ -62,14 +62,14 @@ class Exec implements Macro, Scanner.FirstLine {
         // +
         // To ease typing, this parameter can be multi-line strings.
         // In that case, the non-empty lines are treated as individual parameters before any `arguments` parameters are added.
-        // Must not start with empty line.
+        // Must not start with an empty line.
         // The first line has to be the configured name of the command.
         final var arguments = scanner.list(null, "argument", "arguments");
         // The arguments to be passed to the command.
         // This is a multivalued parameter.
         // To ease typing, each parameter can be multi-line strings.
         // In that case, the non-empty lines are treated as individual parameters.
-        final var environment = scanner.str(null, "environment", "env");
+        final var environment = scanner.str(null, "environment", "env").optional();
         // This option can specify the environment variables to be passed to the command.
         // This option usually is a multi-line string, thus the use of the `"""` delimiter is recommended.
         // Each line of the configuration parameter can be
@@ -84,23 +84,23 @@ class Exec implements Macro, Scanner.FirstLine {
         final var envReset = scanner.bool(null, "envReset", "reset");
         // This option can be used to "reset" the environment variables before the command is executed.
         // Without these options, the command will inherit the environment variables of the Jamal process, and the defined environment variables are added to the current list.
-        final var cwd = scanner.str(null, "directory", "cwd", "curdir", "cd");
+        final var cwd = scanner.str(null, "directory", "cwd", "curdir", "cd").optional();
         // Set the current working directory for the command.
         // If this option is not provided, the current working directory of the Jamal process will be used.
-        final var async = scanner.str(null, "async", "asynch", "asynchronous");
+        final var async = scanner.str(null, "async", "asynch", "asynchronous").optional();
         // Using this option, Jamal will not wait for the command to finish before continuing with the next macro.
         // In this case, the output cannot be used as the result of the macro.
-        // If this option is used, the output of the macro will be empty string.
+        // If this option is used, the output of the macro will be an empty string.
         // The value of this option has to be a macro name, which will be defined and will hold the reference to the process.
         // This macro can later be used to wait for the process to finish.
-        // Although technically the name is a user defined macro, you cannot use it as a conventional user defined macro.
-        // It does not have any "value" and whenever the code would evaluate the macro it will result an error.
-        // Similarly, the name MUST NOT be defined as a user defined macro at the time the `exec` macro is evaluated.
+        // Although technically the name is a user-defined macro, you cannot use it as a conventional user defined macro.
+        // It does not have any "value" and whenever the code evaluates the macro, it will result in an error.
+        // Similarly, the name MUST NOT be defined as a user-defined macro at the time the `exec` macro is evaluated.
         // The exec macro handles the name as the core built-in macro `define` when a `!` is used after the macro name.
         // If there is a user-defined macro of the same name on the same level, an error will occur.
-        final var wait = scanner.number(null, "wait", "waitMax", "timeOut");
-        // {%@define wait=This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
-        // If the process does not finish in the specified time, a BadSyntax exception will be thrown.%}{%wait%}
+        final var wait = scanner.number(null, "wait", "waitMax", "timeOut").optional();
+        // {%@def wait=This option can be used to specify the maximum amount of time in milliseconds to wait for the process to finish.
+        // If the process does not finish in the specified time, a BadSyntax exception will be thrown.%}
         // This option cannot be used together with the `async` option.
         final var destroy = scanner.bool(null, "destroy", "kill");
         // {%@define destroy=This option can be used to destroy the process if it has not finished within the specified time.
@@ -110,7 +110,7 @@ class Exec implements Macro, Scanner.FirstLine {
         // This option can only be used together with the destroy option.%}{%force%}
         final var optional = scanner.bool(null, "optional");
         // This option tells the macro to skip the execution of the command is not configured.
-        // If the macro uses the option `asynch` the process id will still be defined without a process.
+        // If the macro uses the option `asynch`, the process id will still be defined without a process.
         // Any `io:waitFor` macro waiting for this process should also use the `optional` option.
         // end snippet
         scanner.done();
@@ -337,23 +337,23 @@ class Exec implements Macro, Scanner.FirstLine {
         public String evaluate(final Input in, final Processor processor) throws BadSyntax {
             final var scanner = newScanner(in, processor);
             // snippet waitFor_options
-            final var osOnly = scanner.pattern(null, "osOnly", "os");
+            final var osOnly = scanner.pattern(null, "osOnly", "os").optional();
             // {%osOnly%}
             final var async = scanner.str(null, "async", "asynch", "asynchronous", "id", "name");
             // This option should refer to the name, which was specified in the macro `io:exec`.
             // The macro will wait for the process that was started with this name to finish.
-            // Note that this option has two extra aliases, that do not exist in the macro `exec`.
+            // Note that this option has two extra aliases that do not exist in the macro `exec`.
             // These are `id` and `name`.
-            final var wait = scanner.number(null, "wait", "waitMax", "timeOut");
+            final var wait = scanner.number(null, "wait", "waitMax", "timeOut").optional();
             // {%wait%}
-            // If this option is not present, the macro will wait for the process to finish without time limit.
+            // If this option is not present, the macro will wait for the process to finish without a time limit.
             final var destroy = scanner.bool(null, "destroy", "kill");
             // {%destroy%}
             final var force = scanner.bool(null, "force", "forced");
             // {%force%}
             final var optional = scanner.bool(null, "optional");
             // Use this option if the process was started with the `optional` option.
-            // Using this option will not try to wait for a process, which was not started at the first place.
+            // Using this option will not try to wait for a process which was not started at the first place.
             // end snippet
             scanner.done();
             final var idMacro = processor.getRegister().getUserDefined(async.get());

@@ -9,6 +9,7 @@ import javax0.jamal.api.Processor;
 
 import java.io.StringWriter;
 
+@Macro.Sentinel("basic")
 public class Basic implements Macro {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         try {

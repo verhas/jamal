@@ -10,8 +10,8 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 
 @Macro.Name("ruby:property")
-public
-class RubyProperty implements Macro, InnerScopeDependent, Scanner {
+@Macro.Sentinel("ruby")
+public class RubyProperty implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var shell = Shell.getShell(in, processor, this);

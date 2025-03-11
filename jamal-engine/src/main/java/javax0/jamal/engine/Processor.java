@@ -1,7 +1,7 @@
 package javax0.jamal.engine;
 
-import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.api.*;
+import javax0.jamal.api.UserDefinedMacro;
 import javax0.jamal.engine.debugger.DebuggerFactory;
 import javax0.jamal.engine.util.ExceptionDumper;
 import javax0.jamal.engine.util.MacroBodyFetcher;
@@ -49,6 +49,7 @@ public class Processor implements javax0.jamal.api.Processor {
     final private List<BadSyntax> deferredExceptions = new ArrayList<>();
     private boolean deferExceptions = true; // can be switched off when executing in 'try' macro
     private final Context context;
+    private final Map<Object, Context> localContexts = new HashMap<>();
     private final Debugger debugger;
     private final DebuggerStub debuggerStub = new DebuggerStub(this);
     private final OptionsStore optionsStore;
@@ -227,22 +228,22 @@ public class Processor implements javax0.jamal.api.Processor {
 
 
     @Override
-    public boolean setDeferring(final boolean newValue){
+    public boolean setDeferring(final boolean newValue) {
         final var b = deferExceptions;
         deferExceptions = newValue;
         return b;
     }
 
     @Override
-    public void deferredThrow(final String errorMessage, final Object... parameters) throws BadSyntax{
+    public void deferredThrow(final String errorMessage, final Object... parameters) throws BadSyntax {
         deferredThrow(new BadSyntax(String.format(errorMessage, parameters)));
     }
 
     @Override
     public void deferredThrow(final BadSyntax bs) throws BadSyntax {
-        if( deferExceptions ) {
+        if (deferExceptions) {
             deferredExceptions.add(bs);
-        }else{
+        } else {
             throw bs;
         }
     }
@@ -1069,6 +1070,15 @@ public class Processor implements javax0.jamal.api.Processor {
     @Override
     public Context getContext() {
         return context;
+    }
+
+    @Override
+    public <T extends Context> T getLocalContext(final Object key, Supplier<T> contextSupplier) {
+        if (!localContexts.containsKey(key)) {
+            localContexts.put(key, contextSupplier.get());
+        }
+        //noinspection unchecked
+        return (T)localContexts.get(key);
     }
 
     @Override

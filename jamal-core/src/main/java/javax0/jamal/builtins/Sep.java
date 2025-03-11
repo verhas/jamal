@@ -4,6 +4,7 @@ import javax0.jamal.api.BadSyntax;
 import javax0.jamal.api.Input;
 import javax0.jamal.api.Macro;
 import javax0.jamal.api.Processor;
+import javax0.jamal.tools.Parop;
 
 import java.util.regex.Pattern;
 
@@ -19,13 +20,17 @@ public class Sep implements Macro {
 
     @Override
     public String evaluate(Input input, Processor processor) throws BadSyntax {
+        final var validator = Parop.validator(processor);
         trim(input);
         if (input.length() == 0) {
             restoreLastSavedDelimiters(processor);
             return "";
         }
-
-        BadSyntax.when(input.length() == 1, "macro 'sep' has too short argument, only a single character");
+        if (validator.when(input.length() == 1)
+                .then("macro 'sep' has too short argument, only a single character")
+                .hasFailed()) {
+            return "";
+        }
 
         final String openMacro;
         final String closeMacro;
@@ -41,7 +46,7 @@ public class Sep implements Macro {
             if (sep.equals(openMacro) || sep.equals(closeMacro)) {
                 final var open = processor.getRegister().open();
                 final var close = processor.getRegister().close();
-                throw new BadSyntax(open + "@sep " + input + close + " is not correct. Use something different to separate the two characters.");
+                processor.deferredThrow("%s @sep %s%s is not correct. Use something different to separate the two characters.", open, input, close);
             }
         } else {
             final var matcher = PATTERN.matcher(input);
@@ -52,21 +57,27 @@ public class Sep implements Macro {
                 if (misleadingOpenString(openMacro, closeMacro)) {
                     final var open = processor.getRegister().open();
                     final var close = processor.getRegister().close();
-                    throw new BadSyntax(open + "@sep " + input + close + " is ambiguous. Use a definition that does not contain spaces.");
+                    processor.deferredThrow("%s@sep %s%s is ambiguous. Use a definition that does not contain spaces.", open, input, close);
                 }
             } else {
                 var sep = input.substring(0, 1);
                 skip(input, 1);
                 var sepIndex = input.indexOf(sep);
-                BadSyntax.when(sepIndex == -1, "macro 'sep' needs two separators, like {@sep/[[/]]} where '/' is the separator");
+                if (validator.when(sepIndex == -1).then("macro 'sep' needs two separators, like {@sep/[[/]]} where '/' is the separator").hasFailed()) {
+                    return "";
+                }
                 openMacro = input.substring(0, sepIndex).trim();
                 closeMacro = input.substring(sepIndex + 1).trim();
-                BadSyntax.when(closeMacro.contains(sep), "macro 'sep' closing string must not contain the separator character");
+                if (validator.when(closeMacro.contains(sep)).then("macro 'sep' closing string must not contain the separator character").hasFailed()) {
+                    return "";
+                }
             }
         }
 
-        BadSyntax.when(openMacro.length() == 0 || closeMacro.length() == 0, "using macro 'sep' you cannot define zero length macro open and/or macro close strings");
-        BadSyntax.when(openMacro.equals(closeMacro), "using macro 'sep' you cannot use the same string as macro opening and macro closing string");
+        if (validator.when(openMacro.isEmpty() || closeMacro.isEmpty()).then("using macro 'sep' you cannot define zero length macro open and/or macro close strings")
+                .when(openMacro.equals(closeMacro)).then("using macro 'sep' you cannot use the same string as macro opening and macro closing string").anyFailed()) {
+            return "";
+        }
         processor.separators(openMacro, closeMacro);
         return "";
     }

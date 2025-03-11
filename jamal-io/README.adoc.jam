@@ -211,7 +211,7 @@ input text}
 The first line of the macro following the name of the macro contains the options.
 The rest of the macro will be used as the input text to the program, and Jamal will feed it into the standard input of the program.
 
-Note that it is not possible to execute an arbitrary program from Jamal.
+Note that it is not possible to execute any arbitrary program from Jamal.
 Anything you want to execute as a separate process has to be configured in the system.
 For security reason, the command specification is a symbolic name.
 The executable should be configured in an environment variable, a system property or a Jamal configuration in the `~/.jamal/settings.properties` or `~/.jamal/settings.xml` file.
@@ -232,6 +232,10 @@ After this you can execute the macro
 ----
 
 This will start the program without any argument, defined timeout or input text.
+
+Another security measure is the requirement of the `.exec.sentinel` file.
+The sentinel file is an empty file, that has the given name `.exec.sentinel` and its posix permission should be `0400`.
+It has to be in the same directory where the exec macro containin input file is or in the root directory of the development project.
 
 The options of the macro are defined as follows:
 {%#eval {%`@comment%}

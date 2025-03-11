@@ -276,7 +276,16 @@ public interface Processor extends AutoCloseable {
      *
      * @return the context object the embedding application set or {@code null} in case the context object was not set.
      */
-    Context getContext();
+    <T extends Context> T getContext();
+
+    /**
+     * Get a local context assigned to the key object.
+     * If it does not exists, then create it using the supplier
+     * @param key the key to which thsi context is specific
+     * @param contextSupplier  the context supplier if there is no context for the given key yet
+     * @return the context
+     */
+    <T extends Context> T getLocalContext(final Object key, Supplier<T> contextSupplier);
 
     /**
      * A very simple functional interface that the embedding applications can implement, provide to accommodate log

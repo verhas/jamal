@@ -16,8 +16,8 @@ output will that way become a test execution report.
 and it makes it possible to use Yaml structural composition for POM files and other XML formats that do not use
 attributes. (DONE)
 
-* Implement breakpoints in Jamal debugger. A Jamal breakpoint is a string, and the execution in the debugger stops when
- the string is part of the next part to be executed. (DONE)
+* Implement breakpoints in the Jamal debugger.
+A Jamal breakpoint is a string, and the execution in the debugger stops when the string is part of the next part to be executed. (DONE)
 
 * Implement JSON reading and writing and structural construction similar to Yaml. (DONE)
 
@@ -27,11 +27,11 @@ attributes. (DONE)
 
 * Module to read data from Microsoft XLS formatted file via Apache POI (DONE)
 
-* Import properties as user defined macros from a `pom.xml`.
+* Import properties as user-defined macros from a `pom.xml`.
 
 * Make it possible to use Jamal macros in Word DOCX files. (DONE)
 
-* Support Kotlin as macro development language (DONE)
+* Support Kotlin as a macro development language (DONE)
 
 * Implement JUnit plugin that does all the conversions of the `*.jam` files without individual unit tests.
 
@@ -39,4 +39,4 @@ attributes. (DONE)
 
 * Implement `res:` file loading so that ``res:`macroName` `` can be used to load a resource file from the classpath of the class implementing the macro `macroName`. (DONE)
 
-* read and write from and to SQL databases. Writing can be something like writing a log recording the fact of the conversion.
+* read and write from and to SQL databases. Writing can be something like writing a log recording the fact of the conversion. (DONE)

@@ -5,8 +5,8 @@ import javax0.jamal.tools.Scanner;
 import org.jruby.RubyString;
 
 @Macro.Name("ruby:closer")
-public
-class RubyCloser implements Macro, InnerScopeDependent, Scanner {
+@Macro.Sentinel("ruby")
+public class RubyCloser implements Macro, InnerScopeDependent, Scanner {
     private static class Closer implements AutoCloseable, javax0.jamal.api.Closer.OutputAware {
         private Input result;
         private final Shell shell;

@@ -735,6 +735,14 @@ The ZIP file you extracted to the `.Asciidoctor/lib` folder contains the followi
 
 * `jamal-py`
 
+* `jamal-ruby`
+
+* `jamal-groovy`
+
+* `jamal-scriptbasic`
+
+* `jamal-io`
+
 * `jamal-test`
 
 * `jamal-debug`

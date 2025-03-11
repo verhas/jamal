@@ -14,7 +14,6 @@ import static javax0.jamal.tools.InputHandler.skipWhiteSpaces;
 /**
  * See the documentation of the "for" loop in the README.doc in the project root.
  */
-@Macro.Stateful
 public class For implements Macro, InnerScopeDependent, OptionsControlled.Core, Scanner.Core {
 
     enum KeyWord {

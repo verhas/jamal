@@ -4,6 +4,7 @@ import javax0.jamal.api.*;
 import javax0.jamal.tools.Scanner;
 
 @Macro.Name("groovy:eval")
+@Macro.Sentinel("groovy")
 public class GroovyEval implements Macro, InnerScopeDependent, Scanner {
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         try {

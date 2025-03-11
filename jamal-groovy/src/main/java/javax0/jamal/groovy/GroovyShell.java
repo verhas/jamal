@@ -5,6 +5,7 @@ import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 
 @Macro.Name("groovy:shell")
+@Macro.Sentinel("groovy")
 public class GroovyShell implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {

@@ -2,6 +2,7 @@ package javax0.jamal.engine.macro;
 
 import javax0.jamal.api.*;
 import javax0.jamal.tools.InputHandler;
+import javax0.jamal.tools.Sentinel;
 import javax0.levenshtein.Levenshtein;
 
 import java.lang.reflect.Field;
@@ -375,6 +376,21 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
 
     @Override
     public void define(Macro macro) {
+        for (Class<?> k = macro.getClass(); k != Object.class; k = k.getSuperclass()) {
+            final var sentinel =k.getDeclaredAnnotation(Macro.Sentinel.class);
+            if ( sentinel != null) {
+                final var type = sentinel.value();
+                if( type == null || type.isEmpty() ) {
+                    throw new RuntimeException("@" + Macro.Sentinel.class.getSimpleName() + " annotation is null or empty on " + k.getName());
+                }
+                final var proxy = Sentinel.proxy(macro, type);
+                for (final var alias : macro.getIds()) {
+                    define(proxy, alias);
+                }
+                return;
+            }
+        }
+
         for (final var alias : macro.getIds()) {
             define(macro, alias);
         }
@@ -387,7 +403,7 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
     }
 
     /**
-     * Store all the macro classes that were already checked for tastefulness, so that further checks can
+     * Store all the macro classes that were already checked for statefulness so that further checks can
      * ignore them.
      * <p>
      * The map contains a class as a key if it was checked and the value is {@code true} if the class is
@@ -412,12 +428,12 @@ public class MacroRegister implements javax0.jamal.api.MacroRegister, Debuggable
         if (!checkState) {
             return;
         }
-        final Boolean statefulAndWrong = notAnnotatedStateful.get(klass);
-        if (statefulAndWrong != null) {
-            if (statefulAndWrong) {
+        if (notAnnotatedStateful.containsKey(klass)) {
+            if (notAnnotatedStateful.get(klass)) {
                 throwUp(klass, klass, null);
+            } else {
+                return;
             }
-            return;
         }
         for (Class<?> k = klass; k != Object.class; k = k.getSuperclass()) {
             if (k.getDeclaredAnnotation(Macro.Stateful.class) == null) {

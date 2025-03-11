@@ -303,6 +303,18 @@ The library provides macros that can load Java Built-in Macros from Maven artifa
 
 {%further xls%}
 
+=== {%#block {%depCounter%}%} `ScriptBasic`
+
+{%further scriptbasic%}
+
+=== {%#block {%depCounter%}%} `groovy`
+
+{%further groovy%}
+
+=== {%#block {%depCounter%}%} `ruby`
+
+{%further ruby%}
+
 === {%#block {%depCounter%}%} `rest`
 
 {%further rest%}
@@ -315,7 +327,11 @@ The library provides macros that can load Java Built-in Macros from Maven artifa
 
 {%further py%}
 
+=== {%#block {%depCounter%}%} `io`
 
-{%#assert:equals /{%dependencies%}/{%depCounter last%}/Not all dependencies are documented or some documented dependency is not there any more%}
+{%further io%}
+
+
+{%#assert:equals /{%dependencies%}/{%depCounter last%}/Not all dependencies are documented or some documented dependency is not there any more {%dependencies%} != {%depCounter last%}%}
 
 

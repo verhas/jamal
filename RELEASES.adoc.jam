@@ -25,16 +25,39 @@ __currently there are no known bugs in this release__
 * Debugger was updated, including now filtering for macros.
 
 * The asciidoctor version of the program displays the errors at the end of the document interactive in a more readable way.
+The stack trace is collapsed by default thus the list of the errors is more readable.
 
 * You can define built-in macros in a very simple way using Python.
-Needs Python installed.
+It needs Python installed.
+Jamal works without Python, but if you want to use Python coded macros, then you cannot do that without a Python interpreter.
+To use the Python interpreter from Jamal, you need a `.python.sentinel` file.
+{%@def useSentinel=+
+A sentinel file should exist in the directory of the input or in the root of the project.
+The permission of a sentinel file has to be `0400` (owner only, read-only).
+It is very unlikely to get such a file automatically, downloading a Jamal document.
+%}
+
 
 * Integration tests running in Docker are now a must to create a release.
 Integration tests also run in GitHub.
+This is an internal feature that will result more robust releases.
 
 * The macro `references` define macros "soft" when loaded from a reference file, so you can `{@define !...}` them.
 
 * Macros can define errors that are collected and are displayed at the end of the processing even if the `failfast` option is on.
+This is more like an internal feature, but it provides more robust error handling and error recovery to allow discovery of all errors.
+
+* The Groovy, Ruby, ScriptBasic interpreters and the IO Module are now part of the standard module list.
+It means that the macros are automatically available; you do not need to load them.
+On the other hand, you can only execute the macros if there is a properly named and secure sentinel file.
+These are `.groovy.sentinel`, `.ruby.sentinel`, `.basic.sentinel` and `.exec.sentinel`.
+In the IO module only the macro `exec` is protected by a sentinel file.
+
+{%useSentinel%}
+
++
+When a sentinel file is missing or has the wrong permission settings, the error message will contain the necessary Unix commands to fix the setup.
+Issue these commands only if you trust the document.
 
 {%RELEASE HARKIV%}
 

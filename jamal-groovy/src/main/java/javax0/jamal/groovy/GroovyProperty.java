@@ -10,6 +10,7 @@ import javax0.jamal.tools.InputHandler;
 import javax0.jamal.tools.Scanner;
 
 @Macro.Name("groovy:property")
+@Macro.Sentinel("groovy")
 public class GroovyProperty implements Macro, InnerScopeDependent, Scanner {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {

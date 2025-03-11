@@ -678,7 +678,7 @@ To avoid this ambiguity, you have to use `()` after the name of the macro if the
 
 Setting the option `lenient` is a very aggressive way to make all macros inside the current scope evaluated in the lenient way.
 There are more subtle methods to specify that some macros may work with less or more actual parameter values than their concrete arguments.
-Macros can define a minimum, and a maximum number of parameters they need when they are called.
+Macros can define a minimum and a maximum number of parameters they need when they are called.
 When an argument in the `define` macro starts with `...` characters it means that the next argument, and the arguments afterward are optional.
 These arguments will be empty string when no values are provided. For example,
 

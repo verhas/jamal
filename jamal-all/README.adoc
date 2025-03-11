@@ -58,15 +58,15 @@ This will add the following dependencies to your project:
 
 * `jamal-py`
 
+* `jamal-ruby`
+
 * `jamal-groovy`
+
+* `jamal-scriptbasic`
 
 * `jamal-io`
 
 * `jamal-openai`
-
-* `jamal-ruby`
-
-* `jamal-scriptbasic`
 
 * `jamal-word`
 

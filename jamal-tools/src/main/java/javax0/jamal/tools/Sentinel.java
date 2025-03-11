@@ -1,5 +1,6 @@
 package javax0.jamal.tools;
 
+import javax0.jamal.api.*;
 import javax0.jamal.api.Input;
 
 import java.io.File;
@@ -7,13 +8,49 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.*;
+import java.util.Objects;
 import java.util.Set;
 
 public class Sentinel {
-    private Path approvalFile;
+
+    /**
+     * A macro that checks the existence of a sentinel file, and if it is okay, then it invokes the underlying macro.
+     */
+    public static class CheckerProxy implements Macro {
+
+        private final Macro macro;
+        private final String type;
+
+        public CheckerProxy(Macro macro, String type) {
+            this.macro = macro;
+            this.type = type;
+        }
+
+        @Override
+        public String evaluate(Input in, Processor processor) throws BadSyntax {
+            final var sentinel = javax0.jamal.tools.Sentinel.forThe(in, processor).withType(type);
+            BadSyntax.when(!sentinel.check(), sentinel.getErrorMessage());
+            return macro.evaluate(in, processor);
+        }
+    }
+
+    public static class InnerScopeDependentCheckerProxy extends CheckerProxy implements InnerScopeDependent {
+        public InnerScopeDependentCheckerProxy(Macro macro, String type) {
+            super(macro, type);
+        }
+    }
+
+
+    public static Macro proxy(Macro macro, String type) {
+        if (macro instanceof InnerScopeDependent) {
+            return new InnerScopeDependentCheckerProxy(macro, type);
+        } else {
+            return new CheckerProxy(macro, type);
+        }
+    }
 
     private final Input input;
-    private String type = null;
+    private final Processor processor;
 
     public String getErrorMessage() {
         return message;
@@ -21,32 +58,89 @@ public class Sentinel {
 
     private String message = null;
 
-    public static Sentinel forThe(final Input input) {
-        return new Sentinel(input);
+    public static Sentinel forThe(final Input input, final Processor processor) {
+        return new Sentinel(input, processor);
     }
 
-    public Sentinel withType(final String type) {
-        this.type = type;
-        result = _check();
-        return this;
-    }
+    /**
+     * Sentinel context keeps track of the sentinel check and avoids checking the existence of the sentinel file
+     * and the permission set if it was already checked.
+     * <p>
+     * This context is a local context indexed by a {@link SentinelContext.Key} containing the type of the sentinel and
+     * the input. It is stored in the processor local context map.
+     */
+    private static class SentinelContext implements Context {
 
-    private Sentinel(Input input) {
-        this.input = input;
+        final boolean result;
+
+        private SentinelContext(boolean result) {
+            this.result = result;
+        }
+
+        private static class Key {
+
+            private final String type;
+            private final Input input;
+
+            private Key(String type, Input input) {
+                this.type = type;
+                this.input = input;
+
+            }
+
+            @Override
+            public boolean equals(Object o) {
+                if (o == null || getClass() != o.getClass()) return false;
+                Key that = (Key) o;
+                return Objects.equals(type, that.type) && Objects.equals(input, that.input);
+            }
+
+            @Override
+            public int hashCode() {
+                return Objects.hash(type, input);
+            }
+
+        }
+
+        public static Key key(String type, Input input) {
+            return new Key(type, input);
+        }
     }
 
     private boolean result;
+
+    /**
+     * Create the sentinel object and also check that the sentinel file exists and has the proper permission.
+     * <p>
+     * If the local contexts contain a sentinel object already for the same input and type, then the file check is
+     * skipped and the already established boolean value will be in the sentinel object.
+     *
+     * @param type the type of the sentinel. This is the `.<type>.sentinel` part of the name of the file.
+     * @return the sentinel object
+     */
+    public Sentinel withType(final String type) {
+        result = processor.getLocalContext(SentinelContext.key(type, input), () -> new SentinelContext(_check(type))).result;
+        return this;
+    }
+
+    private Sentinel(Input input, Processor processor) {
+        this.input = input;
+        this.processor = processor;
+    }
+
+
     public boolean check() {
         return result;
     }
 
-    private boolean _check() {
+    private boolean _check(final String type) {
         try {
             final var root = InputHandler.getRootDir(input);
+            final Path approvalFile;
             if (root == null) {
-                this.approvalFile = getValidSentinel(type, InputHandler.getInputFileLocation(input));
+                approvalFile = getValidSentinel(type, InputHandler.getInputFileLocation(input));
             } else {
-                this.approvalFile = getValidSentinel(type, InputHandler.getInputFileLocation(input), root);
+                approvalFile = getValidSentinel(type, InputHandler.getInputFileLocation(input), root);
             }
             return approvalFile != null;
         } catch (IOException e) {

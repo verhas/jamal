@@ -15,8 +15,7 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Macro.Name("io:remove")
-public
-class Remove implements Macro, InnerScopeDependent, Scanner.FirstLine {
+public class Remove implements Macro, InnerScopeDependent, Scanner.FirstLine {
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
         final var scanner = newScanner(in, processor);

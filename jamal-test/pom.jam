@@ -27,6 +27,7 @@
         {@for MODULE in (api,tools,engine,core,prog,yaml,json,snippet,jamal,debug)=
             {dependency|{GROUPID}|jamal-MODULE}}
         {dependency|{GROUPID}|jamal-testsupport||test}
+        {dependency|org.mockito|mockito-core||test}
         {@for MODULE in (api,engine,params)=
             {dependency|org.junit.jupiter|junit-jupiter-MODULE}}
     }

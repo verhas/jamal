@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 @Macro.Name("python")
+@Macro.Sentinel("python")
 public class PythonFunction implements Macro, Scanner {
 
     // snipline PYTHON_START_REGEX
@@ -68,8 +69,6 @@ public class PythonFunction implements Macro, Scanner {
         InputHandler.skipWhiteSpaces(in);
         final var dir = directory.get();
         final var v = venv.get();
-        final var sentinel = Sentinel.forThe(in).withType("python");
-        BadSyntax.when(!sentinel.check(), sentinel.getErrorMessage());
 
         final var interp = processor.state(this, () -> createInterpreter(processor, dir, v));
         final String result;

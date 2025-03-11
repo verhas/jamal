@@ -6,6 +6,7 @@ import javax0.jamal.tools.Scanner;
 import java.util.Objects;
 
 @Macro.Name("groovy:closer")
+@Macro.Sentinel("groovy")
 public class GroovyCloser implements Macro, InnerScopeDependent, Scanner {
     private static class Closer implements AutoCloseable, javax0.jamal.api.Closer.OutputAware {
         private Input result;

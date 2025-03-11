@@ -33,7 +33,7 @@ setup_repository() {
     rm -rf "$JAMAL_HOME/.m2"
     mkdir -p "$JAMAL_HOME/.m2/repository"
 
-    # clone the respository if it is not there
+    # clone the repository if it is not there
     if [[ ! -e jamal ]]; then
         print_step "Cloning the latest version from GitHub"
         git clone https://github.com/verhas/jamal.git
@@ -41,7 +41,8 @@ setup_repository() {
 
     print_step "Building Jamal"
     cd "$JAMAL_HOME/jamal" || exit 1
-    mvn clean install || { echo "Maven compilation failed"; exit 1; }
+    # this test rins only on source that was already compiled, there is need fpr the unit tests
+    mvn -Dmaven.test.skip=true clean install || { echo "Maven compilation failed"; exit 1; }
 }
 
 extract_version() {
@@ -111,41 +112,61 @@ calculate_classpath() {
 }
 
 run_script_test() {
-    local X="$1"
-    local Y="$2"
-    local Z="$3"
+    local LANG="$1"
+    local SCRIPT="$2"
+    local RESULT="$3"
 
-    echo "$Y" > test_$X.txt.jam
-    if [ ! -e test_$X.txt.jam ]; then
-        echo "test_$X.txt.jam was not created"
+    echo "$SCRIPT" > test_$LANG.txt.jam
+    if [ ! -e test_$LANG.txt.jam ]; then
+        echo "test_$LANG.txt.jam was not created"
         exit 1
     fi
-    echo "$Z" > test_$X.txt
-    if [ ! -e test_$X.txt ]; then
-        echo "test_$X.txt was not created"
+    echo "$RESULT" > test_$LANG.txt
+    if [ ! -e test_$LANG.txt ]; then
+        echo "test_$LANG.txt was not created"
         exit 1
     fi
+
+    if [ -e ".$LANG.sentinel" ]; then
+      chnod 0777 ".$LANG.sentinel"
+      rm ".$LANG.sentinel" || (echo "could not delete sentinel file" && exit 1)
+    fi
+
     # shellcheck disable=SC2090
-    $JAMAL test_$X.txt.jam test_$X.test
+    $JAMAL test_$LANG.txt.jam test_$LANG.test
 
-    echo test_$X.test
-    cat test_$X.test
-    echo test_$X.txt
-    cat test_$X.txt
-    echo test_$X.txt.jam
-    cat test_$X.txt.jam
-
-    if [ ! -e test_$X.test ]; then
-        echo "test_$X.test was not created"
+    if [ -e test_$LANG.test ]; then
+        echo "FAIL: test_$LANG.test was created w/o sentinel file"
         exit 1
     fi
 
-    if [ "$(diff -b test_$X.txt test_$X.test)" ] ;then
+    touch ".$LANG.sentinel"
+
+    # shellcheck disable=SC2090
+    $JAMAL test_$LANG.txt.jam test_$LANG.test
+
+    if [ -e test_$LANG.test ]; then
+        echo "FAIL: test_$LANG.test was created with insecure sentinel file"
+        exit 1
+    fi
+
+    # securing the sentinel file
+    chmod 0400 ".$LANG.sentinel"
+
+    # shellcheck disable=SC2090
+    $JAMAL test_$LANG.txt.jam test_$LANG.test
+
+    if [ ! -e test_$LANG.test ]; then
+        echo "test_$LANG.test was not created"
+        exit 1
+    fi
+
+    if [ "$(diff -b test_$LANG.txt test_$LANG.test)" ] ;then
         echo "Jamal via SHELL created different output"
-        diff -b test_$X.txt test_$X.test
+        diff -b test_$LANG.txt test_$LANG.test
         exit 1
     else
-       echo "$X test successful"
+       echo "$LANG test successful"
     fi
 }
 
@@ -160,7 +181,7 @@ END
       echo -n 'Hello, You!' > test_py.txt
       $JAMAL test_py.txt.jam test_py.test
       if [[ -e test_py.test ]]; then
-          echo "test_py.test was created w/o sentinel file"
+          echo "FAIL: test_py.test was created w/o sentinel file"
           exit 1
       else
           echo "Python does not run without sentinel file. Great."
@@ -168,7 +189,7 @@ END
       touch .python.sentinel
       $JAMAL test_py.txt.jam test_py.test
       if [[ -e test_py.test ]]; then
-          echo "test_py.test was created insecure"
+          echo "FAIL: test_py.test was created insecure"
           exit 1
       else
           echo "Python does not run with insecure sentinel file. Great."
@@ -177,14 +198,14 @@ END
       chmod 0400 .python.sentinel
       $JAMAL test_py.txt.jam test_py.test
       if [[ ! -e test_py.test ]]; then
-          echo "test_py.test was not created"
+          echo "FAIL: test_py.test was not created"
           exit 1
       else
           echo "Python runs with sentinel file. Great."
       fi
 
       if [ "$(diff -b test_py.txt test_py.test)" ] ;then
-          echo "Python created different output"
+          echo "FAIL: Python created different output"
           diff -b test_py.txt test_py.test
           exit 1
       else
@@ -212,7 +233,7 @@ try:
     import rich
     print("VENV OK")  # Confirms that the script runs inside the virtual environment
 except ImportError:
-    print("VENV NOT OK")  # This will appear if the virtual environment is not active
+    print("FAIL: VENV NOT OK")  # This will appear if the virtual environment is not active
     print("Python executable:", sys.executable)  # Prints which Python is used
 }
 END
@@ -226,7 +247,7 @@ END
         echo "test_venv.test was not created"
       fi
       if [ "$(diff -b test_venv.txt test_venv.test)" ] ;then
-        echo "Python venv created different output"
+        echo "FAIL: Python venv created different output"
         diff -b test_py.txt test_py.test
         exit 1
       else
@@ -246,7 +267,7 @@ main() {
     calculate_classpath
     run_script_test ruby '{@ruby:eval 1+1}' 2
     run_script_test groovy '{@groovy:eval 1+1}' 2
-    run_script_test scriptbasic '{@import res:scriptbasic.jim}{expr 1+1}' 2
+    run_script_test basic '{@import res:scriptbasic.jim}{expr 1+1}' 2
     run_python_tests
     test_python_venv
 

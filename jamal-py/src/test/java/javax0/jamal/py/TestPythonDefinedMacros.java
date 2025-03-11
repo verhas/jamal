@@ -2,6 +2,7 @@ package javax0.jamal.py;
 
 import javax0.jamal.DocumentConverter;
 import javax0.jamal.api.BadSyntax;
+import javax0.jamal.testsupport.SentinelSmith;
 import javax0.jamal.testsupport.TestThat;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
@@ -30,27 +31,9 @@ public class TestPythonDefinedMacros {
         System.out.println("Python interpreter: " + pythonInterpreter.orElseThrow());
     }
 
-    private Path approvalFile;
-
     @BeforeEach
     void setUp() throws Exception {
-        approvalFile = Path.of(tempDir.getAbsolutePath(), ".python.sentinel");
-        Files.createFile(approvalFile);
-        if (Files.getFileAttributeView(approvalFile, PosixFileAttributeView.class) != null) {
-            Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ));
-        } else {
-            Files.getFileAttributeView(approvalFile, DosFileAttributeView.class).setReadOnly(true);
-        }
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-        if (Files.getFileAttributeView(approvalFile, PosixFileAttributeView.class) != null) {
-            Files.setPosixFilePermissions(approvalFile, Set.of(PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE));
-        } else {
-            Files.getFileAttributeView(approvalFile, DosFileAttributeView.class).setReadOnly(false);
-        }
-        Files.deleteIfExists(approvalFile);
+        SentinelSmith.forge("python",tempDir);
     }
 
     @Test

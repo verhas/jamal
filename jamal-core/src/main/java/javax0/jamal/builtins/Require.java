@@ -1,12 +1,14 @@
 package javax0.jamal.builtins;
 
-import javax0.jamal.api.Macro;
 import javax0.jamal.api.*;
+import javax0.jamal.api.Macro;
 import javax0.jamal.api.Macro.Name;
+import javax0.jamal.tools.Parop;
 
 import java.util.Arrays;
 
 import static javax0.jamal.tools.InputHandler.*;
+
 @Name({"require", "version"})
 public class Require implements Macro {
 
@@ -29,6 +31,7 @@ public class Require implements Macro {
 
     @Override
     public String evaluate(Input in, Processor processor) throws BadSyntax {
+        final var validator = Parop.validator(processor);
         skipWhiteSpaces(in);
         if (in.length() == 0) {
             return Processor.jamalVersionString();
@@ -47,7 +50,9 @@ public class Require implements Macro {
         } catch (Exception e) {
             throw new BadSyntaxAt("The string '" + in.toString().trim() + "' cannot be used as a version.", in.getPosition(), e);
         }
-        BadSyntaxAt.when(requiredVersion.compareTo(Processor.jamalVersion("1.6.3")) <= 0, "Required version is older than 1.6.3, which is invalid.", in.getPosition());
+        if (validator.when(requiredVersion.compareTo(Processor.jamalVersion("1.6.3")) <= 0).then("Required version is older than 1.6.3, which is invalid.").hasFailed()) {
+            return "";
+        }
         final var currentVersion = Processor.jamalVersion();
 
         switch (comparing) {
@@ -55,30 +60,37 @@ public class Require implements Macro {
                 if (currentVersion.compareTo(requiredVersion) < 0) {
                     break;
                 }
-                BadSyntaxAt.when(currentVersion.compareTo(requiredVersion) == 0, "The current version " + currentVersion + " is the same as the required version. It has to be older.", in.getPosition());
-                BadSyntaxAt.format( "The current version " + currentVersion + " is newer than the required version. It has to be older.", in.getPosition());
+                if (validator.when(currentVersion.compareTo(requiredVersion) == 0).then("The current version %s is the same as the required version. It has to be older.", currentVersion).hasFailed()) {
+                    return "";
+                }
+                processor.deferredThrow(BadSyntaxAt.format("The current version " + currentVersion + " is newer than the required version. It has to be older.", in.getPosition()));
 
             case LESS_OR_EQUAL:
                 if (currentVersion.compareTo(requiredVersion) <= 0) {
                     break;
                 }
-                throw new BadSyntaxAt("The current version " + currentVersion + " is newer than the required version. It has to be older or the same version.", in.getPosition());
+                processor.deferredThrow(new BadSyntaxAt("The current version " + currentVersion + " is newer than the required version. It has to be older or the same version.", in.getPosition()));
+                return "";
             case EQUAL:
                 if (currentVersion.compareTo(requiredVersion) == 0) {
                     break;
                 }
-                throw new BadSyntaxAt("The current version of Jamal is " + currentVersion + ", which is not the same as the required version " + requiredVersion, in.getPosition());
+                processor.deferredThrow(new BadSyntaxAt("The current version of Jamal is " + currentVersion + ", which is not the same as the required version " + requiredVersion, in.getPosition()));
+                return "";
             case GREATER_OR_EQUAL:
                 if (currentVersion.compareTo(requiredVersion) >= 0) {
                     break;
                 }
-                throw new BadSyntaxAt("The current version " + currentVersion + " is older than the required version. It has to be newer.", in.getPosition());
+                processor.deferredThrow(new BadSyntaxAt("The current version " + currentVersion + " is older than the required version. It has to be newer.", in.getPosition()));
+                return "";
             case GREATER:
                 if (currentVersion.compareTo(requiredVersion) > 0) {
                     break;
                 }
-                BadSyntaxAt.when(currentVersion.compareTo(requiredVersion) == 0, () -> String.format("The current version %s is the same as the required version. It has to be newer.", currentVersion), in.getPosition());
-                BadSyntaxAt.when(true, () -> String.format("The current version %s is older than the required version. It has to be newer.", currentVersion), in.getPosition());
+                if (validator.when(currentVersion.compareTo(requiredVersion) == 0).then("The current version %s is the same as the required version. It has to be newer.", currentVersion)
+                        .when(true).then("The current version %s is older than the required version. It has to be newer.", currentVersion).anyFailed()) {
+                    return "";
+                }
             default:
                 throw new IllegalArgumentException("The comparison in require is illegal.");
         }

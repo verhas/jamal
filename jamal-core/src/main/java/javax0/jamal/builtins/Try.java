@@ -47,16 +47,16 @@ public class Try implements Macro {
      * There are three different possibilities regarding the suppressed exceptions:
      *
      * <ul>
-     *     <li>During the processing some exceptions were suppressed and at the end an exception was thrown.
+     *     <li>During the processing some exceptions were suppressed, and in the end an exception was thrown.
      *     In this case the thrown exception is ignored as well as all the exceptions, which were created following the
      *     first one. The first one is fetched and used to create the return value.
      *     </li>
-     *     <li>During the processing some exceptions were suppressed and at the end no exception was thrown.
+     *     <li>During the processing some exceptions were suppressed, and in the end no exception was thrown.
      *     In this case the method {@link #processInput(Input, Processor, boolean, int) processInput()} pops the
      *     suppressed exceptions and returns the value for {@code try}. In this case this method is not invoked.
      *     </li>
-     *     <li>During the processing no exceptions were suppressed and at the end an exception was thrown.
-     *     In this case this exception is used and the call to clean the suppressed exceptions does not do anything.
+     *     <li>During the processing no exceptions were suppressed, and in the end an exception was thrown.
+     *     In this case this exception is used, and the call to clean the suppressed exceptions does not do anything.
      *     </li>
      * </ul>
      * <p>
