@@ -300,7 +300,7 @@ Note, however, that changing the working directory for the new process does not 
 The other parameters, like `output` still have to define the file names absolute, or relative to the file containing the macro.
 
 {%example pwd%}
-{%@snip:check id=pwd hashCode=2cd327ee%}
+{%@snip:check id=pwd hashCode=c32ec224%}
 
 The following example calls the command `cat` which copies the standard input to the standard output.
 The standard input is not defined in the macro, therefore the text after the first line is used.

@@ -15,9 +15,15 @@ import java.nio.file.Paths;
 @Disabled("Integration tests, runs on MacOS only. Run it from IDE interactively, not part of the every day build. Not portable and slow.")
 public class TestExec {
 
+    private static SentinelSmith blade;
     @BeforeAll
     static void beforeAll() throws Exception {
-        SentinelSmith.forge("exec");
+        blade = SentinelSmith.forge("exec");
+    }
+
+    @AfterAll
+    static void afterAll() throws Exception {
+        blade.close();
     }
 
     @Test
@@ -36,21 +42,22 @@ public class TestExec {
     @Test
     @DisplayName("Executing 'echo hello' print out 'hello' to file")
     void testOutputToFile() throws Exception {
-        SentinelSmith.forge("exec");
-        // tag::pwd[]
-        System.setProperty("exec", "pwd");
-        // end::pwd[]
-        Files.deleteIfExists(Paths.get("target/hallo.txt"));
-        Assertions.assertTrue(
-                TestThat.theInput("" +
-                                        // tag::pwd[]
-                                        "{@io:exec command=EXEC cwd=target output=\"target/hallo.txt\"}" +
-                                        "{@include [verbatim] target/hallo.txt}"
-                                // end::pwd[]
-                        )
-                        .ignoreLineEnding()
-                        .atPosition("./in.jam", 1, 1)
-                        .results().endsWith("/target\n"));
+        try( final var ignored = SentinelSmith.forge("exec")) {
+            // tag::pwd[]
+            System.setProperty("exec", "pwd");
+            // end::pwd[]
+            Files.deleteIfExists(Paths.get("target/hallo.txt"));
+            Assertions.assertTrue(
+                    TestThat.theInput("" +
+                                            // tag::pwd[]
+                                            "{@io:exec command=EXEC cwd=target output=\"target/hallo.txt\"}" +
+                                            "{@include [verbatim] target/hallo.txt}"
+                                    // end::pwd[]
+                            )
+                            .ignoreLineEnding()
+                            .atPosition("./in.jam", 1, 1)
+                            .results().endsWith("/target\n"));
+        }
     }
 
     @Test

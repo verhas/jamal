@@ -2,17 +2,24 @@ package javax0.jamal.ruby;
 
 import javax0.jamal.testsupport.SentinelSmith;
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TestRubyMacros {
 
+    static SentinelSmith blade;
+
     @BeforeEach
     void setUp() throws Exception {
-        SentinelSmith.forge("ruby");
+        blade = SentinelSmith.forge("ruby");
     }
 
+    @AfterAll
+    static void afterAll() throws Exception {
+        blade.close();
+    }
 
     @Test
     @DisplayName("Test a simple ruby eval")

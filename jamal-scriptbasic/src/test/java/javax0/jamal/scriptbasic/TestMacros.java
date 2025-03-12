@@ -2,15 +2,23 @@ package javax0.jamal.scriptbasic;
 
 import javax0.jamal.testsupport.SentinelSmith;
 import javax0.jamal.testsupport.TestThat;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class TestMacros {
 
+    static SentinelSmith blade;
+
     @BeforeEach
     void setUp() throws Exception {
-        SentinelSmith.forge("basic");
+        blade = SentinelSmith.forge("basic");
+    }
+
+    @AfterAll
+    static void afterAll() throws Exception {
+        blade.close();
     }
 
     @DisplayName("Test all files that have an '.expected' pair")

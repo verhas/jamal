@@ -29,7 +29,8 @@ public class TestConvertGroovyReadme {
 
     @Test
     void convertGroovyReadme() throws Exception {
-        SentinelSmith.forge("groovy");
-        generateAdoc("../jamal-groovy");
+        try( final var ignored = SentinelSmith.forge("groovy")) {
+            generateAdoc("../jamal-groovy");
+        }
     }
 }

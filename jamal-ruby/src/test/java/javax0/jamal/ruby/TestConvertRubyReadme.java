@@ -41,7 +41,8 @@ public class TestConvertRubyReadme {
 
     @Test
     void convertRubyReadme() throws Exception {
-        SentinelSmith.forge("ruby");
-        generateAdoc("../jamal-ruby");
+        try (final var ignored = SentinelSmith.forge("ruby")) {
+            generateAdoc("../jamal-ruby");
+        }
     }
 }

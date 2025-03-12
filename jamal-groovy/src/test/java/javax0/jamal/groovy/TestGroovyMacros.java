@@ -4,16 +4,20 @@ import javax0.jamal.testsupport.JamalTests;
 import javax0.jamal.testsupport.JamalYamlTest;
 import javax0.jamal.testsupport.SentinelSmith;
 import javax0.jamal.testsupport.TestThat;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.*;
 
 public class TestGroovyMacros {
 
+    static SentinelSmith blade;
+
     @BeforeEach
     void setUp() throws Exception {
-        SentinelSmith.forge("groovy");
+        blade = SentinelSmith.forge("groovy");
+    }
+
+    @AfterAll
+    static void afterAll() throws Exception {
+        blade.close();
     }
 
     @TestFactory
