@@ -1321,7 +1321,7 @@ When there is a match for a `skip`, any further `skip` is ignored until an `endS
 
 [[replace]]
 === {%chapter%}`replace`
-{%#snip:check file={%JAVA_DIR%}Replace.java hash=46d1ed42%}
+{%#snip:check file={%JAVA_DIR%}Replace.java hash=a8d1c988%}
 The macro `replace` replaces strings with other strings in its input.
 {%standardInput%}
 
@@ -1367,7 +1367,7 @@ In that case you can switch it off using the option `(detectNoChange=false)` in 
 
 [[replaceLines]]
 === {%chapter%}`replaceLines`
-{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=cc7dc937%}
+{%#snip:check file={%JAVA_DIR%}ReplaceLines.java hash=cd2eb183%}
 This macro replaces strings in the input.
 {%parameterized%}
 

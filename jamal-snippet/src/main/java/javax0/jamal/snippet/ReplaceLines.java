@@ -39,6 +39,9 @@ class ReplaceLines implements Macro, InnerScopeDependent, BlockConverter, Scanne
             for (int i = 0; i < parts.length; i += 2) {
                 var noChange = detectNoChange.is();
                 final var from = parts[i];
+                if( from.isEmpty() ){
+                    throw new BadSyntax("You cannot replace an empty string.");
+                }
                 for (int k = 0; k < lines.length; k++) {
                     final String to = ReplaceUtil.fetchElement(parts, i + 1);
                     try {

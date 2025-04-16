@@ -16,7 +16,7 @@ public class Block {
                     case "\n":
                         lexes.next(); // ignore empty lines
                         break;
-                        // start the block specific analyzers, who will also consume the keyword
+                        // start the block-specific analyzers, who will also consume the keyword
                     case "if":
                         commands.add(If.analyze(lexes));
                         break;

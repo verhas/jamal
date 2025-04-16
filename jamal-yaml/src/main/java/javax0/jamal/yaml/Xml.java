@@ -23,7 +23,6 @@ class Xml implements Macro, InnerScopeDependent, Scanner {
 
         final var yamlObject = Resolve.getYaml(processor, in.toString().trim());
         Resolver.resolve(yamlObject, processor, clone.is(), copy.is());
-        //TODO create a new instance to make it thread safe
         return toXml(topTag.get(), attributes.get(), yamlObject.getObject());
     }
 

@@ -6,7 +6,10 @@
 
 
 Using this integration module, you can mix Jamal macro text with JSON data.
-To use this module, you have to add the dependency to your Maven project, as:
+
+The module is included in the standard versions of Jamal, so you can use it right out of the box.
+
+If you create your own Jamal Java integration, you have to add the dependency to your Maven project, as:
 [source,xml]
 ----
 <dependency>
@@ -39,9 +42,9 @@ These differences come from the different nature of Json and Yaml.
 
 [[define]]
 === i. `json:define`
-You can use this macro to define a JSon structure.
+You can use this macro to define a JSON structure.
 A JSON structure can be a map, a list or a string.
-JSon supports other primitive values, but Jamal being a text macro processor handles all other primitive types as strings.
+JSON supports other primitive values, but Jamal being a text macro processor handles all other primitive types as strings.
 
 The format of the macro is
 

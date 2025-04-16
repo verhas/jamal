@@ -6,7 +6,10 @@
 {%#counter:define id=macroChapter {%@define format=$roman. %}%}
 {%@snip:collect from=src/main/java%}
 Using this integration module, you can mix Jamal macro text with JSON data.
-To use this module, you have to add the dependency to your Maven project, as:
+
+The module is included in the standard versions of Jamal, so you can use it right out of the box.
+
+If you create your own Jamal Java integration, you have to add the dependency to your Maven project, as:
 {%@snip:xml pom=pom.xml%}\
 {%#define VERSION={%pom /project/version/text()%}%}\
 {%#define ARTIFACT_ID={%pom /project/artifactId/text()%}%}\

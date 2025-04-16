@@ -10,9 +10,9 @@ import static javax0.jamal.tools.InputHandler.*;
 @Macro.Name("json:define")
 public class Define implements Macro, InnerScopeDependent, Scanner {
 /* snippet Define_macro_documentation
-You can use this macro to define a JSon structure.
+You can use this macro to define a JSON structure.
 A JSON structure can be a map, a list or a string.
-JSon supports other primitive values, but Jamal being a text macro processor handles all other primitive types as strings.
+JSON supports other primitive values, but Jamal being a text macro processor handles all other primitive types as strings.
 
 The format of the macro is
 

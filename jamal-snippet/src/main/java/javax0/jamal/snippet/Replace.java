@@ -21,6 +21,9 @@ public class Replace implements Macro, InnerScopeDependent, Scanner {
         String string = parts[0];
         for (int i = 1; i < parts.length; i += 2) {
             final var from = parts[i];
+            if( from.isEmpty() ){
+                throw new BadSyntax("You cannot replace an empty string.");
+            }
             final String to = ReplaceUtil.fetchElement(parts, i + 1);
             if (isRegex.is()) {
                 try {
