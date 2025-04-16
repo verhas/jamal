@@ -50,9 +50,9 @@ GROUPID=com.javax0.jamal                   -- the project groupId.
 MODULE_PREFIX=jamal.                       -- module names are jamal.XXX
 PACKAGE_PREFIX=javax0.jamal.               -- package names are less restrictive and it is not likely that anyone else would use javax0 as top level package
 
-JAVA_RELEASE=11
+JAVA_RELEASE=17
 JAVA_SOURCE=17
-JAVA_TARGET=11
+JAVA_TARGET=17
 
 -- dependencies
 
