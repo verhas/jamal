@@ -81,6 +81,18 @@ public interface Macro extends Identified, ServiceLoaded, OptionsControlled {
         String[] value();
     }
 
+    /**
+     * Use this annotation to signal that a macro needs a sentinel file.
+     * A sentinel file is an empty file with having the extension '.approve.'XXXX, where XXXX is the argument
+     * os the annotation. The sentinel file has to be read-only and only for the owner, the current user.
+     * <p>
+     * If there is no sentinel file, the macro will not execute.
+     * <p>
+     * Macros do not need to care about the sentinel mechanism other than having the annotation.
+     * The macro register will register an instance of a proxy macro that first checks the sentinel file and then
+     * calls the original macro. That way the macros that may pose security risk executing without careful checking
+     * only need an annotation and nothing more.
+     */
     @Target(java.lang.annotation.ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @interface Sentinel {

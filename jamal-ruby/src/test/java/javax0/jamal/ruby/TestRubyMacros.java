@@ -73,8 +73,8 @@ public class TestRubyMacros {
                         "{%@import res:ruby.jim%}\\\n" +
                         "{%#ruby:shell {%shell=engine%}\n" +
                         "$z = \"\"\n" +
-                        "for it in 0..9 do\n" +
-                        "  $z+=it.to_s\n" +
+                        "for zit in 0..9 do\n" +
+                        "  $z+=zit.to_s\n" +
                         "end\n" +
                         "$z\n" +
                         "%}"
@@ -88,8 +88,8 @@ public class TestRubyMacros {
                 "{#sep {@escape `|`{% %}`|`}}{%@ruby:shell script\n" +
                         "$z = \"\";%}" +
                         "{%@ruby:shell script\n" +
-                        "for it in 0..9 do\n" +
-                        "  $z+=it.to_s\n" +
+                        "for zit in 0..9 do\n" +
+                        "  $z+=zit.to_s\n" +
                         "end\n" +
                         "$z\n" +
                         "%}"
@@ -141,8 +141,8 @@ public class TestRubyMacros {
                 "{#sep {@escape `|`{% %}`|`}}" +
                         "{%@ruby:property $z=%}" +
                         "{%@ruby:shell engine script\n" +
-                        "for it in 0..9 do\n" +
-                        "  $z+=it.to_s\n" +
+                        "for zit in 0..9 do\n" +
+                        "  $z+=zit.to_s\n" +
                         "end\n" +
                         "$z\n" +
                         "%}" +
@@ -158,8 +158,8 @@ public class TestRubyMacros {
                         "{%@ruby:property z=(to_i)55%}" +
                         "{%@ruby:shell script\n" +
                         "z *= 2\n" +
-                        "for it in 0..9 do\n" +
-                        "  z+=it\n" +
+                        "for zit in 0..9 do\n" +
+                        "  z+=zit\n" +
                         "end\n" +
                         "z\n" +
                         "%}"

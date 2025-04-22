@@ -41,7 +41,7 @@ We do not upgrade to beta versions.
 
 * `OK`  `SONATYPE_PLUGIN_VERSION` `1.7.0` 
 
-* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.5.2` 
+* `OK`  `SUREFIRE_PLUGIN_VERSION` `3.5.3` 
 
 * `*[red]#NO#*`  `MAVEN_SOURCE_PLUGIN_VERSION` `3.3.1` `*[red]#upgrade to 4.0.0-beta-1#*`
 +
@@ -51,15 +51,17 @@ We do not upgrade to beta versions.
 
 * `OK`  `MAVEN_DEPENDENCY_PLUGIN_VERSION` `3.8.1` 
 
-* `*[red]#NO#*`  `JUPITER_VERSION` `5.12.0` `*[red]#upgrade to 5.13.0-M1#*`
+* `OK`  `JUPITER_VERSION` `5.13.0-M2` 
 
-* `*[red]#NO#*`  `MOCKITO_VERSION` `5.16.0` `*[red]#upgrade to 5.16.1#*`
+* `OK`  `MOCKITO_VERSION` `5.17.0` 
 
-* `OK`  `JRUBY_VERSION` `9.4.12.0` 
+* `*[red]#NO#*`  `JRUBY_VERSION` `9.4.10.0` `*[red]#upgrade to 10.0.0.0#*`
+JRuby versions 9.4.11.0 and later including the 10.X.X.X. versions are not compatible with the
+IntelliJ Asciidoctor plugin
 
 * `OK`  `GROOVY_VERSION` `3.0.24` 
 
-* `OK`  `OGNL_VERSION` `3.4.6` 
+* `OK`  `OGNL_VERSION` `3.4.7` 
 
 * `OK`  `SNAKEYAML_VERSION` `2.4` 
 
@@ -67,26 +69,7 @@ We do not upgrade to beta versions.
 
 * `OK`  `FLEXMARK_VERSION` `0.64.8` 
 
-* `OK`  `APACHE_POI_VERSION` `5.4.0` 
-
-* `OK`  `APACHE_POI_VERSION` `5.4.0` <- OOXML
-
-[NOTE]
-====
-When upgrading the newer version, check that the dependency on
-
-
-* `OK`  `COMMONS_COMPRESS_VERSION` `1.27.1` 
-
-of the OOXML package is higher than 1.25.0
-
-Version 1.25.0 has two vulnerabilities, CVE-2024-26308 and CVE-2024-25710.
-The OOXML library version 5.2.5 depends on the vulnerable version.
-The version 1.27.1 of the compress library is explicitly added to the `jamal-xls` module as a dependency.
-It may not be needed when the poi-ooxml library also updates its dependency.
-It has to be checked when stepping up from 5.2.5 to a newer version.
-====
-
+* `OK`  `APACHE_POI_VERSION` `5.4.1` 
 
 * `*[red]#NO#*`  `ASCIIDOCTORJ_VERSION` `3.0.0-alpha.1` `*[red]#upgrade to 3.0.0#*`
 
@@ -108,9 +91,9 @@ We do not upgrade to beta versions.
 
 * `OK`  `PLEXUS_COMPONENT_METADATA_VERSION` `2.2.0` 
 
-* `OK`  `ASM_VERSION` `9.7.1` 
+* `OK`  `ASM_VERSION` `9.8` 
 
-* `OK`  `ASM_TREE_VERSION` `9.7.1` 
+* `OK`  `ASM_TREE_VERSION` `9.8` 
 
 * `OK`  `MARKDOWN_TO_ASCIIDOC` `2.0.1` 
 
@@ -118,4 +101,8 @@ We do not upgrade to beta versions.
 
 * `OK`  `JSQLPARSER_VERSION` `5.1` 
 
-* `*[red]#NO#*`  `JSOUP_VERSION` `1.18.3` `*[red]#upgrade to 1.19.1#*`
+* `OK`  `JSOUP_VERSION` `1.19.1` 
+This dependency is needed for the markdown to asciidoc conversion.
+It is not used directly, and it is a transitive dependency of the markdown to asciidoc converter.
+The transitive version of the dependency is too old and has security issues.
+Therefore, here we override the version to the latest one.
